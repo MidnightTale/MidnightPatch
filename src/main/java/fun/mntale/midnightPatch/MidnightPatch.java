@@ -7,7 +7,6 @@ public final class MidnightPatch extends JavaPlugin {
     public static MidnightPatch instance;
     private EnderPearlChunkManager chunkManager;
     private MossBlockManager mossBlockManager;
-    private DragonEggManager dragonEggManager;
 
     @Override
     public void onEnable() {
@@ -18,8 +17,6 @@ public final class MidnightPatch extends JavaPlugin {
         mossBlockManager = new MossBlockManager(this);
         mossBlockManager.initialize();
         
-        dragonEggManager = new DragonEggManager(this);
-        dragonEggManager.initialize();
     }
 
     @Override

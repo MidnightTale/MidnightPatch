@@ -4,3 +4,10 @@ main: fun.mntale.midnightPatch.MidnightPatch
 api-version: '1.21'
 authors: [ MidnightTale_ ]
 website: https://mntale.fun
+folia-supported: true
+dependencies:
+  server:
+    packetevents:
+      load: BEFORE
+      required: true
+      join-classpath: true

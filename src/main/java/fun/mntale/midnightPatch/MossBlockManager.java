@@ -13,7 +13,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDispenseEvent;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.logging.Level;
 
 public class MossBlockManager implements Listener {
     private final MidnightPatch plugin;

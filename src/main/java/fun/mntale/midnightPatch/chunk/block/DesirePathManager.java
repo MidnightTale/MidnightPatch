@@ -43,6 +43,14 @@ public class DesirePathManager implements Listener {
         Material[] jungleStages = { Material.GRASS_BLOCK, Material.PODZOL, Material.ROOTED_DIRT, Material.DIRT_PATH, Material.MOSS_BLOCK };
         // Mushroom
         Material[] mushroomStages = { Material.MYCELIUM, Material.COARSE_DIRT, Material.DIRT_PATH, Material.GRAVEL };
+        // Nether
+        Material[] netherWastesStages = { Material.NETHERRACK, Material.GRAVEL, Material.SOUL_SAND, Material.SOUL_SOIL, Material.MAGMA_BLOCK, Material.NETHER_BRICKS };
+        Material[] soulSandValleyStages = { Material.SOUL_SAND, Material.SOUL_SOIL, Material.GRAVEL, Material.BASALT, Material.POLISHED_BASALT, Material.MAGMA_BLOCK };
+        Material[] crimsonForestStages = { Material.CRIMSON_NYLIUM, Material.NETHERRACK, Material.GRAVEL, Material.CRIMSON_STEM, Material.NETHER_WART_BLOCK, Material.NETHER_BRICKS };
+        Material[] warpedForestStages = { Material.WARPED_NYLIUM, Material.NETHERRACK, Material.GRAVEL, Material.WARPED_STEM, Material.WARPED_WART_BLOCK, Material.NETHER_BRICKS };
+        Material[] basaltDeltasStages = { Material.BASALT, Material.POLISHED_BASALT, Material.BLACKSTONE, Material.GRAVEL, Material.MAGMA_BLOCK };
+        // End
+        Material[] endStages = { Material.END_STONE, Material.PURPUR_BLOCK, Material.END_STONE_BRICKS, Material.PURPUR_PILLAR, Material.COBBLESTONE, Material.CHISELED_STONE_BRICKS, Material.OBSIDIAN, Material.CRYING_OBSIDIAN, Material.BLACKSTONE };
         // Default fallback
         Material[] defaultStages = plainsStages;
         // Assign to biomes using Paper registry access
@@ -60,6 +68,18 @@ public class DesirePathManager implements Listener {
                 BIOME_PATH_STAGES.put(b, jungleStages);
             } else if (name.equals("mushroom_fields") || name.equals("mushroom_field_shore")) {
                 BIOME_PATH_STAGES.put(b, mushroomStages);
+            } else if (name.equals("nether_wastes")) {
+                BIOME_PATH_STAGES.put(b, netherWastesStages);
+            } else if (name.equals("soul_sand_valley")) {
+                BIOME_PATH_STAGES.put(b, soulSandValleyStages);
+            } else if (name.equals("crimson_forest")) {
+                BIOME_PATH_STAGES.put(b, crimsonForestStages);
+            } else if (name.equals("warped_forest")) {
+                BIOME_PATH_STAGES.put(b, warpedForestStages);
+            } else if (name.equals("basalt_deltas")) {
+                BIOME_PATH_STAGES.put(b, basaltDeltasStages);
+            } else if (name.equals("the_end") || name.equals("end_highlands") || name.equals("end_midlands") || name.equals("end_barrens") || name.equals("small_end_islands")) {
+                BIOME_PATH_STAGES.put(b, endStages);
             } else {
                 BIOME_PATH_STAGES.put(b, defaultStages);
             }
@@ -134,16 +154,22 @@ public class DesirePathManager implements Listener {
         if (event.getFrom().getBlock().equals(event.getTo().getBlock())) return;
         Player player = event.getPlayer();
         final int wearAmount;
-        if (player.isInsideVehicle()) {
-            EntityType vehicleType = player.getVehicle().getType();
-            if (vehicleType == EntityType.HORSE || vehicleType == EntityType.CAMEL) {
-                wearAmount = 3; // Heavier steps
-            } else {
-                wearAmount = 1;
-            }
-        } else {
-            wearAmount = 1;
+        boolean isSprinting = player.isSprinting();
+        boolean isSneaking = player.isSneaking();
+        boolean isJumping = player.getVelocity().getY() > 0.1 && !player.isOnGround();
+        boolean isRaining = player.getWorld().hasStorm();
+        boolean isThundering = player.getWorld().isThundering();
+        int baseWear = 1;
+        if (isSprinting) baseWear += 1;
+        if (isJumping) baseWear += 2;
+        if (isSneaking) baseWear -= 1;
+        baseWear = Math.max(1, baseWear);
+        if (isThundering) {
+            baseWear *= 3;
+        } else if (isRaining) {
+            baseWear *= 2;
         }
+        wearAmount = baseWear;
         // Get the block location below the player
         org.bukkit.Location loc = player.getLocation().subtract(0, 1, 0);
         FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, loc, task -> {

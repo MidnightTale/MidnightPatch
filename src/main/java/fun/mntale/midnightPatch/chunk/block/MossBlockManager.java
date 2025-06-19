@@ -1,5 +1,6 @@
-package fun.mntale.midnightPatch;
+package fun.mntale.midnightPatch.chunk.block;
 
+import fun.mntale.midnightPatch.MidnightPatch;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -15,7 +16,6 @@ import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MossBlockManager implements Listener {
-    private final MidnightPatch plugin;
     private static final float VEGETATION_CHANCE = 0.6f; // 60% chance for vegetation
 
     // Vanilla vegetation chances
@@ -24,16 +24,6 @@ public class MossBlockManager implements Listener {
     private static final float TALL_GRASS_CHANCE = 0.1042f; // 10.42%
     private static final float AZALEA_CHANCE = 0.0729f; // 7.29%
     private static final float FLOWERING_AZALEA_CHANCE = 0.0417f; // 4.17%
-
-
-    public MossBlockManager(MidnightPatch plugin) {
-        this.plugin = plugin;
-    }
-
-    public void initialize() {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        plugin.getLogger().info("MossBlockManager initialized");
-    }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -62,11 +52,10 @@ public class MossBlockManager implements Listener {
     @EventHandler
     public void onBlockDispense(BlockDispenseEvent event) {
         // Check if a dispenser is dispensing bone meal
-        if (!(event.getBlock().getState() instanceof Dispenser) || event.getItem().getType() != Material.BONE_MEAL) {
+        if (!(event.getBlock().getState() instanceof Dispenser dispenser) || event.getItem().getType() != Material.BONE_MEAL) {
             return;
         }
 
-        Dispenser dispenser = (Dispenser) event.getBlock().getState();
         BlockFace facing = ((org.bukkit.block.data.Directional) dispenser.getBlockData()).getFacing();
         Block targetBlock = event.getBlock().getRelative(facing);
 
@@ -84,7 +73,7 @@ public class MossBlockManager implements Listener {
     }
 
     private void applyMossSpread(Block centerBlock) {
-        FoliaScheduler.getRegionScheduler().run(plugin, centerBlock.getLocation(), taskBase -> {
+        FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, centerBlock.getLocation(), taskBase -> {
             int maxX = ThreadLocalRandom.current().nextBoolean() ? 2 : 3;
             int maxZ = ThreadLocalRandom.current().nextBoolean() ? 2 : 3;
 

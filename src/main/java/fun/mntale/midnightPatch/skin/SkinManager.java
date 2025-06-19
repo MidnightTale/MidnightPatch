@@ -1,54 +1,44 @@
 package fun.mntale.midnightPatch.skin;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import fun.mntale.midnightPatch.MidnightPatch;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.command.CommandSender;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-import io.papermc.paper.threadedregions.scheduler.GlobalRegionScheduler;
+import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 
-public class SkinManager {
-    private static final String WRAP_COMMAND_TEMPLATE = "/wraps wrap %s %s";
-    private final Plugin plugin;
-
-    public SkinManager(Plugin plugin) {
-        this.plugin = plugin;
-    }
+public class SkinManager implements Listener {
+    private static final String WRAP_COMMAND_TEMPLATE = "hmcwraps:wraps wrap %s %s";
 
     public boolean setSkin(CommandSender sender, String tier, String targetPlayerName) {
         Player targetPlayer = Bukkit.getPlayer(targetPlayerName);
         if (targetPlayer == null) {
-            sender.sendMessage(Component.text("Player " + targetPlayerName + " is not online!", NamedTextColor.RED));
             return false;
         }
 
-        ItemStack mainHand = targetPlayer.getInventory().getItemInMainHand();
-        if (mainHand.getType() == Material.AIR) {
-            sender.sendMessage(Component.text("Target player must be holding a tool in their main hand!", NamedTextColor.RED));
-            return false;
-        }
+        // Access player inventory in entity task
+        FoliaScheduler.getEntityScheduler().run(targetPlayer, MidnightPatch.instance, (taskw) -> {
+            ItemStack mainHand = targetPlayer.getInventory().getItemInMainHand();
+            if (mainHand.getType() == Material.AIR) {
+                return;
+            }
 
-        String toolType = getToolType(mainHand.getType());
-        if (toolType == null) {
-            sender.sendMessage(Component.text("Target player must be holding a valid tool (axe, pickaxe, shovel, or sword)!", NamedTextColor.RED));
-            return false;
-        }
+            String toolType = getToolType(mainHand.getType());
+            if (toolType == null) {
+                return;
+            }
 
-        // Extract the base tool type (e.g., "axe" from "axe_tier1")
-        String baseToolType = toolType.split("_")[0];
-        
-        // Create the wrap command with the correct tier
-        String wrapCommand = String.format(WRAP_COMMAND_TEMPLATE, baseToolType + "_" + tier, tier);
-        
-        // Execute the wrap command in the global region
-        GlobalRegionScheduler scheduler = Bukkit.getGlobalRegionScheduler();
-        scheduler.execute(plugin, () -> {
-            targetPlayer.performCommand(wrapCommand);
-            sender.sendMessage(Component.text("Successfully applied " + tier + " skin to " + targetPlayer.getName() + "'s " + baseToolType + "!", NamedTextColor.GREEN));
-        });
+            // Extract the base tool type (e.g., "axe" from "axe_tier1")
+            String baseToolType = toolType.split("_")[0];
+            
+            // Create the wrap command with the correct format: <tool>_<tier> <player>
+            String wrapCommand = String.format(WRAP_COMMAND_TEMPLATE, baseToolType + "_" + tier, targetPlayerName);
+            
+            // Execute the wrap command as console
+            FoliaScheduler.getGlobalRegionScheduler().run(MidnightPatch.instance, (taskwc) -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), wrapCommand));
+        }, null);
         
         return true;
     }

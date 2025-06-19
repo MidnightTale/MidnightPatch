@@ -1,38 +1,87 @@
 package fun.mntale.midnightPatch;
 
+import fun.mntale.midnightPatch.chunk.block.MossBlockManager;
+import fun.mntale.midnightPatch.entity.LootMobTargetManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import fun.mntale.midnightPatch.chunk.EnderPearlChunkManager;
 import fun.mntale.midnightPatch.skin.SkinManager;
 import fun.mntale.midnightPatch.skin.SkinCommand;
 import io.papermc.paper.command.brigadier.BasicCommand;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
+import fun.mntale.midnightPatch.chunk.block.DesirePathManager;
+import fun.mntale.midnightPatch.command.KillCommand;
 
 public final class MidnightPatch extends JavaPlugin {
     public static MidnightPatch instance;
-    private EnderPearlChunkManager chunkManager;
-    private MossBlockManager mossBlockManager;
-    private SkinManager skinManager;
+    public SkinManager skinManager;
+    public EnderPearlChunkManager enderPearlChunkManager;
+    public MossBlockManager mossBlockManager;
+    public LootMobTargetManager lootMobTargetManager;
+    public DesirePathManager desirePathManager;
+
+    // Configuration
+    boolean enableSkinManager = false;
+    boolean enableEnderPearlChunkManager = false;
+    boolean enableMossBlockManager = false;
+    boolean enableLootMobTargetManager = true;
+    boolean enableDesirePathManager = true;
 
     @Override
     public void onEnable() {
         instance = this;
-        chunkManager = new EnderPearlChunkManager(this);
-        chunkManager.initialize();
-        
-        mossBlockManager = new MossBlockManager(this);
-        mossBlockManager.initialize();
-        
-        // Initialize skin manager and register command
-        skinManager = new SkinManager(this);
-        BasicCommand skinCommand = new SkinCommand(skinManager);
-        
-        // Register command using Paper's command system
-        registerCommand("midnightpatch", skinCommand);
+
+        // Initialize managers first
+        if (enableSkinManager) {
+            skinManager = new SkinManager();
+            BasicCommand skinCommand = new SkinCommand(skinManager);
+            registerCommand("midnightpatch", skinCommand);
+            this.getServer().getPluginManager().registerEvents(skinManager, this);
+            ComponentLogger.logger().info("enableSkinManager = true");
+        } else {
+            ComponentLogger.logger().info("enableSkinManager = false");
+        }
+
+        if (enableEnderPearlChunkManager) {
+            enderPearlChunkManager = new EnderPearlChunkManager();
+            this.getServer().getPluginManager().registerEvents(enderPearlChunkManager, this);
+            ComponentLogger.logger().info("enderPearlChunkManager = true");
+        } else {
+            ComponentLogger.logger().info("enderPearlChunkManager = false");
+        }
+
+        if (enableMossBlockManager) {
+            mossBlockManager = new MossBlockManager();
+            this.getServer().getPluginManager().registerEvents(mossBlockManager, this);
+            ComponentLogger.logger().info("enableMossBlockManager = true");
+        } else {
+            ComponentLogger.logger().info("enableMossBlockManager = false");
+        }
+
+        if (enableLootMobTargetManager) {
+            lootMobTargetManager = new LootMobTargetManager();
+            this.getServer().getPluginManager().registerEvents(lootMobTargetManager, this);
+            ComponentLogger.logger().info("enableLootMobTargetManager = true");
+        } else {
+            ComponentLogger.logger().info("enableLootMobTargetManager = false");
+        }
+
+        if (enableDesirePathManager) {
+            desirePathManager = new DesirePathManager();
+            this.getServer().getPluginManager().registerEvents(desirePathManager, this);
+            ComponentLogger.logger().info("enableDesirePathManager = true");
+        } else {
+            ComponentLogger.logger().info("enableDesirePathManager = false");
+        }
+
+        // Register /kill command
+        BasicCommand killCommand = new KillCommand();
+        registerCommand("kill", killCommand);
     }
 
     @Override
     public void onDisable() {
-        if (chunkManager != null) {
-            chunkManager.shutdown();
+        if (enderPearlChunkManager != null) {
+            enderPearlChunkManager.shutdown();
         }
     }
 }

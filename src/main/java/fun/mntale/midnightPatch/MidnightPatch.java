@@ -10,6 +10,7 @@ import io.papermc.paper.command.brigadier.BasicCommand;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import fun.mntale.midnightPatch.chunk.block.DesirePathManager;
 import fun.mntale.midnightPatch.command.KillCommand;
+import fun.mntale.midnightPatch.entity.ProjectileDamageManager;
 
 public final class MidnightPatch extends JavaPlugin {
     public static MidnightPatch instance;
@@ -18,6 +19,7 @@ public final class MidnightPatch extends JavaPlugin {
     public MossBlockManager mossBlockManager;
     public LootMobTargetManager lootMobTargetManager;
     public DesirePathManager desirePathManager;
+    public ProjectileDamageManager projectileDamageManager;
 
     // Configuration
     boolean enableSkinManager = false;
@@ -25,6 +27,7 @@ public final class MidnightPatch extends JavaPlugin {
     boolean enableMossBlockManager = false;
     boolean enableLootMobTargetManager = true;
     boolean enableDesirePathManager = true;
+    boolean enableProjectileDamageManager = true;
 
     @Override
     public void onEnable() {
@@ -71,6 +74,14 @@ public final class MidnightPatch extends JavaPlugin {
             ComponentLogger.logger().info("enableDesirePathManager = true");
         } else {
             ComponentLogger.logger().info("enableDesirePathManager = false");
+        }
+
+        if (enableProjectileDamageManager) {
+            projectileDamageManager = new ProjectileDamageManager();
+            this.getServer().getPluginManager().registerEvents(projectileDamageManager, this);
+            ComponentLogger.logger().info("enableProjectileDamageManager = true");
+        } else {
+            ComponentLogger.logger().info("enableProjectileDamageManager = false");
         }
 
         // Register /kill command

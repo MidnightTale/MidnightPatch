@@ -155,6 +155,7 @@ public class DesirePathManager implements Listener {
         final int wearAmount;
         boolean isSprinting = player.isSprinting();
         boolean isSneaking = player.isSneaking();
+        @SuppressWarnings("deprecation")
         boolean isJumping = player.getVelocity().getY() > 0.1 && !player.isOnGround();
         boolean isRaining = player.getWorld().hasStorm();
         boolean isThundering = player.getWorld().isThundering();

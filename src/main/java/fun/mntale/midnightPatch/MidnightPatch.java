@@ -24,7 +24,7 @@ public final class MidnightPatch extends JavaPlugin {
     // Configuration
     boolean enableSkinManager = false;
     boolean enableEnderPearlChunkManager = false;
-    boolean enableMossBlockManager = false;
+    boolean enableMossBlockManager = true;
     boolean enableLootMobTargetManager = true;
     boolean enableDesirePathManager = true;
     boolean enableProjectileDamageManager = true;

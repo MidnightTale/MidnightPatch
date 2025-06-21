@@ -11,6 +11,7 @@ import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import fun.mntale.midnightPatch.chunk.block.DesirePathManager;
 import fun.mntale.midnightPatch.command.KillCommand;
 import fun.mntale.midnightPatch.entity.ProjectileDamageManager;
+import fun.mntale.midnightPatch.stats.ServerStatsManager;
 
 public final class MidnightPatch extends JavaPlugin {
     public static MidnightPatch instance;
@@ -20,6 +21,7 @@ public final class MidnightPatch extends JavaPlugin {
     public LootMobTargetManager lootMobTargetManager;
     public DesirePathManager desirePathManager;
     public ProjectileDamageManager projectileDamageManager;
+    public ServerStatsManager serverStatsManager;
 
     // Configuration
     boolean enableSkinManager = false;
@@ -28,6 +30,7 @@ public final class MidnightPatch extends JavaPlugin {
     boolean enableLootMobTargetManager = true;
     boolean enableDesirePathManager = true;
     boolean enableProjectileDamageManager = true;
+    boolean enableServerStatsManager = false;
 
     @Override
     public void onEnable() {
@@ -84,6 +87,14 @@ public final class MidnightPatch extends JavaPlugin {
             ComponentLogger.logger().info("enableProjectileDamageManager = false");
         }
 
+        if (enableServerStatsManager) {
+            serverStatsManager = new ServerStatsManager();
+            serverStatsManager.enable();
+            ComponentLogger.logger().info("enableServerStatsManager = true");
+        } else {
+            ComponentLogger.logger().info("enableServerStatsManager = false");
+        }
+
         // Register /kill command
         BasicCommand killCommand = new KillCommand();
         registerCommand("kill", killCommand);
@@ -93,6 +104,9 @@ public final class MidnightPatch extends JavaPlugin {
     public void onDisable() {
         if (enderPearlChunkManager != null) {
             enderPearlChunkManager.shutdown();
+        }
+        if (serverStatsManager != null) {
+            serverStatsManager.disable();
         }
     }
 }

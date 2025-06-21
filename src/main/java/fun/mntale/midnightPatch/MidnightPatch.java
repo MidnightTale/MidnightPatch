@@ -9,7 +9,9 @@ import fun.mntale.midnightPatch.skin.SkinCommand;
 import io.papermc.paper.command.brigadier.BasicCommand;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import fun.mntale.midnightPatch.chunk.block.DesirePathManager;
+import fun.mntale.midnightPatch.chunk.block.ReachAroundBlockManager;
 import fun.mntale.midnightPatch.command.KillCommand;
+import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
 import fun.mntale.midnightPatch.entity.ProjectileDamageManager;
 import fun.mntale.midnightPatch.stats.ServerStatsManager;
 
@@ -22,6 +24,7 @@ public final class MidnightPatch extends JavaPlugin {
     public DesirePathManager desirePathManager;
     public ProjectileDamageManager projectileDamageManager;
     public ServerStatsManager serverStatsManager;
+    public ReachAroundBlockManager reachAroundBlockManager;
 
     // Configuration
     boolean enableSkinManager = false;
@@ -31,6 +34,7 @@ public final class MidnightPatch extends JavaPlugin {
     boolean enableDesirePathManager = true;
     boolean enableProjectileDamageManager = true;
     boolean enableServerStatsManager = false;
+    boolean enableReachAroundBlockManager = true;
 
     @Override
     public void onEnable() {
@@ -95,9 +99,21 @@ public final class MidnightPatch extends JavaPlugin {
             ComponentLogger.logger().info("enableServerStatsManager = false");
         }
 
+        if (enableReachAroundBlockManager) {
+            reachAroundBlockManager = new ReachAroundBlockManager();
+            this.getServer().getPluginManager().registerEvents(reachAroundBlockManager, this);
+            ComponentLogger.logger().info("enableReachAroundBlockManager = true");
+        } else {
+            ComponentLogger.logger().info("enableReachAroundBlockManager = false");
+        }
+
         // Register /kill command
         BasicCommand killCommand = new KillCommand();
         registerCommand("kill", killCommand);
+        
+        // Register /togglereacharound command
+        BasicCommand toggleReachAroundCommand = new ToggleReachAroundCommand();
+        registerCommand("togglereacharound", toggleReachAroundCommand);
     }
 
     @Override

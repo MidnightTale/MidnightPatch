@@ -30,7 +30,7 @@ public final class MidnightPatch extends JavaPlugin {
     boolean enableLootMobTargetManager = true;
     boolean enableDesirePathManager = true;
     boolean enableProjectileDamageManager = true;
-    boolean enableServerStatsManager = true;
+    boolean enableServerStatsManager = false;
 
     @Override
     public void onEnable() {

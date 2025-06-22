@@ -17,7 +17,6 @@ import fun.mntale.midnightPatch.chunk.block.ReachAroundBlockManager;
 import fun.mntale.midnightPatch.chunk.block.BoneMealManager;
 import fun.mntale.midnightPatch.command.KillCommand;
 import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
-import fun.mntale.midnightPatch.command.ToggleAutoFishCommand;
 import fun.mntale.midnightPatch.entity.ProjectileDamageManager;
 import fun.mntale.midnightPatch.stats.ServerStatsManager;
 
@@ -90,8 +89,6 @@ public final class MidnightPatch extends JavaPlugin {
             ComponentLogger.logger().info("enableAutoFishManager = true");
             
             // Register /toggleautofish command
-            BasicCommand toggleAutoFishCommand = new ToggleAutoFishCommand();
-            registerCommand("toggleautofish", toggleAutoFishCommand);
         } else {
             ComponentLogger.logger().info("enableAutoFishManager = false");
         }
@@ -175,6 +172,12 @@ public final class MidnightPatch extends JavaPlugin {
         // Register /kill command
         BasicCommand killCommand = new KillCommand();
         registerCommand("kill", killCommand);
+
+        // Register AutoHarvestManager (auto-harvest crops with enchanted hoe)
+        getServer().getPluginManager().registerEvents(new fun.mntale.midnightPatch.farming.AutoHarvestManager(), this);
+
+        // Register RecastTradeListener (Recast enchantment in librarian trades)
+        getServer().getPluginManager().registerEvents(new fun.mntale.midnightPatch.fishing.RecastTradeListener(), this);
     }
 
     @Override

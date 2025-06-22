@@ -1,6 +1,7 @@
 name: MidnightPatch
 version: '1.0-SNAPSHOT'
 main: fun.mntale.midnightPatch.MidnightPatch
+bootstrapper: fun.mntale.midnightPatch.farming.AutoHarvestBootstrap
 api-version: '1.21'
 authors: [ MidnightTale_ ]
 website: https://mntale.fun

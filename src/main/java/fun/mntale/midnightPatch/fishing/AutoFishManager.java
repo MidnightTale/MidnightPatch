@@ -1,17 +1,18 @@
 package fun.mntale.midnightPatch.fishing;
 
 import fun.mntale.midnightPatch.MidnightPatch;
-import fun.mntale.midnightPatch.command.ToggleAutoFishCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.Particle;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
 
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import io.github.retrooper.packetevents.util.folia.TaskWrapper;
@@ -30,11 +31,26 @@ public class AutoFishManager implements Listener {
     
     private final Map<UUID, TaskWrapper> autoFishTasks = new ConcurrentHashMap<>();
     
+    private static final NamespacedKey RECAST_KEY = NamespacedKey.fromString("midnightpatch:recasting");
+
+    private boolean hasRecastEnchantment(Player player) {
+        ItemStack rod = player.getInventory().getItemInMainHand();
+        if (rod.getType() != Material.FISHING_ROD) {
+            rod = player.getInventory().getItemInOffHand();
+            if (rod.getType() != Material.FISHING_ROD) {
+                return false;
+            }
+        }
+        Enchantment recastEnchant = io.papermc.paper.registry.RegistryAccess.registryAccess()
+            .getRegistry(io.papermc.paper.registry.RegistryKey.ENCHANTMENT)
+            .get(RECAST_KEY);
+        return recastEnchant != null && rod.containsEnchantment(recastEnchant);
+    }
+
     @EventHandler
     public void onPlayerFish(PlayerFishEvent event) {
         Player player = event.getPlayer();
-        
-        if (!ToggleAutoFishCommand.isAutoFishEnabled(player)) {
+        if (!hasRecastEnchantment(player)) {
             return;
         }
         
@@ -52,13 +68,13 @@ public class AutoFishManager implements Listener {
             case IN_GROUND:
             case FAILED_ATTEMPT:
                 // Bobber hit ground or failed, recast immediately
-                scheduleRecast(player);
+                stopRecastTask(player);
                 break;
                 
             case BITE:
                 // Fish is biting, right-click to catch it after a short delay
                 FoliaScheduler.getEntityScheduler().runDelayed(player, MidnightPatch.instance, (taskObj) -> {
-                    if (ToggleAutoFishCommand.isAutoFishEnabled(player) && player.isOnline()) {
+                    if (hasRecastEnchantment(player) && player.isOnline()) {
                         // Right-click to catch the fish (not recast)
                         catchFish(player);
                     }
@@ -81,12 +97,10 @@ public class AutoFishManager implements Listener {
     }
     
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
+    public void onPlayerItemHeld(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
-        if (ToggleAutoFishCommand.isAutoFishEnabled(player) &&
-            (event.getFrom().getX() != event.getTo().getX() ||
-             event.getFrom().getY() != event.getTo().getY() ||
-             event.getFrom().getZ() != event.getTo().getZ())) {
+        ItemStack newItem = player.getInventory().getItem(event.getNewSlot());
+        if (newItem == null || newItem.getType() != Material.FISHING_ROD) {
             stopRecastTask(player);
         }
     }
@@ -97,7 +111,7 @@ public class AutoFishManager implements Listener {
         
         // Schedule new recast task
         TaskWrapper task = FoliaScheduler.getEntityScheduler().runDelayed(player, MidnightPatch.instance, (taskObj) -> {
-            if (ToggleAutoFishCommand.isAutoFishEnabled(player) && player.isOnline()) {
+            if (hasRecastEnchantment(player) && player.isOnline()) {
                 recastFishingRod(player);
             }
             autoFishTasks.remove(player.getUniqueId());

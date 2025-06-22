@@ -1,0 +1,3 @@
+bootstrapper:
+  - fun.mntale.midnightPatch.farming.AutoHarvestBootstrap
+  - fun.mntale.midnightPatch.fishing.RecastBootstrap 

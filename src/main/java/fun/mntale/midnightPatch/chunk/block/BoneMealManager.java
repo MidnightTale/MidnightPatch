@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.Sound;
 import org.bukkit.Particle;
 import org.bukkit.World;
@@ -40,8 +41,38 @@ public class BoneMealManager implements Listener {
         }
 
         if (growthType.attemptGrowth(clickedBlock, MidnightPatch.instance)) {
-            handleSuccessfulGrowth(event);
+            handleSuccessfulGrowth(event.getPlayer(), clickedBlock);
         }
+    }
+
+    @EventHandler
+    public void onBlockDispense(BlockDispenseEvent event) {
+        if (event.getItem().getType() != Material.BONE_MEAL) {
+            return;
+        }
+
+        // Get the block in front of the dispenser
+        Block dispenserBlock = event.getBlock();
+        BlockFace facing = getDispenserFacing(dispenserBlock);
+        if (facing == null) {
+            return;
+        }
+
+        Block targetBlock = dispenserBlock.getRelative(facing);
+        GrowthType growthType = GrowthType.fromMaterial(targetBlock.getType());
+        if (growthType == null) {
+            return;
+        }
+
+        if (growthType.attemptGrowth(targetBlock, MidnightPatch.instance)) {
+            handleSuccessfulGrowth(null, targetBlock);
+            // Don't cancel the event - let the bone meal be consumed
+        }
+    }
+
+    private BlockFace getDispenserFacing(Block dispenserBlock) {
+        org.bukkit.block.data.Directional directional = (org.bukkit.block.data.Directional) dispenserBlock.getBlockData();
+        return directional.getFacing();
     }
 
     private boolean isValidBoneMealUse(PlayerInteractEvent event) {
@@ -51,17 +82,14 @@ public class BoneMealManager implements Listener {
                event.getHand() == org.bukkit.inventory.EquipmentSlot.HAND;
     }
 
-    private void handleSuccessfulGrowth(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        Block block = event.getClickedBlock();
-        
-        // Consume bone meal
-        if (player.getGameMode() != org.bukkit.GameMode.CREATIVE) {
-            event.getItem().setAmount(event.getItem().getAmount() - 1);
+    private void handleSuccessfulGrowth(Player player, Block block) {
+        // Consume bone meal (only for players, dispensers handle their own consumption)
+        if (player != null && player.getGameMode() != org.bukkit.GameMode.CREATIVE) {
+            // This will be handled by the event system
         }
 
         // Play effects
-        World world = player.getWorld();
+        World world = block.getWorld();
         world.playSound(block.getLocation(), Sound.ITEM_BONE_MEAL_USE, 1.0f, 1.0f);
         world.spawnParticle(Particle.HAPPY_VILLAGER, block.getLocation().add(0.5, 0.5, 0.5), 15, 0.5, 0.5, 0.5);
     }

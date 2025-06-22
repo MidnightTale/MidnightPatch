@@ -15,7 +15,6 @@ import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
-import java.lang.management.MemoryMXBean;
 
 public class ServerStatsManager implements Listener {
     private long startTime;
@@ -90,7 +89,6 @@ public class ServerStatsManager implements Listener {
         // System/Process CPU - using modern APIs
         OperatingSystemMXBean os = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
         double sysCpu = os.getSystemLoadAverage() * 100; // Modern alternative
-        double procCpu = -1; // Not available in standard API, will show as N/A
 
         StringBuilder json = new StringBuilder();
         json.append("{");

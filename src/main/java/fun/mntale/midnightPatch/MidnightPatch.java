@@ -12,6 +12,7 @@ import io.papermc.paper.command.brigadier.BasicCommand;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import fun.mntale.midnightPatch.chunk.block.DesirePathManager;
 import fun.mntale.midnightPatch.chunk.block.ReachAroundBlockManager;
+import fun.mntale.midnightPatch.chunk.block.BoneMealManager;
 import fun.mntale.midnightPatch.command.KillCommand;
 import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
 import fun.mntale.midnightPatch.entity.ProjectileDamageManager;
@@ -29,6 +30,7 @@ public final class MidnightPatch extends JavaPlugin {
     public ReachAroundBlockManager reachAroundBlockManager;
     public ExtraBabyMobManager extraBabyMobManager;
     public PosableArmorStandManager posableArmorStandManager;
+    public BoneMealManager boneMealManager;
 
     // Configuration
     boolean enableSkinManager = false;
@@ -41,6 +43,7 @@ public final class MidnightPatch extends JavaPlugin {
     boolean enableReachAroundBlockManager = true;
     boolean enableExtraBabyMobManager = true;
     boolean enablePosableArmorStandManager = true;
+    boolean enableBoneMealManager = true;
 
     @Override
     public void onEnable() {
@@ -131,6 +134,14 @@ public final class MidnightPatch extends JavaPlugin {
             ComponentLogger.logger().info("enablePosableArmorStandManager = true");
         } else {
             ComponentLogger.logger().info("enablePosableArmorStandManager = false");
+        }
+
+        if (enableBoneMealManager) {
+            boneMealManager = new BoneMealManager();
+            this.getServer().getPluginManager().registerEvents(boneMealManager, this);
+            ComponentLogger.logger().info("enableBoneMealManager = true");
+        } else {
+            ComponentLogger.logger().info("enableBoneMealManager = false");
         }
 
         // Register /kill command

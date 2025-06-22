@@ -4,6 +4,7 @@ import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -28,10 +29,10 @@ public class ToggleReachAroundCommand implements BasicCommand {
             // Store in PDC
             if (newState) {
                 player.getPersistentDataContainer().set(REACH_AROUND_KEY, PersistentDataType.INTEGER, 1);
-                player.sendMessage(Component.text("Reach-around has been §aENABLED", NamedTextColor.GREEN));
+                player.sendActionBar(Component.text("Reacharound: ENABLED", TextColor.fromHexString("#00FF00")));
             } else {
                 player.getPersistentDataContainer().set(REACH_AROUND_KEY, PersistentDataType.INTEGER, 0);
-                player.sendMessage(Component.text("Reach-around has been §cDISABLED", NamedTextColor.RED));
+                player.sendActionBar(Component.text("Reacharound: DISABLED", TextColor.fromHexString("#FF0000")));
             }
         } else {
             sender.sendMessage(Component.text("Only players can use /togglereacharound!", NamedTextColor.RED));

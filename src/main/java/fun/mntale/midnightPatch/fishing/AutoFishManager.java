@@ -83,13 +83,12 @@ public class AutoFishManager implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        // Only toggle off if auto-fishing is enabled and the player actually moved (not just rotated)
         if (ToggleAutoFishCommand.isAutoFishEnabled(player) &&
             (event.getFrom().getX() != event.getTo().getX() ||
              event.getFrom().getY() != event.getTo().getY() ||
              event.getFrom().getZ() != event.getTo().getZ())) {
-            ToggleAutoFishCommand.executeToggle(player, false);
-            cleanupPlayer(player);        }
+            stopRecastTask(player);
+        }
     }
     
     private void scheduleRecast(Player player) {

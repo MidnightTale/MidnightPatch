@@ -17,6 +17,11 @@ import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import java.util.Map;
 import java.util.HashMap;
 import org.bukkit.block.Container;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 
 public class DesirePathListener implements Listener {
     private static final int STAGE_PROGRESS = 256;
@@ -98,5 +103,54 @@ public class DesirePathListener implements Listener {
         int chunkX = chunk.getX();
         int chunkZ = chunk.getZ();
         dataManager.saveRegionAsync(world, chunkX, chunkZ);
+    }
+
+    private void removeWearData(Block block) {
+        World world = block.getWorld();
+        int chunkX = block.getX() >> 4;
+        int chunkZ = block.getZ() >> 4;
+        String regionKey = dataManager.getRegionKey(world, chunkX, chunkZ);
+        Map<String, Map<String, Integer>> regionData = dataManager.loadRegion(world, chunkX, chunkZ);
+        String chunkKey = DesirePathRegionIO.chunkKey(chunkX, chunkZ);
+        Map<String, Integer> chunkMap = regionData.get(chunkKey);
+        if (chunkMap != null) {
+            String blockKey = DesirePathRegionIO.blockKey(block.getX(), block.getY(), block.getZ());
+            if (chunkMap.remove(blockKey) != null) {
+                dataManager.markDirty(regionKey);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        removeWearData(event.getBlock());
+    }
+
+    @EventHandler
+    public void onBlockPistonExtend(BlockPistonExtendEvent event) {
+        for (Block block : event.getBlocks()) {
+            removeWearData(block);
+        }
+    }
+
+    @EventHandler
+    public void onBlockPistonRetract(BlockPistonRetractEvent event) {
+        for (Block block : event.getBlocks()) {
+            removeWearData(block);
+        }
+    }
+
+    @EventHandler
+    public void onBlockExplode(BlockExplodeEvent event) {
+        for (Block block : event.blockList()) {
+            removeWearData(block);
+        }
+    }
+
+    @EventHandler
+    public void onEntityExplode(EntityExplodeEvent event) {
+        for (Block block : event.blockList()) {
+            removeWearData(block);
+        }
     }
 } 

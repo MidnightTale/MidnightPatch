@@ -14,16 +14,20 @@ import fun.mntale.midnightPatch.module.entity.babymob.BabyMobListener;
 import fun.mntale.midnightPatch.module.world.desirepath.DesirePathListener;
 import fun.mntale.midnightPatch.module.world.fertilizer.MossBlockFertilizerListener;
 import fun.mntale.midnightPatch.module.world.loot.FrostbiteLoot;
+import fun.mntale.midnightPatch.module.world.loot.GraceLoot;
 import fun.mntale.midnightPatch.module.world.loot.HarvestingLoot;
 import fun.mntale.midnightPatch.module.world.loot.RecastingLoot;
+import fun.mntale.midnightPatch.module.world.loot.ResilienceLoot;
 import fun.mntale.midnightPatch.module.world.loot.UpdraftLoot;
 import fun.mntale.midnightPatch.module.entity.armorstand.PoseArmorStandListener;
 import fun.mntale.midnightPatch.module.entity.projectile.ProjectileDamageListener;
 import fun.mntale.midnightPatch.module.world.enchantment.FrostbiteEnchantment;
+import fun.mntale.midnightPatch.module.world.enchantment.GraceEnchantment;
 import fun.mntale.midnightPatch.module.world.enchantment.UpdraftEnchantment;
 import fun.mntale.midnightPatch.module.world.enchantment.HarvestingEnchantment;
 import fun.mntale.midnightPatch.module.world.enchantment.RecastingEnchantment;
 import fun.mntale.midnightPatch.module.world.enchantment.RelimitAnvil;
+import fun.mntale.midnightPatch.module.world.enchantment.ResilienceEnchantment;
 
 
 public final class MidnightPatch extends JavaPlugin implements Listener {
@@ -58,6 +62,12 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
 
         getServer().getPluginManager().registerEvents(new RecastingEnchantment(), this);
         getServer().getPluginManager().registerEvents(new UpdraftLoot(), this);
+
+        getServer().getPluginManager().registerEvents(new GraceEnchantment(), this);
+        getServer().getPluginManager().registerEvents(new GraceLoot(), this);
+
+        getServer().getPluginManager().registerEvents(new ResilienceEnchantment(), this);
+        getServer().getPluginManager().registerEvents(new ResilienceLoot(), this);
         
         BasicCommand killCommand = new KillCommand();
         registerCommand("kill", killCommand);

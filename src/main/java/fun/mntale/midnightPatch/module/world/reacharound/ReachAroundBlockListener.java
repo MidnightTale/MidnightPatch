@@ -37,7 +37,7 @@ public class ReachAroundBlockListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (!event.getAction().isRightClick() || event.getHand() != org.bukkit.inventory.EquipmentSlot.HAND) {
             return;

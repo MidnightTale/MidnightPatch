@@ -56,6 +56,42 @@ public class MidnightPatchBootstrap implements PluginBootstrap {
                             RegistrySet.keySet(RegistryKey.ENCHANTMENT, EnchantmentKeys.FIRE_ASPECT)
                         )
                 );
+                // Register Grace
+                event.registry().register(
+                    EnchantmentKeys.create(NamespacedKey.fromString("midnightpatch:grace")),
+                    b -> b.description(Component.text("Grace"))
+                        .supportedItems(event.getOrCreateTag(ItemTypeTagKeys.ENCHANTABLE_ARMOR))
+                        .anvilCost(2)
+                        .maxLevel(1)
+                        .weight(2)
+                        .minimumCost(EnchantmentRegistryEntry.EnchantmentCost.of(15, 0))
+                        .maximumCost(EnchantmentRegistryEntry.EnchantmentCost.of(30, 0))
+                        .activeSlots(EquipmentSlotGroup.ARMOR)
+                        .exclusiveWith(
+                            RegistrySet.keySet(
+                                RegistryKey.ENCHANTMENT,
+                                EnchantmentKeys.create(NamespacedKey.fromString("midnightpatch:resilience"))
+                            )
+                        )
+                );
+                // Register Resilience
+                event.registry().register(
+                    EnchantmentKeys.create(NamespacedKey.fromString("midnightpatch:resilience")),
+                    b -> b.description(Component.text("Resilience"))
+                        .supportedItems(event.getOrCreateTag(ItemTypeTagKeys.ENCHANTABLE_ARMOR))
+                        .anvilCost(2)
+                        .maxLevel(1)
+                        .weight(2)
+                        .minimumCost(EnchantmentRegistryEntry.EnchantmentCost.of(15, 0))
+                        .maximumCost(EnchantmentRegistryEntry.EnchantmentCost.of(30, 0))
+                        .activeSlots(EquipmentSlotGroup.ARMOR)
+                        .exclusiveWith(
+                            RegistrySet.keySet(
+                                RegistryKey.ENCHANTMENT,
+                                EnchantmentKeys.create(NamespacedKey.fromString("midnightpatch:grace"))
+                            )
+                        )
+                );
                 // Register Updraft
                 event.registry().register(
                     EnchantmentKeys.create(NamespacedKey.fromString("midnightpatch:updraft")),
@@ -67,6 +103,13 @@ public class MidnightPatchBootstrap implements PluginBootstrap {
                         .minimumCost(EnchantmentRegistryEntry.EnchantmentCost.of(15, 0))
                         .maximumCost(EnchantmentRegistryEntry.EnchantmentCost.of(30, 0))
                         .activeSlots(EquipmentSlotGroup.FEET)
+                        .exclusiveWith(
+                            RegistrySet.keySet(
+                                RegistryKey.ENCHANTMENT,
+                                EnchantmentKeys.FEATHER_FALLING,
+                                EnchantmentKeys.FROST_WALKER
+                            )
+                        )
                 );
             })
         );

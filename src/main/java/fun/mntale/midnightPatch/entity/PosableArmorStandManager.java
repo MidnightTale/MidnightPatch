@@ -28,180 +28,104 @@ public class PosableArmorStandManager implements Listener {
     }
     
     private void initializePresetPoses() {
-        // Default poses
+        // Default: Perfectly straight, neutral pose.
         presetPoses.put("default", new ArmorStandPose(
-            new EulerAngle(0, 0, 0), // head
-            new EulerAngle(0, 0, 0), // body
-            new EulerAngle(0, 0, 0), // left arm
-            new EulerAngle(0, 0, 0), // right arm
-            new EulerAngle(0, 0, 0), // left leg
-            new EulerAngle(0, 0, 0)  // right leg
+            new EulerAngle(0, 0, 0), new EulerAngle(0, 0, 0), new EulerAngle(Math.toRadians(-10), 0, 0),
+            new EulerAngle(Math.toRadians(-10), 0, 0), new EulerAngle(0, 0, 0), new EulerAngle(0, 0, 0)
         ));
-        
-        // Salute pose
-        presetPoses.put("salute", new ArmorStandPose(
-            new EulerAngle(0, 0, 0), // head straight
-            new EulerAngle(0, 0, 0), // body straight
-            new EulerAngle(0, 0, 0), // left arm down
-            new EulerAngle(Math.toRadians(-90), 0, Math.toRadians(45)), // right arm salute
-            new EulerAngle(0, 0, 0), // left leg
-            new EulerAngle(0, 0, 0)  // right leg
-        ));
-        
-        // Wave pose
-        presetPoses.put("wave", new ArmorStandPose(
-            new EulerAngle(0, 0, 0), // head straight
-            new EulerAngle(0, 0, 0), // body straight
-            new EulerAngle(0, 0, 0), // left arm down
-            new EulerAngle(0, Math.toRadians(45), Math.toRadians(-90)), // right arm wave
-            new EulerAngle(0, 0, 0), // left leg
-            new EulerAngle(0, 0, 0)  // right leg
-        ));
-        
-        // Point pose
-        presetPoses.put("point", new ArmorStandPose(
-            new EulerAngle(0, 0, 0), // head straight
-            new EulerAngle(0, 0, 0), // body straight
-            new EulerAngle(0, 0, 0), // left arm down
-            new EulerAngle(0, 0, Math.toRadians(-45)), // right arm point
-            new EulerAngle(0, 0, 0), // left leg
-            new EulerAngle(0, 0, 0)  // right leg
-        ));
-        
-        // Sitting pose
+
+        // Sitting: Legs bent as if on a chair, arms resting.
         presetPoses.put("sitting", new ArmorStandPose(
-            new EulerAngle(0, 0, 0), // head straight
-            new EulerAngle(0, 0, 0), // body straight
-            new EulerAngle(0, 0, 0), // left arm down
-            new EulerAngle(0, 0, 0), // right arm down
-            new EulerAngle(Math.toRadians(90), 0, 0), // left leg sitting
-            new EulerAngle(Math.toRadians(90), 0, 0)  // right leg sitting
+            new EulerAngle(0, 0, 0), new EulerAngle(0, 0, 0),
+            new EulerAngle(Math.toRadians(-15), 0, Math.toRadians(5)), // Left arm resting
+            new EulerAngle(Math.toRadians(-15), 0, Math.toRadians(-5)), // Right arm resting
+            new EulerAngle(Math.toRadians(90), 0, 0),  // Left leg bent
+            new EulerAngle(Math.toRadians(90), 0, 0)   // Right leg bent
         ));
-        
-        // Dancing pose
-        presetPoses.put("dancing", new ArmorStandPose(
-            new EulerAngle(0, 0, 0), // head straight
-            new EulerAngle(0, 0, 0), // body straight
-            new EulerAngle(Math.toRadians(45), 0, Math.toRadians(30)), // left arm dance
-            new EulerAngle(Math.toRadians(-45), 0, Math.toRadians(-30)), // right arm dance
-            new EulerAngle(Math.toRadians(20), 0, 0), // left leg dance
-            new EulerAngle(Math.toRadians(-20), 0, 0) // right leg dance
+
+        // Waving: A friendly wave with the right hand.
+        presetPoses.put("wave", new ArmorStandPose(
+            new EulerAngle(0, 0, 0), new EulerAngle(0, 0, 0), new EulerAngle(0, 0, 0),
+            new EulerAngle(Math.toRadians(-120), Math.toRadians(0), Math.toRadians(-45)), // Right arm waving
+            new EulerAngle(0, 0, 0), new EulerAngle(0, 0, 0)
         ));
-        
-        // Thinking pose
-        presetPoses.put("thinking", new ArmorStandPose(
-            new EulerAngle(Math.toRadians(15), 0, 0), // head tilted
-            new EulerAngle(0, 0, 0), // body straight
-            new EulerAngle(0, 0, Math.toRadians(45)), // left arm thinking
-            new EulerAngle(0, 0, 0), // right arm down
-            new EulerAngle(0, 0, 0), // left leg
-            new EulerAngle(0, 0, 0)  // right leg
-        ));
-        
-        // Victory pose
+
+        // Victory: Both arms up in a celebratory 'V' shape.
         presetPoses.put("victory", new ArmorStandPose(
-            new EulerAngle(0, 0, 0), // head straight
-            new EulerAngle(0, 0, 0), // body straight
-            new EulerAngle(Math.toRadians(-45), 0, Math.toRadians(30)), // left arm V
-            new EulerAngle(Math.toRadians(-45), 0, Math.toRadians(-30)), // right arm V
-            new EulerAngle(0, 0, 0), // left leg
-            new EulerAngle(0, 0, 0)  // right leg
+            new EulerAngle(Math.toRadians(-5), 0, 0), new EulerAngle(0, 0, 0),
+            new EulerAngle(Math.toRadians(-150), Math.toRadians(0), Math.toRadians(-35)), // Left arm up
+            new EulerAngle(Math.toRadians(-150), Math.toRadians(0), Math.toRadians(35)), // Right arm up
+            new EulerAngle(0, 0, 0), new EulerAngle(0, 0, 0)
         ));
-        
-        // Surprised pose
-        presetPoses.put("surprised", new ArmorStandPose(
-            new EulerAngle(Math.toRadians(-10), 0, 0), // head back slightly
-            new EulerAngle(0, 0, 0), // body straight
-            new EulerAngle(Math.toRadians(-90), 0, 0), // left arm up
-            new EulerAngle(Math.toRadians(-90), 0, 0), // right arm up
-            new EulerAngle(Math.toRadians(15), 0, 0), // left leg back
-            new EulerAngle(Math.toRadians(15), 0, 0)  // right leg back
-        ));
-        
-        // Bow pose
+
+        // Bowing: A respectful bow, body and head forward.
         presetPoses.put("bow", new ArmorStandPose(
-            new EulerAngle(Math.toRadians(45), 0, 0), // head down
-            new EulerAngle(Math.toRadians(30), 0, 0), // body forward
-            new EulerAngle(0, 0, 0), // left arm down
-            new EulerAngle(0, 0, 0), // right arm down
-            new EulerAngle(Math.toRadians(20), 0, 0), // left leg forward
-            new EulerAngle(Math.toRadians(20), 0, 0)  // right leg forward
+            new EulerAngle(Math.toRadians(35), 0, 0), // Head bowed
+            new EulerAngle(Math.toRadians(25), 0, 0), // Body bowed
+            new EulerAngle(Math.toRadians(-10), 0, 0), new EulerAngle(Math.toRadians(-10), 0, 0),
+            new EulerAngle(0, 0, 0), new EulerAngle(0, 0, 0)
+        ));
+
+        // Superhero Flight: A dynamic flying pose.
+        presetPoses.put("superhero", new ArmorStandPose(
+            new EulerAngle(0, 0, 0), new EulerAngle(Math.toRadians(20), 0, 0), // Body leaning forward
+            new EulerAngle(Math.toRadians(-70), 0, 0), // Left arm back
+            new EulerAngle(Math.toRadians(-90), 0, 0), // Right arm forward (punching)
+            new EulerAngle(Math.toRadians(15), 0, 0),  // Left leg trailing
+            new EulerAngle(Math.toRadians(-15), 0, 0)   // Right leg forward
+        ));
+
+        // Thinking: Hand to chin, legs crossed, deep in thought.
+        presetPoses.put("thinking", new ArmorStandPose(
+            new EulerAngle(Math.toRadians(-10), Math.toRadians(0), Math.toRadians(20)), // Head tilted
+            new EulerAngle(0, 0, 0),
+            new EulerAngle(Math.toRadians(-100), Math.toRadians(-20), 0), // Left hand on chin
+            new EulerAngle(Math.toRadians(-15), 0, Math.toRadians(-5)), // Right arm resting
+            new EulerAngle(Math.toRadians(0), Math.toRadians(0), Math.toRadians(15)), // Legs crossed
+            new EulerAngle(Math.toRadians(0), Math.toRadians(0), Math.toRadians(-15))
         ));
         
-        // Flex pose
-        presetPoses.put("flex", new ArmorStandPose(
-            new EulerAngle(0, 0, 0), // head straight
-            new EulerAngle(0, 0, 0), // body straight
-            new EulerAngle(Math.toRadians(-45), 0, Math.toRadians(90)), // left arm flex
-            new EulerAngle(Math.toRadians(-45), 0, Math.toRadians(-90)), // right arm flex
-            new EulerAngle(Math.toRadians(10), 0, 0), // left leg stance
-            new EulerAngle(Math.toRadians(10), 0, 0)  // right leg stance
+        // Facepalm: Head down, hand to face in disappointment.
+        presetPoses.put("facepalm", new ArmorStandPose(
+            new EulerAngle(Math.toRadians(25), 0, 0), // Head down
+            new EulerAngle(0, 0, 0), new EulerAngle(0, 0, 0),
+            new EulerAngle(Math.toRadians(-160), Math.toRadians(25), 0), // Right hand on face
+            new EulerAngle(0, 0, 0), new EulerAngle(0, 0, 0)
         ));
-        
-        // Sleep pose
-        presetPoses.put("sleep", new ArmorStandPose(
-            new EulerAngle(Math.toRadians(90), 0, 0), // head to side
-            new EulerAngle(0, 0, 0), // body straight
-            new EulerAngle(0, 0, 0), // left arm down
-            new EulerAngle(0, 0, 0), // right arm down
-            new EulerAngle(Math.toRadians(45), 0, 0), // left leg bent
-            new EulerAngle(Math.toRadians(45), 0, 0)  // right leg bent
-        ));
-        
-        // Jump pose
-        presetPoses.put("jump", new ArmorStandPose(
-            new EulerAngle(Math.toRadians(-15), 0, 0), // head up slightly
-            new EulerAngle(0, 0, 0), // body straight
-            new EulerAngle(Math.toRadians(-30), 0, 0), // left arm up
-            new EulerAngle(Math.toRadians(-30), 0, 0), // right arm up
-            new EulerAngle(Math.toRadians(-45), 0, 0), // left leg up
-            new EulerAngle(Math.toRadians(-45), 0, 0)  // right leg up
-        ));
-        
-        // Meditate pose
-        presetPoses.put("meditate", new ArmorStandPose(
-            new EulerAngle(0, 0, 0), // head straight
-            new EulerAngle(0, 0, 0), // body straight
-            new EulerAngle(0, 0, Math.toRadians(90)), // left arm meditation
-            new EulerAngle(0, 0, Math.toRadians(-90)), // right arm meditation
-            new EulerAngle(Math.toRadians(90), 0, 0), // cross-legged
-            new EulerAngle(Math.toRadians(90), 0, 0)  // cross-legged
-        ));
-        
-        // Run pose
-        presetPoses.put("run", new ArmorStandPose(
-            new EulerAngle(Math.toRadians(10), 0, 0), // head forward slightly
-            new EulerAngle(Math.toRadians(15), 0, 0), // body leaning forward
-            new EulerAngle(Math.toRadians(-45), 0, 0), // left arm back
-            new EulerAngle(Math.toRadians(45), 0, 0),  // right arm forward
-            new EulerAngle(Math.toRadians(45), 0, 0),  // left leg forward
-            new EulerAngle(Math.toRadians(-45), 0, 0)  // right leg back
-        ));
-        
-        // Clap pose
-        presetPoses.put("clap", new ArmorStandPose(
-            new EulerAngle(0, 0, 0), // head straight
-            new EulerAngle(0, 0, 0), // body straight
-            new EulerAngle(0, Math.toRadians(45), 0), // left arm clap
-            new EulerAngle(0, Math.toRadians(-45), 0), // right arm clap
-            new EulerAngle(Math.toRadians(5), 0, 0), // left leg slight stance
-            new EulerAngle(Math.toRadians(5), 0, 0)  // right leg slight stance
-        ));
-        
-        // Shrug pose
+
+        // Shrug: A classic "I don't know" gesture.
         presetPoses.put("shrug", new ArmorStandPose(
-            new EulerAngle(Math.toRadians(5), 0, 0), // head slightly up
-            new EulerAngle(0, 0, 0), // body straight
-            new EulerAngle(Math.toRadians(-30), 0, Math.toRadians(45)), // left arm shrug
-            new EulerAngle(Math.toRadians(-30), 0, Math.toRadians(-45)), // right arm shrug
-            new EulerAngle(Math.toRadians(8), 0, 0), // left leg slight stance
-            new EulerAngle(Math.toRadians(8), 0, 0)  // right leg slight stance
+            new EulerAngle(Math.toRadians(5), 0, 0), // Head slightly up
+            new EulerAngle(0, 0, 0),
+            new EulerAngle(Math.toRadians(-20), Math.toRadians(0), Math.toRadians(25)), // Left arm shrug
+            new EulerAngle(Math.toRadians(-20), Math.toRadians(0), Math.toRadians(-25)),// Right arm shrug
+            new EulerAngle(0, 0, 0), new EulerAngle(0, 0, 0)
+        ));
+
+        // T-Pose: Asserting dominance.
+        presetPoses.put("t-pose", new ArmorStandPose(
+            new EulerAngle(0, 0, 0), new EulerAngle(0, 0, 0),
+            new EulerAngle(0, 0, Math.toRadians(90)), // Left arm out
+            new EulerAngle(0, 0, Math.toRadians(-90)), // Right arm out
+            new EulerAngle(0, 0, 0), new EulerAngle(0, 0, 0)
         ));
     }
     
     @EventHandler
+    public void onEntitySpawn(EntitySpawnEvent event) {
+        if (event.getEntity() instanceof ArmorStand armorStand) {
+            FoliaScheduler.getEntityScheduler().run(armorStand,
+                fun.mntale.midnightPatch.MidnightPatch.instance,
+                task -> {
+                    if (armorStand.isDead()) return;
+                    armorStand.setArms(true);
+                }, null
+            );
+        }
+    }
+    
+    @EventHandler
     public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event) {
-        // Check if it's an armor stand
         if (!(event.getRightClicked() instanceof ArmorStand armorStand)) {
             return;
         }
@@ -209,44 +133,22 @@ public class PosableArmorStandManager implements Listener {
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
         
-        // Only cycle pose if player has empty hand
         if (item != null && item.getType() != Material.AIR) {
             return;
         }
         
         event.setCancelled(true);
-        
-        // Cycle through poses
         cyclePose(armorStand);
         player.sendMessage("§aPose cycled!");
     }
-    
-    @EventHandler
-    public void onEntitySpawn(EntitySpawnEvent event) {
-        if (event.getEntity() instanceof ArmorStand armorStand) {
-            // Enable arms by default for new armor stands
-            FoliaScheduler.getEntityScheduler().run(armorStand,
-                fun.mntale.midnightPatch.MidnightPatch.instance,
-                task -> {
-                    if (armorStand.isDead()) return;
-                    
-                    // Enable arms
-                    armorStand.setArms(true);
-                }, null
-            );
-        }
-    }
-    
+
     private void cyclePose(ArmorStand armorStand) {
         String[] poseNames = presetPoses.keySet().toArray(new String[0]);
-        
-        // Get current pose from PDC or start with first
         String currentPose = getCurrentPoseName(armorStand);
         if (currentPose == null || !presetPoses.containsKey(currentPose)) {
             currentPose = "default";
         }
         
-        // Find next pose
         int currentIndex = -1;
         for (int i = 0; i < poseNames.length; i++) {
             if (poseNames[i].equals(currentPose)) {
@@ -258,21 +160,18 @@ public class PosableArmorStandManager implements Listener {
         String nextPose = poseNames[(currentIndex + 1) % poseNames.length];
         applyPose(armorStand, nextPose);
     }
-    
+
     private void applyPose(ArmorStand armorStand, String poseName) {
         ArmorStandPose pose = presetPoses.get(poseName);
         if (pose == null) return;
         
-        // Use entity task to apply pose
         FoliaScheduler.getEntityScheduler().run(armorStand,
             fun.mntale.midnightPatch.MidnightPatch.instance,
             task -> {
                 if (armorStand.isDead()) return;
                 
-                // Enable arms if not already enabled
                 armorStand.setArms(true);
                 
-                // Apply pose angles
                 armorStand.setHeadPose(pose.head);
                 armorStand.setBodyPose(pose.body);
                 armorStand.setLeftArmPose(pose.leftArm);
@@ -280,12 +179,11 @@ public class PosableArmorStandManager implements Listener {
                 armorStand.setLeftLegPose(pose.leftLeg);
                 armorStand.setRightLegPose(pose.rightLeg);
                 
-                // Store pose name in PDC
                 armorStand.getPersistentDataContainer().set(POSE_KEY, PersistentDataType.STRING, poseName);
             }, null
         );
     }
-    
+
     private String getCurrentPoseName(ArmorStand armorStand) {
         return armorStand.getPersistentDataContainer().get(POSE_KEY, PersistentDataType.STRING);
     }

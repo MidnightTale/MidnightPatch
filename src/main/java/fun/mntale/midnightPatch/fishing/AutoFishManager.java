@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -15,7 +16,6 @@ import org.bukkit.Location;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import io.github.retrooper.packetevents.util.folia.TaskWrapper;
 
-import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
@@ -78,6 +78,18 @@ public class AutoFishManager implements Listener {
                 // Reeling in, this is handled automatically by the game
                 break;
         }
+    }
+    
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        // Only toggle off if auto-fishing is enabled and the player actually moved (not just rotated)
+        if (ToggleAutoFishCommand.isAutoFishEnabled(player) &&
+            (event.getFrom().getX() != event.getTo().getX() ||
+             event.getFrom().getY() != event.getTo().getY() ||
+             event.getFrom().getZ() != event.getTo().getZ())) {
+            ToggleAutoFishCommand.executeToggle(player, false);
+            cleanupPlayer(player);        }
     }
     
     private void scheduleRecast(Player player) {

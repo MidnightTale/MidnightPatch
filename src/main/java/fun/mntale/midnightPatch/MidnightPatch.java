@@ -6,6 +6,7 @@ import fun.mntale.midnightPatch.entity.ExtraBabyMobManager;
 import fun.mntale.midnightPatch.entity.PosableArmorStandManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import fun.mntale.midnightPatch.chunk.EnderPearlChunkManager;
+import fun.mntale.midnightPatch.chunk.MinecartChunkManager;
 import fun.mntale.midnightPatch.skin.SkinManager;
 import fun.mntale.midnightPatch.skin.SkinCommand;
 import io.papermc.paper.command.brigadier.BasicCommand;
@@ -22,6 +23,7 @@ public final class MidnightPatch extends JavaPlugin {
     public static MidnightPatch instance;
     public SkinManager skinManager;
     public EnderPearlChunkManager enderPearlChunkManager;
+    public MinecartChunkManager minecartChunkManager;
     public MossBlockManager mossBlockManager;
     public LootMobTargetManager lootMobTargetManager;
     public DesirePathManager desirePathManager;
@@ -35,6 +37,7 @@ public final class MidnightPatch extends JavaPlugin {
     // Configuration
     boolean enableSkinManager = false;
     boolean enableEnderPearlChunkManager = false;
+    boolean enableMinecartChunkManager = true;
     boolean enableMossBlockManager = true;
     boolean enableLootMobTargetManager = true;
     boolean enableDesirePathManager = true;
@@ -66,6 +69,14 @@ public final class MidnightPatch extends JavaPlugin {
             ComponentLogger.logger().info("enderPearlChunkManager = true");
         } else {
             ComponentLogger.logger().info("enderPearlChunkManager = false");
+        }
+
+        if (enableMinecartChunkManager) {
+            minecartChunkManager = new MinecartChunkManager();
+            this.getServer().getPluginManager().registerEvents(minecartChunkManager, this);
+            ComponentLogger.logger().info("enableMinecartChunkManager = true");
+        } else {
+            ComponentLogger.logger().info("enableMinecartChunkManager = false");
         }
 
         if (enableMossBlockManager) {
@@ -153,6 +164,9 @@ public final class MidnightPatch extends JavaPlugin {
     public void onDisable() {
         if (enderPearlChunkManager != null) {
             enderPearlChunkManager.shutdown();
+        }
+        if (minecartChunkManager != null) {
+            minecartChunkManager.shutdown();
         }
         if (serverStatsManager != null) {
             serverStatsManager.disable();

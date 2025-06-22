@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;
 import org.bukkit.util.EulerAngle;
@@ -139,7 +140,21 @@ public class PosableArmorStandManager implements Listener {
         
         event.setCancelled(true);
         cyclePose(armorStand);
-        player.sendMessage("§aPose cycled!");
+    }
+
+    @EventHandler
+    public void onBlockRedstone(BlockRedstoneEvent event) {
+        // Only trigger on a rising edge (i.e., when power is applied or increased)
+        if (event.getNewCurrent() <= event.getOldCurrent()) {
+            return;
+        }
+
+        // Check for nearby armor stands and cycle their pose
+        for (Entity entity : event.getBlock().getWorld().getNearbyEntities(event.getBlock().getLocation().add(0.5, 0.5, 0.5), 1.5, 1.5, 1.5)) {
+            if (entity instanceof ArmorStand armorStand) {
+                cyclePose(armorStand);
+            }
+        }
     }
 
     private void cyclePose(ArmorStand armorStand) {

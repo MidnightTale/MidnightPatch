@@ -111,6 +111,21 @@ public class MidnightPatchBootstrap implements PluginBootstrap {
                             )
                         )
                 );
+                // Register Undertow
+                event.registry().register(
+                    EnchantmentKeys.create(NamespacedKey.fromString("midnightpatch:undertow")),
+                    b -> b.description(Component.text("Undertow"))
+                        .supportedItems(event.getOrCreateTag(ItemTypeTagKeys.ENCHANTABLE_TRIDENT))
+                        .anvilCost(2)
+                        .maxLevel(3)
+                        .weight(2)
+                        .minimumCost(EnchantmentRegistryEntry.EnchantmentCost.of(15, 0))
+                        .maximumCost(EnchantmentRegistryEntry.EnchantmentCost.of(30, 0))
+                        .activeSlots(EquipmentSlotGroup.HAND)
+                        .exclusiveWith(
+                            RegistrySet.keySet(RegistryKey.ENCHANTMENT, EnchantmentKeys.RIPTIDE)
+                        )
+                );
             })
         );
     }

@@ -14,7 +14,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import fun.mntale.midnightPatch.MidnightPatch;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,10 +64,20 @@ public class AutoHarvestManager implements Listener {
                     Ageable newAgeable = (Ageable) block.getBlockData();
                     newAgeable.setAge(0);
                     block.setBlockData(newAgeable);
+                    center.getWorld().playSound(center.getLocation().add(0.5, 0.5, 0.5), org.bukkit.Sound.BLOCK_COMPOSTER_READY, 1.2f, 1.0f);
+                    double radius = (range) / 2.0;
+                    int points = 36; // every 10 degrees
+                    for (int i = 0; i < points; i++) {
+                        double angle = 2 * Math.PI * i / points;
+                        double x = Math.cos(angle) * radius;
+                        double z = Math.sin(angle) * radius;
+                        center.getWorld().spawnParticle(org.bukkit.Particle.ELECTRIC_SPARK,
+                            center.getLocation().add(x + 0.5, 0.5, z + 0.5),
+                            3, 0.1, 0.1, 0.1, 0.01);
+                    }
                 }
             }
         }, null);
 
-        event.setCancelled(true);
     }
 } 

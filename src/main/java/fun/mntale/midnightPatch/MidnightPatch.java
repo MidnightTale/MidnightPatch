@@ -51,12 +51,42 @@ public final class MidnightPatch extends JavaPlugin {
     boolean enableExtraBabyMobManager = true;
     boolean enablePosableArmorStandManager = true;
     boolean enableBoneMealManager = true;
+    boolean enableUpdraftLoot = true;
+    boolean enableHarvestingLoot = true;
+    boolean enableRecastingLoot = true;
+    boolean enableFrostbiteLoot = true;
+    boolean enableUpdraftLogic = true;
+    boolean enableFrostbiteLogic = true;
+    boolean enableAutoHarvestManager = true;
 
     @Override
     public void onEnable() {
         instance = this;
+        saveDefaultConfig();
+        // Load config values (still used by listeners at runtime)
+        enableSkinManager = getConfig().getBoolean("enableSkinManager", enableSkinManager);
+        enableEnderPearlChunkManager = getConfig().getBoolean("enableEnderPearlChunkManager", enableEnderPearlChunkManager);
+        enableMinecartChunkManager = getConfig().getBoolean("enableMinecartChunkManager", enableMinecartChunkManager);
+        enableAutoFishManager = getConfig().getBoolean("enableAutoFishManager", enableAutoFishManager);
+        enableFreecamManager = getConfig().getBoolean("enableFreecamManager", enableFreecamManager);
+        enableMossBlockManager = getConfig().getBoolean("enableMossBlockManager", enableMossBlockManager);
+        enableLootMobTargetManager = getConfig().getBoolean("enableLootMobTargetManager", enableLootMobTargetManager);
+        enableDesirePathManager = getConfig().getBoolean("enableDesirePathManager", enableDesirePathManager);
+        enableProjectileDamageManager = getConfig().getBoolean("enableProjectileDamageManager", enableProjectileDamageManager);
+        enableServerStatsManager = getConfig().getBoolean("enableServerStatsManager", enableServerStatsManager);
+        enableReachAroundBlockManager = getConfig().getBoolean("enableReachAroundBlockManager", enableReachAroundBlockManager);
+        enableExtraBabyMobManager = getConfig().getBoolean("enableExtraBabyMobManager", enableExtraBabyMobManager);
+        enablePosableArmorStandManager = getConfig().getBoolean("enablePosableArmorStandManager", enablePosableArmorStandManager);
+        enableBoneMealManager = getConfig().getBoolean("enableBoneMealManager", enableBoneMealManager);
+        enableUpdraftLoot = getConfig().getBoolean("enableUpdraftLoot", enableUpdraftLoot);
+        enableHarvestingLoot = getConfig().getBoolean("enableHarvestingLoot", enableHarvestingLoot);
+        enableRecastingLoot = getConfig().getBoolean("enableRecastingLoot", enableRecastingLoot);
+        enableFrostbiteLoot = getConfig().getBoolean("enableFrostbiteLoot", enableFrostbiteLoot);
+        enableUpdraftLogic = getConfig().getBoolean("enableUpdraftLogic", enableUpdraftLogic);
+        enableFrostbiteLogic = getConfig().getBoolean("enableFrostbiteLogic", enableFrostbiteLogic);
+        enableAutoHarvestManager = getConfig().getBoolean("enableAutoHarvestManager", enableAutoHarvestManager);
 
-        // Initialize managers first
+        // Register all listeners unconditionally. Each listener checks config at runtime.
         if (enableSkinManager) {
             skinManager = new SkinManager();
             BasicCommand skinCommand = new SkinCommand(skinManager);
@@ -66,7 +96,6 @@ public final class MidnightPatch extends JavaPlugin {
         } else {
             ComponentLogger.logger().info("enableSkinManager = false");
         }
-
         if (enableEnderPearlChunkManager) {
             enderPearlChunkManager = new EnderPearlChunkManager();
             this.getServer().getPluginManager().registerEvents(enderPearlChunkManager, this);
@@ -74,7 +103,6 @@ public final class MidnightPatch extends JavaPlugin {
         } else {
             ComponentLogger.logger().info("enderPearlChunkManager = false");
         }
-
         if (enableMinecartChunkManager) {
             minecartChunkManager = new MinecartChunkManager();
             this.getServer().getPluginManager().registerEvents(minecartChunkManager, this);
@@ -82,17 +110,13 @@ public final class MidnightPatch extends JavaPlugin {
         } else {
             ComponentLogger.logger().info("enableMinecartChunkManager = false");
         }
-
         if (enableAutoFishManager) {
             autoFishManager = new AutoFishManager();
             this.getServer().getPluginManager().registerEvents(autoFishManager, this);
             ComponentLogger.logger().info("enableAutoFishManager = true");
-            
-            // Register /toggleautofish command
         } else {
             ComponentLogger.logger().info("enableAutoFishManager = false");
         }
-
         if (enableMossBlockManager) {
             mossBlockManager = new MossBlockManager();
             this.getServer().getPluginManager().registerEvents(mossBlockManager, this);
@@ -100,7 +124,6 @@ public final class MidnightPatch extends JavaPlugin {
         } else {
             ComponentLogger.logger().info("enableMossBlockManager = false");
         }
-
         if (enableLootMobTargetManager) {
             lootMobTargetManager = new LootMobTargetManager();
             this.getServer().getPluginManager().registerEvents(lootMobTargetManager, this);
@@ -108,7 +131,6 @@ public final class MidnightPatch extends JavaPlugin {
         } else {
             ComponentLogger.logger().info("enableLootMobTargetManager = false");
         }
-
         if (enableDesirePathManager) {
             desirePathManager = new DesirePathManager();
             this.getServer().getPluginManager().registerEvents(desirePathManager, this);
@@ -116,7 +138,6 @@ public final class MidnightPatch extends JavaPlugin {
         } else {
             ComponentLogger.logger().info("enableDesirePathManager = false");
         }
-
         if (enableProjectileDamageManager) {
             projectileDamageManager = new ProjectileDamageManager();
             this.getServer().getPluginManager().registerEvents(projectileDamageManager, this);
@@ -124,7 +145,6 @@ public final class MidnightPatch extends JavaPlugin {
         } else {
             ComponentLogger.logger().info("enableProjectileDamageManager = false");
         }
-
         if (enableServerStatsManager) {
             serverStatsManager = new ServerStatsManager();
             serverStatsManager.enable();
@@ -132,19 +152,15 @@ public final class MidnightPatch extends JavaPlugin {
         } else {
             ComponentLogger.logger().info("enableServerStatsManager = false");
         }
-
         if (enableReachAroundBlockManager) {
             reachAroundBlockManager = new ReachAroundBlockManager();
             this.getServer().getPluginManager().registerEvents(reachAroundBlockManager, this);
             ComponentLogger.logger().info("enableReachAroundBlockManager = true");
-        
-            // Register /togglereacharound command
             BasicCommand toggleReachAroundCommand = new ToggleReachAroundCommand();
             registerCommand("togglereacharound", toggleReachAroundCommand);
         } else {
             ComponentLogger.logger().info("enableReachAroundBlockManager = false");
         }
-
         if (enableExtraBabyMobManager) {
             extraBabyMobManager = new ExtraBabyMobManager();
             this.getServer().getPluginManager().registerEvents(extraBabyMobManager, this);
@@ -152,7 +168,6 @@ public final class MidnightPatch extends JavaPlugin {
         } else {
             ComponentLogger.logger().info("enableExtraBabyMobManager = false");
         }
-
         if (enablePosableArmorStandManager) {
             posableArmorStandManager = new PosableArmorStandManager();
             this.getServer().getPluginManager().registerEvents(posableArmorStandManager, this);
@@ -160,7 +175,6 @@ public final class MidnightPatch extends JavaPlugin {
         } else {
             ComponentLogger.logger().info("enablePosableArmorStandManager = false");
         }
-
         if (enableBoneMealManager) {
             boneMealManager = new BoneMealManager();
             this.getServer().getPluginManager().registerEvents(boneMealManager, this);
@@ -173,11 +187,14 @@ public final class MidnightPatch extends JavaPlugin {
         BasicCommand killCommand = new KillCommand();
         registerCommand("kill", killCommand);
 
-        // Register AutoHarvestManager (auto-harvest crops with enchanted hoe)
+        // Always register all custom enchantment logic and loot listeners
         getServer().getPluginManager().registerEvents(new fun.mntale.midnightPatch.farming.AutoHarvestManager(), this);
-
-        // Register RecastTradeListener (Recast enchantment in librarian trades)
-        getServer().getPluginManager().registerEvents(new fun.mntale.midnightPatch.fishing.RecastTradeListener(), this);
+        getServer().getPluginManager().registerEvents(new fun.mntale.midnightPatch.entity.FrostbiteLogic(), this);
+        getServer().getPluginManager().registerEvents(new fun.mntale.midnightPatch.entity.UpdraftLogic(), this);
+        getServer().getPluginManager().registerEvents(new fun.mntale.midnightPatch.entity.UpdraftLootListener(), this);
+        getServer().getPluginManager().registerEvents(new fun.mntale.midnightPatch.entity.HarvestingLootListener(), this);
+        getServer().getPluginManager().registerEvents(new fun.mntale.midnightPatch.entity.RecastingLootListener(), this);
+        getServer().getPluginManager().registerEvents(new fun.mntale.midnightPatch.entity.FrostbiteLootListener(), this);
     }
 
     @Override

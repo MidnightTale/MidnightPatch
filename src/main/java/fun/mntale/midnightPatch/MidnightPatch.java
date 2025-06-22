@@ -2,6 +2,8 @@ package fun.mntale.midnightPatch;
 
 import fun.mntale.midnightPatch.chunk.block.MossBlockManager;
 import fun.mntale.midnightPatch.entity.LootMobTargetManager;
+import fun.mntale.midnightPatch.entity.ExtraBabyMobManager;
+import fun.mntale.midnightPatch.entity.PosableArmorStandManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import fun.mntale.midnightPatch.chunk.EnderPearlChunkManager;
 import fun.mntale.midnightPatch.skin.SkinManager;
@@ -25,6 +27,8 @@ public final class MidnightPatch extends JavaPlugin {
     public ProjectileDamageManager projectileDamageManager;
     public ServerStatsManager serverStatsManager;
     public ReachAroundBlockManager reachAroundBlockManager;
+    public ExtraBabyMobManager extraBabyMobManager;
+    public PosableArmorStandManager posableArmorStandManager;
 
     // Configuration
     boolean enableSkinManager = false;
@@ -35,6 +39,8 @@ public final class MidnightPatch extends JavaPlugin {
     boolean enableProjectileDamageManager = true;
     boolean enableServerStatsManager = false;
     boolean enableReachAroundBlockManager = true;
+    boolean enableExtraBabyMobManager = true;
+    boolean enablePosableArmorStandManager = true;
 
     @Override
     public void onEnable() {
@@ -103,17 +109,33 @@ public final class MidnightPatch extends JavaPlugin {
             reachAroundBlockManager = new ReachAroundBlockManager();
             this.getServer().getPluginManager().registerEvents(reachAroundBlockManager, this);
             ComponentLogger.logger().info("enableReachAroundBlockManager = true");
+        
+            // Register /togglereacharound command
+            BasicCommand toggleReachAroundCommand = new ToggleReachAroundCommand();
+            registerCommand("togglereacharound", toggleReachAroundCommand);
         } else {
             ComponentLogger.logger().info("enableReachAroundBlockManager = false");
+        }
+
+        if (enableExtraBabyMobManager) {
+            extraBabyMobManager = new ExtraBabyMobManager();
+            this.getServer().getPluginManager().registerEvents(extraBabyMobManager, this);
+            ComponentLogger.logger().info("enableExtraBabyMobManager = true");
+        } else {
+            ComponentLogger.logger().info("enableExtraBabyMobManager = false");
+        }
+
+        if (enablePosableArmorStandManager) {
+            posableArmorStandManager = new PosableArmorStandManager();
+            this.getServer().getPluginManager().registerEvents(posableArmorStandManager, this);
+            ComponentLogger.logger().info("enablePosableArmorStandManager = true");
+        } else {
+            ComponentLogger.logger().info("enablePosableArmorStandManager = false");
         }
 
         // Register /kill command
         BasicCommand killCommand = new KillCommand();
         registerCommand("kill", killCommand);
-        
-        // Register /togglereacharound command
-        BasicCommand toggleReachAroundCommand = new ToggleReachAroundCommand();
-        registerCommand("togglereacharound", toggleReachAroundCommand);
     }
 
     @Override

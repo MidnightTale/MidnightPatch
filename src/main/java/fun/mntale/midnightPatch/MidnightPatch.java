@@ -1,6 +1,7 @@
 package fun.mntale.midnightPatch;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.event.Listener;
 
 import io.papermc.paper.command.brigadier.BasicCommand;
 import fun.mntale.midnightPatch.command.KillCommand;
@@ -22,9 +23,10 @@ import fun.mntale.midnightPatch.module.world.enchantment.FrostbiteEnchantment;
 import fun.mntale.midnightPatch.module.world.enchantment.UpdraftEnchantment;
 import fun.mntale.midnightPatch.module.world.enchantment.HarvestingEnchantment;
 import fun.mntale.midnightPatch.module.world.enchantment.RecastingEnchantment;
+import fun.mntale.midnightPatch.module.world.enchantment.RelimitAnvil;
 
 
-public final class MidnightPatch extends JavaPlugin {
+public final class MidnightPatch extends JavaPlugin implements Listener {
     public static MidnightPatch instance;
 
     @Override
@@ -42,6 +44,8 @@ public final class MidnightPatch extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MossBlockFertilizerListener(), this);
         getServer().getPluginManager().registerEvents(new PoseArmorStandListener(), this);
         getServer().getPluginManager().registerEvents(new ProjectileDamageListener(), this);
+        getServer().getPluginManager().registerEvents(new RelimitAnvil(), this);
+        
 
         getServer().getPluginManager().registerEvents(new FrostbiteEnchantment(), this);
         getServer().getPluginManager().registerEvents(new FrostbiteLoot(), this);
@@ -62,4 +66,6 @@ public final class MidnightPatch extends JavaPlugin {
     @Override
     public void onDisable() {
     }
+
+
 }

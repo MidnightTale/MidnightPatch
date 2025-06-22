@@ -2,6 +2,7 @@ package fun.mntale.midnightPatch.module.world.reacharound;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
@@ -36,7 +37,7 @@ public class ReachAroundBlockListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (!event.getAction().isRightClick() || event.getHand() != org.bukkit.inventory.EquipmentSlot.HAND) {
             return;

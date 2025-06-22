@@ -45,5 +45,6 @@ public class MossBlockFertilizerListener implements Listener {
             return;
         }
         MossBlockFertilizerSpread.applyMossSpread(targetBlock);
+        event.getItem().setAmount(event.getItem().getAmount() - 1);
     }
 } 

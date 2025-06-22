@@ -3,7 +3,6 @@ package fun.mntale.midnightPatch;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import io.papermc.paper.command.brigadier.BasicCommand;
-import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import fun.mntale.midnightPatch.command.KillCommand;
 import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
 import fun.mntale.midnightPatch.module.world.reacharound.ReachAroundBlockListener;

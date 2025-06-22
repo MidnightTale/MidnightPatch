@@ -16,6 +16,7 @@ import org.bukkit.Location;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import java.util.Map;
 import java.util.HashMap;
+import org.bukkit.block.Container;
 
 public class DesirePathListener implements Listener {
     private static final int STAGE_PROGRESS = 256;
@@ -52,6 +53,18 @@ public class DesirePathListener implements Listener {
                     stage = i;
                     break;
                 }
+            }
+            // Only proceed if the current block is in the stage list
+            boolean isValidStageBlock = false;
+            for (Material m : stages) {
+                if (m == type) {
+                    isValidStageBlock = true;
+                    break;
+                }
+            }
+            // Extra safety: skip containers (tile entities)
+            if (!isValidStageBlock || block.getState() instanceof Container) {
+                return;
             }
             World world = block.getWorld();
             int chunkX = block.getX() >> 4;

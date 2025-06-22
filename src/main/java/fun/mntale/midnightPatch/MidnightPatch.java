@@ -7,6 +7,7 @@ import fun.mntale.midnightPatch.entity.PosableArmorStandManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import fun.mntale.midnightPatch.chunk.EnderPearlChunkManager;
 import fun.mntale.midnightPatch.chunk.MinecartChunkManager;
+import fun.mntale.midnightPatch.fishing.AutoFishManager;
 import fun.mntale.midnightPatch.skin.SkinManager;
 import fun.mntale.midnightPatch.skin.SkinCommand;
 import io.papermc.paper.command.brigadier.BasicCommand;
@@ -16,6 +17,7 @@ import fun.mntale.midnightPatch.chunk.block.ReachAroundBlockManager;
 import fun.mntale.midnightPatch.chunk.block.BoneMealManager;
 import fun.mntale.midnightPatch.command.KillCommand;
 import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
+import fun.mntale.midnightPatch.command.ToggleAutoFishCommand;
 import fun.mntale.midnightPatch.entity.ProjectileDamageManager;
 import fun.mntale.midnightPatch.stats.ServerStatsManager;
 
@@ -24,6 +26,7 @@ public final class MidnightPatch extends JavaPlugin {
     public SkinManager skinManager;
     public EnderPearlChunkManager enderPearlChunkManager;
     public MinecartChunkManager minecartChunkManager;
+    public AutoFishManager autoFishManager;
     public MossBlockManager mossBlockManager;
     public LootMobTargetManager lootMobTargetManager;
     public DesirePathManager desirePathManager;
@@ -38,6 +41,8 @@ public final class MidnightPatch extends JavaPlugin {
     boolean enableSkinManager = false;
     boolean enableEnderPearlChunkManager = false;
     boolean enableMinecartChunkManager = true;
+    boolean enableAutoFishManager = true;
+    boolean enableFreecamManager = true;
     boolean enableMossBlockManager = true;
     boolean enableLootMobTargetManager = true;
     boolean enableDesirePathManager = true;
@@ -77,6 +82,18 @@ public final class MidnightPatch extends JavaPlugin {
             ComponentLogger.logger().info("enableMinecartChunkManager = true");
         } else {
             ComponentLogger.logger().info("enableMinecartChunkManager = false");
+        }
+
+        if (enableAutoFishManager) {
+            autoFishManager = new AutoFishManager();
+            this.getServer().getPluginManager().registerEvents(autoFishManager, this);
+            ComponentLogger.logger().info("enableAutoFishManager = true");
+            
+            // Register /toggleautofish command
+            BasicCommand toggleAutoFishCommand = new ToggleAutoFishCommand();
+            registerCommand("toggleautofish", toggleAutoFishCommand);
+        } else {
+            ComponentLogger.logger().info("enableAutoFishManager = false");
         }
 
         if (enableMossBlockManager) {

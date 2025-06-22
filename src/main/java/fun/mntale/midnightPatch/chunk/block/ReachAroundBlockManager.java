@@ -22,6 +22,7 @@ import org.joml.Vector3f;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import io.github.retrooper.packetevents.util.folia.TaskWrapper;
 import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
+import org.bukkit.plugin.Plugin;
 
 import java.util.Map;
 import java.util.UUID;
@@ -32,6 +33,11 @@ public class ReachAroundBlockManager implements Listener {
     private final Map<UUID, BlockDisplay> previewDisplays = new ConcurrentHashMap<>();
     private final Map<UUID, Location> lastPreviewLocation = new ConcurrentHashMap<>();
     private final Map<UUID, TaskWrapper> playerTasks = new ConcurrentHashMap<>();
+    private final Plugin plugin;
+
+    public ReachAroundBlockManager(Plugin plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -90,17 +96,23 @@ public class ReachAroundBlockManager implements Listener {
             
             // If preview shows, we can place here
             if (targetBlock.getType().isAir()) {
-                // Place the block at the reach-around location
-                targetBlock.setType(item.getType());
+                // Place the block at the reach-around location using Folia task
+                final Block finalTargetBlock = targetBlock;
+                final Material finalItemType = item.getType();
+                final Player finalPlayer = player;
                 
-                // Handle block data if needed (for directional blocks)
-                if (item.getType().name().contains("STAIRS") || 
-                    item.getType().name().contains("SLAB") ||
-                    item.getType().name().contains("FENCE") ||
-                    item.getType().name().contains("WALL")) {
-                    // Set appropriate block data based on player direction
-                    setBlockDirection(targetBlock, player);
-                }
+                FoliaScheduler.getRegionScheduler().execute(plugin, targetBlock.getLocation(), () -> {
+                    finalTargetBlock.setType(finalItemType);
+                    
+                    // Handle block data if needed (for directional blocks)
+                    if (finalItemType.name().contains("STAIRS") || 
+                        finalItemType.name().contains("SLAB") ||
+                        finalItemType.name().contains("FENCE") ||
+                        finalItemType.name().contains("WALL")) {
+                        // Set appropriate block data based on player direction
+                        setBlockDirection(finalTargetBlock, finalPlayer);
+                    }
+                });
                 
                 // Consume item if not in creative mode
                 if (player.getGameMode() != org.bukkit.GameMode.CREATIVE) {
@@ -128,7 +140,7 @@ public class ReachAroundBlockManager implements Listener {
         
         // Start continuous preview task
         TaskWrapper task = FoliaScheduler.getRegionScheduler().runAtFixedRate(
-            fun.mntale.midnightPatch.MidnightPatch.instance,
+            plugin,
             player.getLocation(),
             taskBase -> {
                 if (!player.isOnline()) {
@@ -281,55 +293,61 @@ public class ReachAroundBlockManager implements Listener {
         // Remove old preview
         removePreview(player);
         
-        // Create new preview
-        BlockDisplay display = player.getWorld().spawn(previewLocation, BlockDisplay.class);
+        // Create new preview using Folia task
+        final Location finalPreviewLocation = previewLocation;
+        final Material finalBlockType = blockType;
+        final Player finalPlayer = player;
         
-        // Make the display only visible to this specific player
-        display.setVisibleByDefault(false);
-        player.showEntity(fun.mntale.midnightPatch.MidnightPatch.instance, display);
-        
-        // Create block data with proper rotation for directional blocks
-        org.bukkit.block.data.BlockData blockData = blockType.createBlockData();
-        
-        // Handle directional blocks
-        if (blockData instanceof org.bukkit.block.data.Directional directional) {
-            // Set direction based on player's facing direction
-            BlockFace facing = getPlayerFacingDirection(player);
-            directional.setFacing(facing);
-            blockData = directional;
-        }
-        
-        display.setBlock(blockData);
-        
-        // Make it semi-transparent with dynamic brightness based on time of day
-        long time = player.getWorld().getTime();
-        int brightness;
-        
-        // Day time (0-12000): use dark brightness
-        // Night time (12000-24000): use light brightness
-        if (time >= 0 && time < 12000) {
-            // Day time - use dark brightness
-            brightness = 5; // Dark
-        } else {
-            // Night time - use light brightness
-            brightness = 15; // Light
-        }
-        
-        display.setBrightness(new Display.Brightness(brightness, brightness));
-        display.setTransformation(new Transformation(
-            new Vector3f(0, 0, 0),
-            new AxisAngle4f(0, 0, 0, 1),
-            new Vector3f(1, 1, 1),
-            new AxisAngle4f(0, 0, 0, 1)
-        ));
-        
-        // Set transparency and color
-        display.setInterpolationDuration(0);
-        display.setInterpolationDelay(0);
-        
-        // Store the preview
-        previewDisplays.put(player.getUniqueId(), display);
-        lastPreviewLocation.put(player.getUniqueId(), previewLocation);
+        FoliaScheduler.getRegionScheduler().execute(plugin, previewLocation, () -> {
+            BlockDisplay display = finalPlayer.getWorld().spawn(finalPreviewLocation, BlockDisplay.class);
+            
+            // Make the display only visible to this specific player
+            display.setVisibleByDefault(false);
+            finalPlayer.showEntity(plugin, display);
+            
+            // Create block data with proper rotation for directional blocks
+            org.bukkit.block.data.BlockData blockData = finalBlockType.createBlockData();
+            
+            // Handle directional blocks
+            if (blockData instanceof org.bukkit.block.data.Directional directional) {
+                // Set direction based on player's facing direction
+                BlockFace facing = getPlayerFacingDirection(finalPlayer);
+                directional.setFacing(facing);
+                blockData = directional;
+            }
+            
+            display.setBlock(blockData);
+            
+            // Make it semi-transparent with dynamic brightness based on time of day
+            long time = finalPlayer.getWorld().getTime();
+            int brightness;
+            
+            // Day time (0-12000): use dark brightness
+            // Night time (12000-24000): use light brightness
+            if (time >= 0 && time < 12000) {
+                // Day time - use dark brightness
+                brightness = 5; // Dark
+            } else {
+                // Night time - use light brightness
+                brightness = 15; // Light
+            }
+            
+            display.setBrightness(new Display.Brightness(brightness, brightness));
+            display.setTransformation(new Transformation(
+                new Vector3f(0, 0, 0),
+                new AxisAngle4f(0, 0, 0, 1),
+                new Vector3f(1, 1, 1),
+                new AxisAngle4f(0, 0, 0, 1)
+            ));
+            
+            // Set transparency and color
+            display.setInterpolationDuration(0);
+            display.setInterpolationDelay(0);
+            
+            // Store the preview
+            previewDisplays.put(finalPlayer.getUniqueId(), display);
+            lastPreviewLocation.put(finalPlayer.getUniqueId(), finalPreviewLocation);
+        });
     }
     
     private BlockFace getPlayerFacingDirection(Player player) {
@@ -355,22 +373,32 @@ public class ReachAroundBlockManager implements Listener {
         UUID playerId = player.getUniqueId();
         BlockDisplay display = previewDisplays.remove(playerId);
         if (display != null && !display.isDead()) {
-            display.remove();
+            final BlockDisplay finalDisplay = display;
+            FoliaScheduler.getRegionScheduler().execute(plugin, display.getLocation(), () -> {
+                if (!finalDisplay.isDead()) {
+                    finalDisplay.remove();
+                }
+            });
         }
         lastPreviewLocation.remove(playerId);
     }
 
     private void setBlockDirection(Block block, Player player) {
-        // Apply the direction to the block data
-        try {
-            if (block.getBlockData() instanceof org.bukkit.block.data.Directional directional) {
-                BlockFace facing = getPlayerFacingDirection(player);
-                directional.setFacing(facing);
-                block.setBlockData(directional);
+        // Apply the direction to the block data using Folia task
+        final Block finalBlock = block;
+        final Player finalPlayer = player;
+        
+        FoliaScheduler.getRegionScheduler().execute(plugin, block.getLocation(), () -> {
+            try {
+                if (finalBlock.getBlockData() instanceof org.bukkit.block.data.Directional directional) {
+                    BlockFace facing = getPlayerFacingDirection(finalPlayer);
+                    directional.setFacing(facing);
+                    finalBlock.setBlockData(directional);
+                }
+            } catch (Exception e) {
+                // Ignore if block data can't be set
             }
-        } catch (Exception e) {
-            // Ignore if block data can't be set
-        }
+        });
     }
 
     private org.bukkit.Sound getBlockPlaceSound(Material blockType) {

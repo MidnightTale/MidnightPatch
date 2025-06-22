@@ -8,25 +8,20 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.Sound;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
+
+import fun.mntale.midnightPatch.MidnightPatch;
+
 import org.bukkit.plugin.Plugin;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Function;
 
 @NullMarked
 public class BoneMealManager implements Listener {
-
-    private final Plugin plugin;
-
-    public BoneMealManager(Plugin plugin) {
-        this.plugin = plugin;
-    }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -44,7 +39,7 @@ public class BoneMealManager implements Listener {
             return;
         }
 
-        if (growthType.attemptGrowth(clickedBlock, plugin)) {
+        if (growthType.attemptGrowth(clickedBlock, MidnightPatch.instance)) {
             handleSuccessfulGrowth(event);
         }
     }

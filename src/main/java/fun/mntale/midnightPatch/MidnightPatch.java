@@ -109,7 +109,7 @@ public final class MidnightPatch extends JavaPlugin {
         }
 
         if (enableReachAroundBlockManager) {
-            reachAroundBlockManager = new ReachAroundBlockManager();
+            reachAroundBlockManager = new ReachAroundBlockManager(this);
             this.getServer().getPluginManager().registerEvents(reachAroundBlockManager, this);
             ComponentLogger.logger().info("enableReachAroundBlockManager = true");
         

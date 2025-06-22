@@ -1,4 +1,4 @@
-package fun.mntale.midnightPatch;
+package fun.mntale.midnightPatch.bootstrap;
 
 import io.papermc.paper.plugin.bootstrap.BootstrapContext;
 import io.papermc.paper.plugin.bootstrap.PluginBootstrap;

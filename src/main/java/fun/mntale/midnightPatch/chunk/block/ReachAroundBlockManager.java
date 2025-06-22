@@ -70,6 +70,11 @@ public class ReachAroundBlockManager implements Listener {
             return;
         }
         
+        // Prevent bedrock players from using reach-around
+        if (isBedrockPlayer(player)) {
+            return;
+        }
+        
         ItemStack item = event.getItem();
         
         // Skip if no item or not a placeable block
@@ -139,6 +144,12 @@ public class ReachAroundBlockManager implements Listener {
                 
                 // Check if reach-around is enabled for this player
                 if (!ToggleReachAroundCommand.isReachAroundEnabled(player)) {
+                    removePreview(player);
+                    return;
+                }
+                
+                // Prevent bedrock players from using reach-around
+                if (isBedrockPlayer(player)) {
                     removePreview(player);
                     return;
                 }
@@ -408,5 +419,11 @@ public class ReachAroundBlockManager implements Listener {
         
         // Default to stone sound
         return org.bukkit.Sound.BLOCK_STONE_PLACE;
+    }
+
+    private boolean isBedrockPlayer(Player player) {
+        // Bedrock players have UUIDs starting with 00000000-0000-0000
+        String uuid = player.getUniqueId().toString();
+        return uuid.startsWith("00000000-0000-0000");
     }
 } 

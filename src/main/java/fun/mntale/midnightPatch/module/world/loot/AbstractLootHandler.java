@@ -23,7 +23,7 @@ public abstract class AbstractLootHandler implements Listener {
     protected abstract String[] getLootTableKeys();
     protected abstract ItemStack createLootItem();
     protected boolean shouldAddLoot(Inventory inv) { return true; }
-    protected double getChance() { return 0.20; }
+    protected double getChance() { return 0.07; }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {

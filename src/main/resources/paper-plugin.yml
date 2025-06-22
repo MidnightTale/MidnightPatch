@@ -2,9 +2,7 @@ name: MidnightPatch
 version: '1.0-SNAPSHOT'
 main: fun.mntale.midnightPatch.MidnightPatch
 api-version: '1.21'
-bootstrapper:
-  - fun.mntale.midnightPatch.farming.AutoHarvestBootstrap
-  - fun.mntale.midnightPatch.fishing.RecastBootstrap
+bootstrapper: fun.mntale.midnightPatch.MidnightPatchBootstrap
 authors: [ MidnightTale_ ]
 website: https://mntale.fun
 folia-supported: true

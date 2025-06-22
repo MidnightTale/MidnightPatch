@@ -273,6 +273,10 @@ public class ReachAroundBlockManager implements Listener {
         // Create new preview
         BlockDisplay display = player.getWorld().spawn(previewLocation, BlockDisplay.class);
         
+        // Make the display only visible to this specific player
+        display.setVisibleByDefault(false);
+        player.showEntity(fun.mntale.midnightPatch.MidnightPatch.instance, display);
+        
         // Create block data with proper rotation for directional blocks
         org.bukkit.block.data.BlockData blockData = blockType.createBlockData();
         
@@ -294,7 +298,7 @@ public class ReachAroundBlockManager implements Listener {
         // Night time (12000-24000): use light brightness
         if (time >= 0 && time < 12000) {
             // Day time - use dark brightness
-            brightness = 1; // Dark
+            brightness = 5; // Dark
         } else {
             // Night time - use light brightness
             brightness = 15; // Light

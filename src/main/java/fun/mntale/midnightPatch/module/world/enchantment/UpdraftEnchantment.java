@@ -45,11 +45,11 @@ public class UpdraftEnchantment implements Listener {
         FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
             boolean hasUpdraft = shouldHaveUpdraft(player);
             player.setAllowFlight(hasUpdraft);
-            if (player.getGameMode() != org.bukkit.GameMode.CREATIVE && player.getGameMode() != org.bukkit.GameMode.SPECTATOR) {
+            if (!isCreativeOrSpectator(player)) {
                 player.setFlying(false);
             }
             if (hasUpdraft && player.isOnGround()) {
-                updraftJumps.remove(uuid); // Only reset on ground
+                updraftJumps.remove(uuid);
             }
         }, null);
     }
@@ -147,9 +147,12 @@ public class UpdraftEnchantment implements Listener {
         FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
             updraftJumps.put(uuid, jumpsUsed + 1);
             player.setAllowFlight(jumpsUsed + 1 < level);
-            if (player.getGameMode() != org.bukkit.GameMode.CREATIVE && player.getGameMode() != org.bukkit.GameMode.SPECTATOR) {
-                player.setFlying(false);
-            }
+            player.setFlying(false);
+            Vector dir = player.getLocation().getDirection().normalize();
+            double y = Math.max(0.35, Math.min(0.85, dir.getY()));
+            dir.setY(y);
+            dir.multiply(1.1 + 0.2 * (level - 1));
+            player.setVelocity(dir);
             player.setFallDistance(0);
             player.getWorld().spawnParticle(org.bukkit.Particle.CLOUD, player.getLocation().add(0, 0.1, 0), 20, 0.2, 0.05, 0.2, 0.01);
             player.getWorld().playSound(player.getLocation(), org.bukkit.Sound.ENTITY_PHANTOM_FLAP, 1.0f, 1.2f);

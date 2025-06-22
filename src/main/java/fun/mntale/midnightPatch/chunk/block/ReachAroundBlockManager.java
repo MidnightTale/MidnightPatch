@@ -21,8 +21,8 @@ import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import io.github.retrooper.packetevents.util.folia.TaskWrapper;
+import fun.mntale.midnightPatch.MidnightPatch;
 import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
-import org.bukkit.plugin.Plugin;
 
 import java.util.Map;
 import java.util.UUID;
@@ -33,11 +33,7 @@ public class ReachAroundBlockManager implements Listener {
     private final Map<UUID, BlockDisplay> previewDisplays = new ConcurrentHashMap<>();
     private final Map<UUID, Location> lastPreviewLocation = new ConcurrentHashMap<>();
     private final Map<UUID, TaskWrapper> playerTasks = new ConcurrentHashMap<>();
-    private final Plugin plugin;
 
-    public ReachAroundBlockManager(Plugin plugin) {
-        this.plugin = plugin;
-    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -101,7 +97,7 @@ public class ReachAroundBlockManager implements Listener {
                 final Material finalItemType = item.getType();
                 final Player finalPlayer = player;
                 
-                FoliaScheduler.getRegionScheduler().execute(plugin, targetBlock.getLocation(), () -> {
+                FoliaScheduler.getRegionScheduler().execute(MidnightPatch.instance, targetBlock.getLocation(), () -> {
                     finalTargetBlock.setType(finalItemType);
                     
                     // Handle block data if needed (for directional blocks)
@@ -140,7 +136,7 @@ public class ReachAroundBlockManager implements Listener {
         
         // Start continuous preview task
         TaskWrapper task = FoliaScheduler.getRegionScheduler().runAtFixedRate(
-            plugin,
+            MidnightPatch.instance,
             player.getLocation(),
             taskBase -> {
                 if (!player.isOnline()) {
@@ -298,12 +294,12 @@ public class ReachAroundBlockManager implements Listener {
         final Material finalBlockType = blockType;
         final Player finalPlayer = player;
         
-        FoliaScheduler.getRegionScheduler().execute(plugin, previewLocation, () -> {
+        FoliaScheduler.getRegionScheduler().execute(MidnightPatch.instance, previewLocation, () -> {
             BlockDisplay display = finalPlayer.getWorld().spawn(finalPreviewLocation, BlockDisplay.class);
             
             // Make the display only visible to this specific player
             display.setVisibleByDefault(false);
-            finalPlayer.showEntity(plugin, display);
+            finalPlayer.showEntity(MidnightPatch.instance, display);
             
             // Create block data with proper rotation for directional blocks
             org.bukkit.block.data.BlockData blockData = finalBlockType.createBlockData();
@@ -374,7 +370,7 @@ public class ReachAroundBlockManager implements Listener {
         BlockDisplay display = previewDisplays.remove(playerId);
         if (display != null && !display.isDead()) {
             final BlockDisplay finalDisplay = display;
-            FoliaScheduler.getRegionScheduler().execute(plugin, display.getLocation(), () -> {
+            FoliaScheduler.getRegionScheduler().execute(MidnightPatch.instance, display.getLocation(), () -> {
                 if (!finalDisplay.isDead()) {
                     finalDisplay.remove();
                 }
@@ -388,7 +384,7 @@ public class ReachAroundBlockManager implements Listener {
         final Block finalBlock = block;
         final Player finalPlayer = player;
         
-        FoliaScheduler.getRegionScheduler().execute(plugin, block.getLocation(), () -> {
+        FoliaScheduler.getRegionScheduler().execute(MidnightPatch.instance, block.getLocation(), () -> {
             try {
                 if (finalBlock.getBlockData() instanceof org.bukkit.block.data.Directional directional) {
                     BlockFace facing = getPlayerFacingDirection(finalPlayer);

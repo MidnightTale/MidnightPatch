@@ -20,6 +20,28 @@ import fun.mntale.midnightPatch.command.TogglePhantomIsolationCommand;
 import fun.mntale.midnightPatch.command.ToggleProjectileDamageCommand;
 import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
 
+/**
+ * PlaceholderAPI expansion for MidnightPatch.
+ * 
+ * Usage: %midnightpatch_<placeholder>%
+ * Each placeholder returns "Enabled" or "Disabled" for the given player.
+ *
+ * Available placeholders:
+ *   %midnightpatch_reacharound%           - ReachAround feature toggle
+ *   %midnightpatch_healthindicator%       - Health Indicator toggle
+ *   %midnightpatch_deathlootglow%         - Death Loot Glow toggle
+ *   %midnightpatch_deathlootinvulnerable% - Death Loot Invulnerable toggle
+ *   %midnightpatch_deathlootnodespawn%    - Death Loot No Despawn toggle
+ *   %midnightpatch_deathlootletmobpickup% - Death Loot Let Mob Pickup toggle
+ *   %midnightpatch_deathlootletplayerpickup% - Death Loot Let Player Pickup toggle
+ *   %midnightpatch_phantomisolation%      - Phantom Isolation toggle
+ *   %midnightpatch_mendingrepair%         - Mending Repair toggle
+ *   %midnightpatch_lootchestprotection%   - Loot Chest Protection toggle
+ *   %midnightpatch_armorstandpose%        - Armor Stand Pose toggle
+ *   %midnightpatch_projectiledamage%      - Projectile Damage toggle
+ *   %midnightpatch_desirepath%            - Desire Path toggle
+ *   %midnightpatch_deathcamera%           - Death Camera toggle
+ */
 public class MidnightPatchExpansion extends PlaceholderExpansion {
     @Override
     public @NotNull String getIdentifier() {
@@ -46,7 +68,6 @@ public class MidnightPatchExpansion extends PlaceholderExpansion {
         if (offlinePlayer == null) return "";
         Player player = offlinePlayer.getPlayer();
         if (player == null) return "";
-        // Add a placeholder for each toggle command
         return switch (identifier.toLowerCase()) {
             case "reacharound" -> boolToString(ToggleReachAroundCommand.isReachAroundEnabled(player));
             case "healthindicator" -> boolToString(ToggleHealthIndicatorCommand.isHealthIndicatorEnabled(player));

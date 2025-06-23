@@ -61,6 +61,6 @@ public class ToggleReachAroundCommand implements BasicCommand {
      */
     public static boolean isReachAroundEnabled(Player player) {
         Integer value = player.getPersistentDataContainer().get(REACH_AROUND_KEY, PersistentDataType.INTEGER);
-        return value == null || value == 1; // Default to enabled if not set
+        return value != null && value == 1; // Default to disabled if not set
     }
 } 

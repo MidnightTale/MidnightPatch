@@ -26,10 +26,10 @@ public class TogglePhantomIsolationCommand implements BasicCommand {
             boolean newState = !currentState;
             if (newState) {
                 player.getPersistentDataContainer().set(PHANTOM_ISOLATION_KEY, PersistentDataType.INTEGER, 1);
-                player.sendActionBar(Component.text("Phantom Isolation: ENABLED", TextColor.fromHexString("#00FF00")));
+                player.sendActionBar(Component.text("Phantom Spawn: ENABLED", TextColor.fromHexString("#00FF00")));
             } else {
                 player.getPersistentDataContainer().set(PHANTOM_ISOLATION_KEY, PersistentDataType.INTEGER, 0);
-                player.sendActionBar(Component.text("Phantom Isolation: DISABLED", TextColor.fromHexString("#FF0000")));
+                player.sendActionBar(Component.text("Phantom Spawn: DISABLED", TextColor.fromHexString("#FF0000")));
             }
         } else {
             sender.sendMessage(Component.text("Only players can use /togglephantom!", NamedTextColor.RED));

@@ -18,7 +18,7 @@ public class PhantomIsolation {
             plugin,
             (taskphantom) -> {
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (shouldIsolate(player)) {
+                    if (!shouldIsolate(player)) {
                         player.setStatistic(Statistic.TIME_SINCE_REST, 0);
                     }
                 }

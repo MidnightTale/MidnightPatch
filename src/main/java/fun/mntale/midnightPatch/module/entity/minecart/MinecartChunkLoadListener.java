@@ -53,16 +53,6 @@ public class MinecartChunkLoadListener implements Listener {
         if (world == null) {
             return;
         }
-        MinecartChunkData currentData = dataManager.getActiveMinecarts().get(minecart.getUniqueId());
-        if (currentData != null) {
-            double distance = Math.sqrt(
-                Math.pow(newLocation.getX() - currentData.x(), 2) +
-                Math.pow(newLocation.getZ() - currentData.z(), 2)
-            );
-            if (distance < MinecartChunkConfig.MOVEMENT_THRESHOLD) {
-                return;
-            }
-        }
         dataManager.getActiveMinecarts().put(minecart.getUniqueId(), new MinecartChunkData(world.getName(), newLocation.getX(), newLocation.getY(), newLocation.getZ()));
         dataManager.loadChunksAroundLocation(world, newLocation.getX(), newLocation.getY(), newLocation.getZ());
     }

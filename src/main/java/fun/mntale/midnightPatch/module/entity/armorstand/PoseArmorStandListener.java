@@ -8,7 +8,6 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;
-import org.bukkit.util.EulerAngle;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.NamespacedKey;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;

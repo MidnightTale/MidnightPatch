@@ -31,7 +31,6 @@ import fun.mntale.midnightPatch.module.world.enchantment.RecastingEnchantment;
 import fun.mntale.midnightPatch.module.world.enchantment.RelimitAnvil;
 import fun.mntale.midnightPatch.module.world.enchantment.ResilienceEnchantment;
 import fun.mntale.midnightPatch.module.world.enchantment.UndertowEnchantment;
-//test
 
 public final class MidnightPatch extends JavaPlugin implements Listener {
     public static MidnightPatch instance;
@@ -53,6 +52,7 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new ProjectileDamageListener(), this);
         getServer().getPluginManager().registerEvents(new RelimitAnvil(), this);
         getServer().getPluginManager().registerEvents(new AxeStrippingPatch(), this);
+        getServer().getPluginManager().registerEvents(new StartupJoinDelayPatch(), this);
         
         
 

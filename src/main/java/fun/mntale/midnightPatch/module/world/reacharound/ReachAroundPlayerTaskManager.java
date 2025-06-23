@@ -40,10 +40,6 @@ public class ReachAroundPlayerTaskManager {
                     previewManager.removePreview(player);
                     return;
                 }
-                if (ReachAroundUtil.isBedrockPlayer(player)) {
-                    previewManager.removePreview(player);
-                    return;
-                }
                 previewManager.updatePreview(player, item.getType());
             },
             60L,

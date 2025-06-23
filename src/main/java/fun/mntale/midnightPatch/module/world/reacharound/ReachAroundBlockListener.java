@@ -46,9 +46,6 @@ public class ReachAroundBlockListener implements Listener {
         if (!ToggleReachAroundCommand.isReachAroundEnabled(player)) {
             return;
         }
-        if (ReachAroundUtil.isBedrockPlayer(player)) {
-            return;
-        }
         ItemStack item = event.getItem();
         if (item == null || !item.getType().isBlock()) {
             return;

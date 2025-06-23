@@ -122,9 +122,4 @@ public class ReachAroundUtil {
         }
         return org.bukkit.Sound.BLOCK_STONE_PLACE;
     }
-
-    public static boolean isBedrockPlayer(Player player) {
-        String uuid = player.getUniqueId().toString();
-        return uuid.startsWith("00000000-0000-0000");
-    }
 } 

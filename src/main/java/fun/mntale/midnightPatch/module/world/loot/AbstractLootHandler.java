@@ -5,6 +5,7 @@ import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
 import org.bukkit.loot.Lootable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,9 +17,21 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.io.File;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 
 public abstract class AbstractLootHandler implements Listener {
     private final Set<Location> flaggedChests = new HashSet<>();
+    private final File dataDir;
+    private final ChestLootGenDataManager lootGenDataManager = new ChestLootGenDataManager();
+
+    public AbstractLootHandler() {
+        File pluginDir = MidnightPatch.instance.getDataFolder();
+        dataDir = new File(pluginDir, "lootgen");
+        if (!dataDir.exists()) dataDir.mkdirs();
+    }
 
     protected abstract String[] getLootTableKeys();
     protected abstract ItemStack createLootItem();
@@ -47,11 +60,44 @@ public abstract class AbstractLootHandler implements Listener {
         Location loc = event.getInventory().getLocation();
         if (loc == null) return;
         if (!flaggedChests.remove(loc)) return;
+        if (lootGenDataManager.isChestGenerated(loc)) return; // Already generated
         if (!shouldAddLoot(event.getInventory())) return;
         FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, loc, (task) -> {
             if (ThreadLocalRandom.current().nextDouble() < getChance()) {
                 event.getInventory().addItem(createLootItem());
+                lootGenDataManager.markChestGenerated(loc);
             }
         });
     }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        Block block = event.getBlock();
+        BlockState state = block.getState();
+        if (state instanceof Chest) {
+            lootGenDataManager.removeChest(block.getLocation());
+        }
+    }
+
+    @EventHandler
+    public void onEntityExplode(EntityExplodeEvent event) {
+        for (Block block : event.blockList()) {
+            BlockState state = block.getState();
+            if (state instanceof Chest) {
+                lootGenDataManager.removeChest(block.getLocation());
+            }
+        }
+    }
+
+
+    @EventHandler
+    public void onBlockExplode(BlockExplodeEvent event) {
+        for (Block block : event.blockList()) {
+            BlockState state = block.getState();
+            if (state instanceof Chest) {
+                lootGenDataManager.removeChest(block.getLocation());
+            }
+        }
+    }
+
 } 

@@ -1,4 +1,4 @@
-package fun.mntale.midnightPatch.module.entity.loot;
+package fun.mntale.midnightPatch.module.entity.player;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

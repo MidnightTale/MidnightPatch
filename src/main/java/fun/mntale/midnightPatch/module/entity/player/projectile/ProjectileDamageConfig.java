@@ -1,4 +1,4 @@
-package fun.mntale.midnightPatch.module.entity.projectile;
+package fun.mntale.midnightPatch.module.entity.player.projectile;
 
 public class ProjectileDamageConfig {
     public static final double SNOWBALL_DAMAGE = 0.5;

@@ -1,4 +1,4 @@
-package fun.mntale.midnightPatch.module.entity.projectile;
+package fun.mntale.midnightPatch.module.entity.player.projectile;
 
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.LivingEntity;

@@ -1,4 +1,4 @@
-package fun.mntale.midnightPatch.module.entity.indicator;
+package fun.mntale.midnightPatch.module.entity.player.indicator;
 
 import org.joml.Matrix4f;
 

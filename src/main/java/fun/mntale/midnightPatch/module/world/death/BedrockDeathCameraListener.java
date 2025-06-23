@@ -28,6 +28,7 @@ import io.github.retrooper.packetevents.util.folia.TaskWrapper;
 import net.kyori.adventure.text.Component;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.player.PlayerQuitEvent;
+import fun.mntale.midnightPatch.command.ToggleDeathCameraCommand;
 
 public class BedrockDeathCameraListener implements Listener {
     private final Map<UUID, ArmorStand> deathCameras = new HashMap<>();
@@ -35,6 +36,10 @@ public class BedrockDeathCameraListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
+
+        if (!ToggleDeathCameraCommand.isDeathCameraEnabled(player)) {
+            return;
+        }
 
         if (player.getUniqueId().toString().startsWith("00000000-0000-0000")) {
             return;

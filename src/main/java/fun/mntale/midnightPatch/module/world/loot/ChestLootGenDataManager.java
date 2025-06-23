@@ -81,30 +81,38 @@ public class ChestLootGenDataManager {
         World world = loc.getWorld();
         int chunkX = loc.getBlockX() >> 4;
         int chunkZ = loc.getBlockZ() >> 4;
-        Set<String> region = loadRegion(world, chunkX, chunkZ);
-        String chestKey = blockKey(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-        return region.contains(chestKey);
+        final boolean[] result = {false};
+        FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, loc, (task) -> {
+            Set<String> region = loadRegion(world, chunkX, chunkZ);
+            String chestKey = blockKey(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+            result[0] = region.contains(chestKey);
+        });
+        return result[0];
     }
 
     public void markChestGenerated(Location loc) {
         World world = loc.getWorld();
         int chunkX = loc.getBlockX() >> 4;
         int chunkZ = loc.getBlockZ() >> 4;
-        Set<String> region = loadRegion(world, chunkX, chunkZ);
-        String chestKey = blockKey(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-        if (region.add(chestKey)) {
-            saveRegionAsync(world, chunkX, chunkZ);
-        }
+        FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, loc, (task) -> {
+            Set<String> region = loadRegion(world, chunkX, chunkZ);
+            String chestKey = blockKey(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+            if (region.add(chestKey)) {
+                saveRegionAsync(world, chunkX, chunkZ);
+            }
+        });
     }
 
     public void removeChest(Location loc) {
         World world = loc.getWorld();
         int chunkX = loc.getBlockX() >> 4;
         int chunkZ = loc.getBlockZ() >> 4;
-        Set<String> region = loadRegion(world, chunkX, chunkZ);
-        String chestKey = blockKey(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-        if (region.remove(chestKey)) {
-            saveRegionAsync(world, chunkX, chunkZ);
-        }
+        FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, loc, (task) -> {
+            Set<String> region = loadRegion(world, chunkX, chunkZ);
+            String chestKey = blockKey(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+            if (region.remove(chestKey)) {
+                saveRegionAsync(world, chunkX, chunkZ);
+            }
+        });
     }
 } 

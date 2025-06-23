@@ -23,9 +23,9 @@ public class ReachAroundPlayerTaskManager {
         if (playerTasks.containsKey(playerId)) {
             return;
         }
-        TaskWrapper task = FoliaScheduler.getRegionScheduler().runAtFixedRate(
+        TaskWrapper task = FoliaScheduler.getEntityScheduler().runAtFixedRate(
+            player,
             MidnightPatch.instance,
-            player.getLocation(),
             taskBase -> {
                 if (!player.isOnline()) {
                     stopPlayerTask(player);
@@ -42,6 +42,7 @@ public class ReachAroundPlayerTaskManager {
                 }
                 previewManager.updatePreview(player, item.getType());
             },
+            null,
             60L,
             2L
         );

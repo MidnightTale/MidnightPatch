@@ -51,7 +51,6 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new PoseArmorStandListener(), this);
         getServer().getPluginManager().registerEvents(new ProjectileDamageListener(), this);
         getServer().getPluginManager().registerEvents(new RelimitAnvil(), this);
-        getServer().getPluginManager().registerEvents(new AxeStrippingPatch(), this);
         getServer().getPluginManager().registerEvents(new StartupJoinDelayPatch(), this);
         
         
@@ -81,7 +80,6 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         BasicCommand killCommand = new KillCommand();
         registerCommand("kill", killCommand);
 
-        // Set the start time here, after everything is loaded
         StartupJoinDelayPatch.START_TIME = System.currentTimeMillis();
     }
 

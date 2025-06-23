@@ -80,6 +80,9 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         
         BasicCommand killCommand = new KillCommand();
         registerCommand("kill", killCommand);
+
+        // Set the start time here, after everything is loaded
+        StartupJoinDelayPatch.START_TIME = System.currentTimeMillis();
     }
 
     @Override

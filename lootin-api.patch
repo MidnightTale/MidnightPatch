@@ -1,0 +1,61 @@
+diff --git a/src/main/java/com/github/sachin/lootin/api/LootinCustomLootEvent.java b/src/main/java/com/github/sachin/lootin/api/LootinCustomLootEvent.java
+new file mode 100644
+index 0000000..f8cb0d7
+--- /dev/null
++++ b/src/main/java/com/github/sachin/lootin/api/LootinCustomLootEvent.java
+@@ -0,0 +1,34 @@
++package com.github.sachin.lootin.api;
++
++import org.bukkit.entity.Player;
++import org.bukkit.event.Event;
++import org.bukkit.event.HandlerList;
++import org.bukkit.inventory.Inventory;
++
++public class LootinCustomLootEvent extends Event {
++    private static final HandlerList handlers = new HandlerList();
++    private final Player player;
++    private final Inventory inventory;
++
++    public LootinCustomLootEvent(Player player, Inventory inventory) {
++        this.player = player;
++        this.inventory = inventory;
++    }
++
++    public Player getPlayer() {
++        return player;
++    }
++
++    public Inventory getInventory() {
++        return inventory;
++    }
++
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++} 
+\ No newline at end of file
+diff --git a/src/main/java/com/github/sachin/lootin/utils/ChestUtils.java b/src/main/java/com/github/sachin/lootin/utils/ChestUtils.java
+index 7cebff4..3b628f7 100644
+--- a/src/main/java/com/github/sachin/lootin/utils/ChestUtils.java
++++ b/src/main/java/com/github/sachin/lootin/utils/ChestUtils.java
+@@ -286,6 +286,7 @@ public class ChestUtils{
+                     if(playerLootData.isRefillRequired(System.currentTimeMillis(),player.getWorld())){
+                         if(!plugin.getWorldManager().shouldRefillCustomChests(player.getWorld().getName()) && data.has(LConstants.CUSTOM_CONTAINER_KEY)) return playerLootData.getItems();
+                         fillLoot(player,data,lootable,inventory);
++                        org.bukkit.Bukkit.getPluginManager().callEvent(new com.github.sachin.lootin.api.LootinCustomLootEvent(player, inventory));
+                         items = Arrays.asList(inventory.getContents());
+                         if(inventory.isEmpty()){
+                             if(data.has(LConstants.DATA_KEY,DataType.ITEM_STACK_ARRAY)){
+@@ -307,6 +308,7 @@ public class ChestUtils{
+                 }
+             }
+             fillLoot(player,data,lootable,inventory);
++            org.bukkit.Bukkit.getPluginManager().callEvent(new com.github.sachin.lootin.api.LootinCustomLootEvent(player, inventory));
+             if(data.has(Lootin.getKey(uuid),PersistentDataType.STRING)){
+                 items = ItemSerializer.deserialize(data.get(Lootin.getKey(uuid),PersistentDataType.STRING));
+                 updatePersistentStorageTypes(data,inventory,items,Lootin.getKey(uuid));

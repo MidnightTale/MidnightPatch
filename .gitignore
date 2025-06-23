@@ -15,7 +15,7 @@ atlassian-ide-plugin.xml
 
 # Compiled class file
 *.class
-
+/Lootin-plugin
 # Log file
 *.log
 

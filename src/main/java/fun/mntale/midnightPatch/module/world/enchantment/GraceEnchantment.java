@@ -19,6 +19,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.NamespacedKey;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
 
 public class GraceEnchantment implements Listener {
     private static final NamespacedKey GRACE_KEY = NamespacedKey.fromString("midnightpatch:grace");
@@ -34,7 +36,9 @@ public class GraceEnchantment implements Listener {
     }
 
     private Enchantment getGraceEnchantment() {
-        return org.bukkit.Registry.ENCHANTMENT.get(GRACE_KEY);
+        return RegistryAccess.registryAccess()
+            .getRegistry(RegistryKey.ENCHANTMENT)
+            .get(GRACE_KEY);
     }
 
     private void updateGraceEffect(Player player) {

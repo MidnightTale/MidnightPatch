@@ -15,12 +15,15 @@ import org.bukkit.Sound;
 import org.bukkit.Particle;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import fun.mntale.midnightPatch.MidnightPatch;
+import io.papermc.paper.registry.RegistryAccess;
 
 public class UndertowEnchantment implements Listener {
     private static final NamespacedKey UNDERTOW_KEY = NamespacedKey.fromString("midnightpatch:undertow");
 
     private Enchantment getUndertowEnchantment() {
-        return org.bukkit.Registry.ENCHANTMENT.get(UNDERTOW_KEY);
+        return RegistryAccess.registryAccess()
+            .getRegistry(io.papermc.paper.registry.RegistryKey.ENCHANTMENT)
+            .get(UNDERTOW_KEY);
     }
 
     @EventHandler(priority = EventPriority.NORMAL)

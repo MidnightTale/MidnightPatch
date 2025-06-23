@@ -43,11 +43,13 @@ public class UpdraftEnchantment implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
+            if (isCreativeOrSpectator(player)) {
+                player.setAllowFlight(true); // Always allow flight in these modes
+                return;
+            }
             boolean hasUpdraft = shouldHaveUpdraft(player);
             player.setAllowFlight(hasUpdraft);
-            if (!isCreativeOrSpectator(player)) {
-                player.setFlying(false);
-            }
+            player.setFlying(false);
             if (hasUpdraft && player.isOnGround()) {
                 updraftJumps.remove(uuid);
             }
@@ -69,7 +71,9 @@ public class UpdraftEnchantment implements Listener {
 
         if (!hasUpdraft) {
             FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
-                player.setAllowFlight(false);
+                if (!isCreativeOrSpectator(player)) {
+                    player.setAllowFlight(false);
+                }
                 fallStartY.remove(uuid);
                 wasFalling.remove(uuid);
             }, null);
@@ -232,6 +236,10 @@ public class UpdraftEnchantment implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
+            if (isCreativeOrSpectator(player)) {
+                player.setAllowFlight(true);
+                return;
+            }
             boolean hasUpdraft = shouldHaveUpdraft(player);
             if (!hasUpdraft) {
                 player.setAllowFlight(false);

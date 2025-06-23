@@ -11,7 +11,6 @@ import fun.mntale.midnightPatch.module.entity.minecart.MinecartChunkLoadListener
 import fun.mntale.midnightPatch.module.world.fertilizer.FertilizerListener;
 import fun.mntale.midnightPatch.module.entity.loot.LootMobTargetListener;
 import fun.mntale.midnightPatch.module.entity.babymob.BabyMobListener;
-import fun.mntale.midnightPatch.module.world.AxeStrippingPatch;
 import fun.mntale.midnightPatch.module.world.desirepath.DesirePathListener;
 import fun.mntale.midnightPatch.module.world.fertilizer.MossBlockFertilizerListener;
 import fun.mntale.midnightPatch.module.world.loot.FrostbiteLoot;

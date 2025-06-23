@@ -45,7 +45,7 @@ public class BedrockDeathCameraListener implements Listener {
 
         final double radius = 4.0;
         final double height = 2.5;
-        final int totalTicks = 20 * 12;
+        final int totalTicks = 20 * 18;
         final Location center = deathLoc.clone().add(0, height, 0);
         double startAngle = 0;
         double x = center.getX() + radius * Math.cos(startAngle);

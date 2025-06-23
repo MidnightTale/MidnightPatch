@@ -43,7 +43,6 @@ public class PoseArmorStandListener implements Listener {
         if (item != null && item.getType() != Material.AIR) {
             return;
         }
-        event.setCancelled(true);
         cyclePose(armorStand);
     }
 

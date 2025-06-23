@@ -11,6 +11,7 @@ import fun.mntale.midnightPatch.module.entity.minecart.MinecartChunkLoadListener
 import fun.mntale.midnightPatch.module.world.fertilizer.FertilizerListener;
 import fun.mntale.midnightPatch.module.entity.loot.LootMobTargetListener;
 import fun.mntale.midnightPatch.module.entity.babymob.BabyMobListener;
+import fun.mntale.midnightPatch.module.world.AxeStrippingPatch;
 import fun.mntale.midnightPatch.module.world.desirepath.DesirePathListener;
 import fun.mntale.midnightPatch.module.world.fertilizer.MossBlockFertilizerListener;
 import fun.mntale.midnightPatch.module.world.loot.FrostbiteLoot;
@@ -51,6 +52,8 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new PoseArmorStandListener(), this);
         getServer().getPluginManager().registerEvents(new ProjectileDamageListener(), this);
         getServer().getPluginManager().registerEvents(new RelimitAnvil(), this);
+        getServer().getPluginManager().registerEvents(new AxeStrippingPatch(), this);
+        
         
 
         getServer().getPluginManager().registerEvents(new FrostbiteEnchantment(), this);
@@ -73,6 +76,7 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
 
         getServer().getPluginManager().registerEvents(new UndertowEnchantment(), this);
         getServer().getPluginManager().registerEvents(new UndertowLoot(), this);
+        
         
         BasicCommand killCommand = new KillCommand();
         registerCommand("kill", killCommand);

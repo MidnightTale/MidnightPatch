@@ -17,7 +17,7 @@ import org.bukkit.Particle;
 public class ResilienceEnchantment implements Listener {
     private static final NamespacedKey RESILIENCE_KEY = NamespacedKey.fromString("midnightpatch:resilience");
     private static final PotionEffect RESISTANCE_EFFECT = new PotionEffect(PotionEffectType.RESISTANCE, 60, 3, true, false, true); // 2s, level 4
-    private static final long COOLDOWN_MILLIS = 60_000L;
+    private static final long COOLDOWN_MILLIS = 300_000L; // 5 minutes
     private final Map<Player, Long> cooldowns = new HashMap<>();
 
     private boolean hasFullResilienceSet(Player player) {
@@ -45,6 +45,7 @@ public class ResilienceEnchantment implements Listener {
         event.setCancelled(true);
         player.setHealth(1.0);
         player.addPotionEffect(RESISTANCE_EFFECT);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, (int) (COOLDOWN_MILLIS / 50), 0, true, false, true));
         cooldowns.put(player, now + COOLDOWN_MILLIS);
         // Play sound and particle effect
         player.getWorld().playSound(player.getLocation(), Sound.ITEM_TOTEM_USE, 1.0f, 1.0f);

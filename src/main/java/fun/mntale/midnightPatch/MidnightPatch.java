@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import io.papermc.paper.command.brigadier.BasicCommand;
 import fun.mntale.midnightPatch.command.KillCommand;
 import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
+import fun.mntale.midnightPatch.command.ToggleHealthIndicatorCommand;
 import fun.mntale.midnightPatch.module.world.reacharound.ReachAroundBlockListener;
 import fun.mntale.midnightPatch.module.entity.minecart.MinecartChunkLoadListener;
 import fun.mntale.midnightPatch.module.world.fertilizer.FertilizerListener;
@@ -31,6 +32,7 @@ import fun.mntale.midnightPatch.module.world.enchantment.RecastingEnchantment;
 import fun.mntale.midnightPatch.module.world.enchantment.RelimitAnvil;
 import fun.mntale.midnightPatch.module.world.enchantment.ResilienceEnchantment;
 import fun.mntale.midnightPatch.module.world.enchantment.UndertowEnchantment;
+import fun.mntale.midnightPatch.module.entity.indicator.HealthDamageIndicatorListener;
 
 public final class MidnightPatch extends JavaPlugin implements Listener {
     public static MidnightPatch instance;
@@ -53,6 +55,7 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new RelimitAnvil(), this);
         getServer().getPluginManager().registerEvents(new StartupJoinDelayPatch(), this);
         getServer().getPluginManager().registerEvents(new BedrockDeathCameraListener(), this);
+        getServer().getPluginManager().registerEvents(new HealthDamageIndicatorListener(), this);
         
         
 
@@ -80,6 +83,9 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         
         BasicCommand killCommand = new KillCommand();
         registerCommand("kill", killCommand);
+
+        BasicCommand toggleIndicatorCommand = new ToggleHealthIndicatorCommand();
+        registerCommand("toggleindicator", toggleIndicatorCommand);
 
         StartupJoinDelayPatch.START_TIME = System.currentTimeMillis();
     }

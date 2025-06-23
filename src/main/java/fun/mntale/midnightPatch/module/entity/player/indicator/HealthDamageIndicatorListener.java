@@ -78,25 +78,15 @@ public class HealthDamageIndicatorListener implements Listener {
         );
         configureDisplay(display, text, color);
 
-        // Show only to enabled players
-        if (entity instanceof Player player) {
-            if (ToggleHealthIndicatorCommand.isHealthIndicatorEnabled(player)) {
-                player.showEntity(fun.mntale.midnightPatch.MidnightPatch.instance, display);
-            } else {
-                display.remove();
-                return;
-            }
-        } else {
-            List<Player> viewers = entity.getWorld().getPlayers().stream()
-                .filter(ToggleHealthIndicatorCommand::isHealthIndicatorEnabled)
-                .toList();
-            if (viewers.isEmpty()) {
-                display.remove();
-                return;
-            }
-            for (Player viewer : viewers) {
-                viewer.showEntity(fun.mntale.midnightPatch.MidnightPatch.instance, display);
-            }
+        List<Player> viewers = entity.getWorld().getPlayers().stream()
+            .filter(ToggleHealthIndicatorCommand::isHealthIndicatorEnabled)
+            .toList();
+        if (viewers.isEmpty()) {
+            display.remove();
+            return;
+        }
+        for (Player viewer : viewers) {
+            viewer.showEntity(fun.mntale.midnightPatch.MidnightPatch.instance, display);
         }
 
         new DisplayAnimator(

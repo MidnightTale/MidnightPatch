@@ -40,6 +40,8 @@ import fun.mntale.midnightPatch.module.world.enchantment.RecastingEnchantment;
 import fun.mntale.midnightPatch.module.world.enchantment.RelimitAnvil;
 import fun.mntale.midnightPatch.module.world.enchantment.ResilienceEnchantment;
 import fun.mntale.midnightPatch.module.world.enchantment.UndertowEnchantment;
+import fun.mntale.midnightPatch.module.entity.player.MendingRepair;
+import fun.mntale.midnightPatch.command.ToggleMendingRepairCommand;
 
 public final class MidnightPatch extends JavaPlugin implements Listener {
     public static MidnightPatch instance;
@@ -124,6 +126,10 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         registerCommand("toggledeathlootletmobpickup", toggleDeathLootLetMobPickupCommand);
         BasicCommand toggleDeathLootLetPlayerPickupCommand = new fun.mntale.midnightPatch.command.ToggleDeathLootLetPlayerPickupCommand();
         registerCommand("toggledeathlootletplayerpickup", toggleDeathLootLetPlayerPickupCommand);
+
+        getServer().getPluginManager().registerEvents(new MendingRepair(), this);
+        BasicCommand toggleMendingRepairCommand = new ToggleMendingRepairCommand();
+        registerCommand("togglemendingrepair", toggleMendingRepairCommand);
 
         StartupJoinDelayPatch.START_TIME = System.currentTimeMillis();
     }

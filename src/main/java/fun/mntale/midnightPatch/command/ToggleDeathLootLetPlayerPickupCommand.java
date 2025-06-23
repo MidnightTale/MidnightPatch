@@ -53,6 +53,6 @@ public class ToggleDeathLootLetPlayerPickupCommand implements BasicCommand {
 
     public static boolean isEnabled(Player player) {
         Integer value = player.getPersistentDataContainer().get(KEY, PersistentDataType.INTEGER);
-        return value == null || value == 1; // Default to enabled if not set
+        return value != null && value == 1; // Default to disabled if not set
     }
 } 

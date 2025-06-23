@@ -2,6 +2,7 @@ package fun.mntale.midnightPatch;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.event.Listener;
+import org.bukkit.Bukkit;
 
 import io.papermc.paper.command.brigadier.BasicCommand;
 import fun.mntale.midnightPatch.command.KillCommand;
@@ -42,6 +43,7 @@ import fun.mntale.midnightPatch.module.world.enchantment.ResilienceEnchantment;
 import fun.mntale.midnightPatch.module.world.enchantment.UndertowEnchantment;
 import fun.mntale.midnightPatch.module.entity.player.MendingRepair;
 import fun.mntale.midnightPatch.command.ToggleMendingRepairCommand;
+import fun.mntale.midnightPatch.bootstrap.MidnightPatchExpansion;;
 
 public final class MidnightPatch extends JavaPlugin implements Listener {
     public static MidnightPatch instance;
@@ -49,6 +51,9 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         instance = this;
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new MidnightPatchExpansion().register();
+        }
         getServer().getPluginManager().registerEvents(new ReachAroundBlockListener(), this);
         BasicCommand ToggleReachAroundCommand = new ToggleReachAroundCommand();
         registerCommand("togglereacharound", ToggleReachAroundCommand);

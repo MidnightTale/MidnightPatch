@@ -18,6 +18,7 @@ import fun.mntale.midnightPatch.module.world.reacharound.ReachAroundBlockListene
 import fun.mntale.midnightPatch.module.entity.minecart.MinecartChunkLoadListener;
 import fun.mntale.midnightPatch.module.entity.player.LootMobTargetListener;
 import fun.mntale.midnightPatch.module.entity.player.PhantomIsolation;
+import fun.mntale.midnightPatch.module.entity.player.fakeplayer.MobSpawnerPlayer;
 import fun.mntale.midnightPatch.module.entity.player.indicator.HealthDamageIndicatorListener;
 import fun.mntale.midnightPatch.module.entity.player.projectile.ProjectileDamageListener;
 import fun.mntale.midnightPatch.module.world.fertilizer.FertilizerListener;
@@ -44,6 +45,8 @@ import fun.mntale.midnightPatch.module.world.enchantment.UndertowEnchantment;
 import fun.mntale.midnightPatch.module.entity.player.MendingRepair;
 import fun.mntale.midnightPatch.command.ToggleMendingRepairCommand;
 import fun.mntale.midnightPatch.bootstrap.MidnightPatchExpansion;
+import fun.mntale.midnightPatch.bootstrap.MidnightPatchStartupJoinDelay;
+import fun.mntale.midnightPatch.command.PlayerCommand;
 
 public final class MidnightPatch extends JavaPlugin implements Listener {
     public static MidnightPatch instance;
@@ -65,7 +68,7 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new MossBlockFertilizerListener(), this);
         getServer().getPluginManager().registerEvents(new PoseArmorStandListener(), this);
         getServer().getPluginManager().registerEvents(new RelimitAnvil(), this);
-        getServer().getPluginManager().registerEvents(new StartupJoinDelayPatch(), this);
+        getServer().getPluginManager().registerEvents(new MidnightPatchStartupJoinDelay(), this);
         
         
 
@@ -136,7 +139,12 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         BasicCommand toggleMendingRepairCommand = new ToggleMendingRepairCommand();
         registerCommand("togglemendingrepair", toggleMendingRepairCommand);
 
-        StartupJoinDelayPatch.START_TIME = System.currentTimeMillis();
+        getServer().getPluginManager().registerEvents(new MobSpawnerPlayer(), this);
+     
+        BasicCommand playerCommand = new PlayerCommand();
+        registerCommand("player", playerCommand);
+
+        MidnightPatchStartupJoinDelay.START_TIME = System.currentTimeMillis();
     }
 
 

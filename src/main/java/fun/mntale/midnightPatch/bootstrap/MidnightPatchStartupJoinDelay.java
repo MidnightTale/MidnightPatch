@@ -1,4 +1,4 @@
-package fun.mntale.midnightPatch;
+package fun.mntale.midnightPatch.bootstrap;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import net.kyori.adventure.text.Component;
 
-public class StartupJoinDelayPatch implements Listener {
+public class MidnightPatchStartupJoinDelay implements Listener {
     public static volatile long START_TIME = 0; // Set from MidnightPatch
 
     private static final long DELAY_MILLIS = 10000; // 10 seconds

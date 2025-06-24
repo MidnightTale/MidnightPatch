@@ -19,9 +19,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.util.Vector;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import io.github.retrooper.packetevents.util.folia.TaskWrapper;
@@ -31,7 +32,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import fun.mntale.midnightPatch.command.ToggleDeathCameraCommand;
 
 public class BedrockDeathCameraListener implements Listener {
-    private final Map<UUID, ArmorStand> deathCameras = new HashMap<>();
+    private final Map<UUID, ArmorStand> deathCameras = new ConcurrentHashMap<>();
+    private static final Logger logger = MidnightPatch.instance.getLogger();
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
@@ -130,6 +132,7 @@ public class BedrockDeathCameraListener implements Listener {
         try {
             ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
         } catch (Exception e) {
+            logger.severe("Error sending camera packet: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -142,6 +145,7 @@ public class BedrockDeathCameraListener implements Listener {
         try {
             ProtocolLibrary.getProtocolManager().sendServerPacket(player, setSlot);
         } catch (Exception e) {
+            logger.severe("Error sending set slot packet: " + e.getMessage());
             e.printStackTrace();
         }
     }

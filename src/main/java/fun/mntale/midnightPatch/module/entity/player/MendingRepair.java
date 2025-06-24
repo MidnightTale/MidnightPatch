@@ -9,14 +9,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.UUID;
 import fun.mntale.midnightPatch.command.ToggleMendingRepairCommand;
 
 public class MendingRepair implements Listener {
-    private final Map<UUID, Integer> repairStep = new HashMap<>();
-    private final Map<UUID, Long> lastInteract = new HashMap<>();
+    private final Map<UUID, Integer> repairStep = new ConcurrentHashMap<>();
+    private final Map<UUID, Long> lastInteract = new ConcurrentHashMap<>();
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {

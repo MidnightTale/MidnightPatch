@@ -16,7 +16,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.Location;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.block.Container;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
@@ -79,7 +79,7 @@ public class DesirePathListener implements Listener {
             String regionKey = dataManager.getRegionKey(world, chunkX, chunkZ);
             Map<String, Map<String, Integer>> regionData = dataManager.loadRegion(world, chunkX, chunkZ);
             String chunkKey = DesirePathRegionIO.chunkKey(chunkX, chunkZ);
-            Map<String, Integer> chunkMap = regionData.computeIfAbsent(chunkKey, k -> new HashMap<>());
+            Map<String, Integer> chunkMap = regionData.computeIfAbsent(chunkKey, k -> new ConcurrentHashMap<>());
             String blockKey = DesirePathRegionIO.blockKey(block.getX(), block.getY(), block.getZ());
             int wear = chunkMap.getOrDefault(blockKey, 0) + wearAmount;
             int currentStage = wear / STAGE_PROGRESS;

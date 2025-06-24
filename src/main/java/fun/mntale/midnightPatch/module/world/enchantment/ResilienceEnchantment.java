@@ -12,7 +12,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import fun.mntale.midnightPatch.MidnightPatch;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -24,7 +24,7 @@ public class ResilienceEnchantment implements Listener {
     private static final NamespacedKey RESILIENCE_KEY = NamespacedKey.fromString("midnightpatch:resilience");
     private static final PotionEffect RESISTANCE_EFFECT = new PotionEffect(PotionEffectType.RESISTANCE, 60, 3, true, false, true); // 2s, level 4
     private static final long COOLDOWN_MILLIS = 300_000L; // 5 minutes
-    private final Map<Player, Long> cooldowns = new HashMap<>();
+    private final Map<Player, Long> cooldowns = new ConcurrentHashMap<>();
 
     private boolean hasFullResilienceSet(Player player) {
         Enchantment resilience = getResilienceEnchantment();

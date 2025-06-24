@@ -4,11 +4,10 @@ import fun.mntale.midnightPatch.MidnightPatch;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import org.bukkit.World;
 import java.io.File;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class DesirePathDataManager {
     private final Map<String, Map<String, Map<String, Integer>>> regionMap = new ConcurrentHashMap<>();
@@ -49,9 +48,9 @@ public class DesirePathDataManager {
         String regionKey = getRegionKey(world, chunkX, chunkZ);
         Map<String, Map<String, Integer>> regionData = regionMap.get(regionKey);
         if (regionData != null) {
-            Map<String, Map<String, Integer>> regionDataCopy = new HashMap<>();
+            Map<String, Map<String, Integer>> regionDataCopy = new ConcurrentHashMap<>();
             for (Map.Entry<String, Map<String, Integer>> entry : regionData.entrySet()) {
-                regionDataCopy.put(entry.getKey(), new HashMap<>(entry.getValue()));
+                regionDataCopy.put(entry.getKey(), new ConcurrentHashMap<>(entry.getValue()));
             }
             File file = getRegionFile(world, chunkX, chunkZ);
             FoliaScheduler.getAsyncScheduler().runNow(MidnightPatch.instance, (io) -> DesirePathRegionIO.saveRegion(file, regionDataCopy));

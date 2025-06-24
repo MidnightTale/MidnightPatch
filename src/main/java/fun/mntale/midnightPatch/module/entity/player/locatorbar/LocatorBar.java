@@ -17,15 +17,17 @@ import net.minecraft.world.waypoints.Waypoint;
 import net.minecraft.world.waypoints.WaypointStyleAssets;
 import fun.mntale.midnightPatch.command.ToggleLocatorBarCommand;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.Logger;
 import fun.mntale.midnightPatch.MidnightPatch;
 
 public class LocatorBar implements Listener {
-    private static final Map<UUID, Location> playerLocations = new HashMap<>();
+    private static final Map<UUID, Location> playerLocations = new ConcurrentHashMap<>();
     private static boolean enabled = false;
+    private static final Logger logger = MidnightPatch.instance.getLogger();
     
     public static void start() {
         if (enabled) return;
@@ -133,7 +135,7 @@ public class LocatorBar implements Listener {
             nmsPlayer.connection.send(packet);
             
         } catch (Exception e) {
-            System.err.println("Error sending waypoint packet: " + e.getMessage());
+            logger.severe("Error sending waypoint packet: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -157,7 +159,7 @@ public class LocatorBar implements Listener {
             nmsPlayer.connection.send(packet);
             
         } catch (Exception e) {
-            System.err.println("Error removing waypoint packet: " + e.getMessage());
+            logger.severe("Error removing waypoint packet: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -175,7 +177,7 @@ public class LocatorBar implements Listener {
             }
             
         } catch (Exception e) {
-            System.err.println("Error removing all waypoints: " + e.getMessage());
+            logger.severe("Error removing all waypoints: " + e.getMessage());
             e.printStackTrace();
         }
     }

@@ -7,11 +7,11 @@ import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.view.AnvilView;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
 public class RelimitAnvil implements Listener {
-    private final Map<AnvilInventory, Integer> realMaxRepairCosts = new HashMap<>();
+    private final Map<AnvilInventory, Integer> realMaxRepairCosts = new ConcurrentHashMap<>();
     private final boolean forceMax = true;
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPrepareAnvil(PrepareAnvilEvent e) {

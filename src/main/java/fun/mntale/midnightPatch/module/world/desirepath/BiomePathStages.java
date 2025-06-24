@@ -4,11 +4,11 @@ import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
 public class BiomePathStages {
-    private static final Map<Biome, Material[]> BIOME_PATH_STAGES = new HashMap<>();
+    private static final Map<Biome, Material[]> BIOME_PATH_STAGES = new ConcurrentHashMap<>();
     static {
         // Plains, Forest, Meadow
         Material[] plainsStages = { Material.GRASS_BLOCK, Material.COARSE_DIRT, Material.DIRT_PATH, Material.GRAVEL, Material.COBBLESTONE_SLAB };

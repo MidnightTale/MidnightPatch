@@ -14,12 +14,12 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import fun.mntale.midnightPatch.MidnightPatch;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class HarvestingEnchantment implements Listener {
-    private static final Map<Material, Material> CROP_TO_SEED = new HashMap<>();
+    private static final Map<Material, Material> CROP_TO_SEED = new ConcurrentHashMap<>();
     static {
         CROP_TO_SEED.put(Material.WHEAT, Material.WHEAT_SEEDS);
         CROP_TO_SEED.put(Material.CARROTS, Material.CARROT);

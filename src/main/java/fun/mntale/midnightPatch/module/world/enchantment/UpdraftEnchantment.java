@@ -19,7 +19,7 @@ import org.bukkit.util.Vector;
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -31,9 +31,9 @@ public class UpdraftEnchantment implements Listener {
         .get(Objects.requireNonNull(UPDRAFT_KEY));
 
     // Track number of updraft jumps used per player per airtime
-    private final Map<UUID, Integer> updraftJumps = new HashMap<>();
-    private final Map<UUID, Double> fallStartY = new HashMap<>();
-    private final Map<UUID, Boolean> wasFalling = new HashMap<>();
+    private final Map<UUID, Integer> updraftJumps = new ConcurrentHashMap<>();
+    private final Map<UUID, Double> fallStartY = new ConcurrentHashMap<>();
+    private final Map<UUID, Boolean> wasFalling = new ConcurrentHashMap<>();
 
     /**
      * Handles player join events. Ensures the player's flight state is set correctly

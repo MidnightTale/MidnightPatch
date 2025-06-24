@@ -6,11 +6,11 @@ import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import io.github.retrooper.packetevents.util.folia.TaskWrapper;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
 public class UseTaskManager {
-    private static final Map<Player, TaskWrapper> useTasks = new HashMap<>();
+    private static final Map<Player, TaskWrapper> useTasks = new ConcurrentHashMap<>();
 
     public static boolean isUseTaskRunning(Player player) {
         return useTasks.containsKey(player);

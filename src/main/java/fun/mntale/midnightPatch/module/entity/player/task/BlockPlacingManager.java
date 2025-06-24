@@ -10,13 +10,13 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
 public class BlockPlacingManager {
-    private static final Map<Player, TaskWrapper> placeTasks = new HashMap<>();
-    private static final Map<Player, Block> lastBlockMap = new HashMap<>();
-    private static final Map<Player, BlockFace> lastFaceMap = new HashMap<>();
+    private static final Map<Player, TaskWrapper> placeTasks = new ConcurrentHashMap<>();
+    private static final Map<Player, Block> lastBlockMap = new ConcurrentHashMap<>();
+    private static final Map<Player, BlockFace> lastFaceMap = new ConcurrentHashMap<>();
 
     public static boolean isPlaceTaskRunning(Player player) {
         return placeTasks.containsKey(player);

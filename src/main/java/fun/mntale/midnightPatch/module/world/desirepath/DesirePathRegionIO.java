@@ -1,8 +1,10 @@
 package fun.mntale.midnightPatch.module.world.desirepath;
 
 import java.io.*;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
+import java.util.logging.Logger;
+import fun.mntale.midnightPatch.MidnightPatch;
 import net.jpountz.lz4.LZ4FrameOutputStream;
 import net.jpountz.lz4.LZ4FrameInputStream;
 
@@ -12,6 +14,7 @@ import net.jpountz.lz4.LZ4FrameInputStream;
  */
 public class DesirePathRegionIO {
     public static final int REGION_SIZE = 32; // 32x32 chunks per region
+    private static final Logger logger = MidnightPatch.instance.getLogger();
 
     /**
      * Loads all path data for a region from a .mnt file.
@@ -19,14 +22,14 @@ public class DesirePathRegionIO {
      * @return Map of chunk coords to block wear data
      */
     public static Map<String, Map<String, Integer>> loadRegion(File file) {
-        Map<String, Map<String, Integer>> regionData = new HashMap<>();
+        Map<String, Map<String, Integer>> regionData = new ConcurrentHashMap<>();
         if (!file.exists()) return regionData;
         try (DataInputStream in = new DataInputStream(new BufferedInputStream(new LZ4FrameInputStream(new FileInputStream(file))))) {
             int chunkCount = in.readInt();
             for (int i = 0; i < chunkCount; i++) {
                 String chunkKey = in.readUTF();
                 int blockCount = in.readInt();
-                Map<String, Integer> blockMap = new HashMap<>();
+                Map<String, Integer> blockMap = new ConcurrentHashMap<>();
                 for (int j = 0; j < blockCount; j++) {
                     String blockKey = in.readUTF();
                     int wear = in.readInt();
@@ -35,6 +38,7 @@ public class DesirePathRegionIO {
                 regionData.put(chunkKey, blockMap);
             }
         } catch (IOException e) {
+            logger.severe("Error loading region file: " + e.getMessage());
             e.printStackTrace();
         }
         return regionData;
@@ -58,6 +62,7 @@ public class DesirePathRegionIO {
                 }
             }
         } catch (IOException e) {
+            logger.severe("Error saving region file: " + e.getMessage());
             e.printStackTrace();
         }
     }

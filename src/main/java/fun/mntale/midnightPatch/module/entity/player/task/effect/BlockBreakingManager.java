@@ -9,12 +9,14 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class BlockBreakingManager {
-    private static final Map<Player, TaskWrapper> breakTasks = new HashMap<>();
-    private static final Map<Player, Map<Block, TaskWrapper>> activeBreakingTasks = new HashMap<>();
+    private static final Map<Player, TaskWrapper> breakTasks = new ConcurrentHashMap<>();
+    private static final Map<Player, Map<Block, TaskWrapper>> activeBreakingTasks = new ConcurrentHashMap<>();
+    private static final Logger logger = MidnightPatch.instance.getLogger();
 
     public static boolean isBreakTaskRunning(Player player) {
         return breakTasks.containsKey(player);
@@ -23,7 +25,7 @@ public class BlockBreakingManager {
     public static void startBreakTask(Player player, int interval) {
         if (breakTasks.containsKey(player)) return;
         
-        Map<Block, TaskWrapper> playerActiveTasks = new HashMap<>();
+        Map<Block, TaskWrapper> playerActiveTasks = new ConcurrentHashMap<>();
         activeBreakingTasks.put(player, playerActiveTasks);
         
         TaskWrapper outerTask = FoliaScheduler.getEntityScheduler().runAtFixedRate(player, MidnightPatch.instance, (ignored) -> {
@@ -75,6 +77,7 @@ public class BlockBreakingManager {
                 BlockAnimationUtil.sendBlockCrackAnimation(result.getHitBlock(), player.getEntityId(), -1);
             }
         } catch (Exception e) {
+            logger.warning("Error stopping break task: " + e.getMessage());
         }
     }
 

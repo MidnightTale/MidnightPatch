@@ -9,11 +9,11 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
 public class AttackTaskManager {
-    private static final Map<Player, TaskWrapper> attackTasks = new HashMap<>();
+    private static final Map<Player, TaskWrapper> attackTasks = new ConcurrentHashMap<>();
 
     public static boolean isAttackTaskRunning(Player player) {
         return attackTasks.containsKey(player);

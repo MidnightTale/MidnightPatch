@@ -1,12 +1,12 @@
 package fun.mntale.midnightPatch.module.entity.armorstand;
 
 import org.bukkit.util.EulerAngle;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
 public class ArmorStandPosePresets {
     public static Map<String, ArmorStandPose> getPresets() {
-        Map<String, ArmorStandPose> presetPoses = new HashMap<>();
+        Map<String, ArmorStandPose> presetPoses = new ConcurrentHashMap<>();
         presetPoses.put("default", new ArmorStandPose(
             new EulerAngle(0, 0, 0), new EulerAngle(0, 0, 0), new EulerAngle(Math.toRadians(-10), 0, 0),
             new EulerAngle(Math.toRadians(-10), 0, 0), new EulerAngle(0, 0, 0), new EulerAngle(0, 0, 0)

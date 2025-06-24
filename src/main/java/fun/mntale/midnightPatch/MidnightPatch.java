@@ -51,6 +51,8 @@ import fun.mntale.midnightPatch.bootstrap.MidnightPatchExpansion;
 import fun.mntale.midnightPatch.bootstrap.MidnightPatchStartupJoinDelay;
 import fun.mntale.midnightPatch.command.PlayerCommand;
 import fun.mntale.midnightPatch.command.TaskCommand;
+import fun.mntale.midnightPatch.module.entity.player.locatorbar.LocatorBar;
+import fun.mntale.midnightPatch.command.ToggleLocatorBarCommand;
 
 public final class MidnightPatch extends JavaPlugin implements Listener {
     public static MidnightPatch instance;
@@ -153,6 +155,12 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new PlayerTaskManager(), this);
         BasicCommand taskCommand = new TaskCommand();
         registerCommand("task", taskCommand);
+
+        // Initialize LocatorBar
+        LocatorBar.start();
+        getServer().getPluginManager().registerEvents(new LocatorBar(), this);
+        BasicCommand toggleLocatorBarCommand = new ToggleLocatorBarCommand();
+        registerCommand("togglelocatorbarposition", toggleLocatorBarCommand);
 
         MidnightPatchStartupJoinDelay.START_TIME = System.currentTimeMillis();
     }

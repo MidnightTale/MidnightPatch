@@ -121,7 +121,7 @@ public class LocatorBar implements Listener {
             
             Waypoint.Icon icon = new Waypoint.Icon();
             icon.style = WaypointStyleAssets.DEFAULT;
-            icon.color = Optional.of(0xFFFFFF);
+            icon.color = Optional.of(generateColorFromUUID(target.getUniqueId()));
             
             BlockPos blockPos = new net.minecraft.core.BlockPos(
                 location.getBlockX(),
@@ -184,5 +184,29 @@ public class LocatorBar implements Listener {
             System.err.println("Error removing all waypoints: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    
+    /**
+     * Generate a consistent color from a player's UUID
+     * @param uuid The player's UUID
+     * @return RGB color as integer
+     */
+    private static int generateColorFromUUID(UUID uuid) {
+        // Use the UUID's hash code to generate a consistent color
+        int hash = uuid.hashCode();
+        
+        // Generate RGB values using different parts of the hash
+        int red = Math.abs(hash) % 256;
+        int green = Math.abs(hash >> 8) % 256;
+        int blue = Math.abs(hash >> 16) % 256;
+        
+        // Ensure minimum brightness for visibility
+        if (red + green + blue < 200) {
+            red = Math.min(255, red + 100);
+            green = Math.min(255, green + 100);
+            blue = Math.min(255, blue + 100);
+        }
+        
+        return (red << 16) | (green << 8) | blue;
     }
 }

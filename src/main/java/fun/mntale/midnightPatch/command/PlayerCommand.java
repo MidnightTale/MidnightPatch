@@ -1,13 +1,12 @@
 package fun.mntale.midnightPatch.command;
 
+import fun.mntale.midnightPatch.module.entity.player.fakeplayer.FakePlayerFactory;
 import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import fun.mntale.midnightPatch.module.entity.player.fakeplayer.MobSpawnerPlayer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,11 +28,11 @@ public class PlayerCommand implements BasicCommand {
                     sender.sendMessage("This command can only be used by a player.");
                     return;
                 }
-                MobSpawnerPlayer.create(player.getLocation(), name);
+                FakePlayerFactory.create(player.getLocation(), name);
                 sender.sendMessage("Spawned fake player: " + name);
             }
             case "remove" -> {
-                boolean removed = MobSpawnerPlayer.remove(name);
+                boolean removed = FakePlayerFactory.remove(name);
                 if (removed) {
                     sender.sendMessage("Removed fake player: " + name);
                 } else {
@@ -59,7 +58,7 @@ public class PlayerCommand implements BasicCommand {
             if ("spawn".startsWith(args[0].toLowerCase())) suggestions.add("spawn");
             if ("remove".startsWith(args[0].toLowerCase())) suggestions.add("remove");
         } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
-            for (String name : MobSpawnerPlayer.getFakePlayerNames()) {
+            for (String name : FakePlayerFactory.getFakePlayerNames()) {
                 if (name.toLowerCase().startsWith(args[1].toLowerCase())) {
                     suggestions.add(name);
                 }

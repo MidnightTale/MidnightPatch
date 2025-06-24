@@ -13,14 +13,17 @@ import fun.mntale.midnightPatch.command.ToggleLootChestProtectionCommand;
 import fun.mntale.midnightPatch.command.TogglePhantomIsolationCommand;
 import fun.mntale.midnightPatch.command.ToggleProjectileDamageCommand;
 import fun.mntale.midnightPatch.command.ToggleDesirePathCommand;
+import fun.mntale.midnightPatch.command.ToggleFakePlayerOnJoinLeaveCommand;
 import fun.mntale.midnightPatch.command.ToggleDeathCameraCommand;
 import fun.mntale.midnightPatch.module.world.reacharound.ReachAroundBlockListener;
 import fun.mntale.midnightPatch.module.entity.minecart.MinecartChunkLoadListener;
 import fun.mntale.midnightPatch.module.entity.player.LootMobTargetListener;
 import fun.mntale.midnightPatch.module.entity.player.PhantomIsolation;
+import fun.mntale.midnightPatch.module.entity.player.PlayerLootListener;
 import fun.mntale.midnightPatch.module.entity.player.fakeplayer.MobSpawnerPlayer;
 import fun.mntale.midnightPatch.module.entity.player.indicator.HealthDamageIndicatorListener;
 import fun.mntale.midnightPatch.module.entity.player.projectile.ProjectileDamageListener;
+import fun.mntale.midnightPatch.module.entity.player.task.PlayerTaskManager;
 import fun.mntale.midnightPatch.module.world.fertilizer.FertilizerListener;
 import fun.mntale.midnightPatch.module.entity.babymob.BabyMobListener;
 import fun.mntale.midnightPatch.module.world.death.BedrockDeathCameraListener;
@@ -47,6 +50,7 @@ import fun.mntale.midnightPatch.command.ToggleMendingRepairCommand;
 import fun.mntale.midnightPatch.bootstrap.MidnightPatchExpansion;
 import fun.mntale.midnightPatch.bootstrap.MidnightPatchStartupJoinDelay;
 import fun.mntale.midnightPatch.command.PlayerCommand;
+import fun.mntale.midnightPatch.command.TaskCommand;
 
 public final class MidnightPatch extends JavaPlugin implements Listener {
     public static MidnightPatch instance;
@@ -124,6 +128,7 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         BasicCommand togglePhantomIsolationCommand = new TogglePhantomIsolationCommand();
         registerCommand("togglephantom", togglePhantomIsolationCommand);
 
+        getServer().getPluginManager().registerEvents(new PlayerLootListener(), this);
         BasicCommand toggleDeathLootGlowCommand = new fun.mntale.midnightPatch.command.ToggleDeathLootGlowCommand();
         registerCommand("toggledeathlootglow", toggleDeathLootGlowCommand);
         BasicCommand toggleDeathLootInvulnerableCommand = new fun.mntale.midnightPatch.command.ToggleDeathLootInvulnerableCommand();
@@ -140,9 +145,14 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         registerCommand("togglemendingrepair", toggleMendingRepairCommand);
 
         getServer().getPluginManager().registerEvents(new MobSpawnerPlayer(), this);
-     
         BasicCommand playerCommand = new PlayerCommand();
         registerCommand("player", playerCommand);
+        BasicCommand toggleFakePlayerOnJoinLeaveCommand = new ToggleFakePlayerOnJoinLeaveCommand();
+        registerCommand("toggleshadowplayer", toggleFakePlayerOnJoinLeaveCommand);
+
+        getServer().getPluginManager().registerEvents(new PlayerTaskManager(), this);
+        BasicCommand taskCommand = new TaskCommand();
+        registerCommand("task", taskCommand);
 
         MidnightPatchStartupJoinDelay.START_TIME = System.currentTimeMillis();
     }

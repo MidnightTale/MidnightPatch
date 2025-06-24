@@ -19,6 +19,7 @@ import fun.mntale.midnightPatch.command.ToggleMendingRepairCommand;
 import fun.mntale.midnightPatch.command.TogglePhantomIsolationCommand;
 import fun.mntale.midnightPatch.command.ToggleProjectileDamageCommand;
 import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
+import fun.mntale.midnightPatch.command.ToggleFakePlayerOnJoinLeaveCommand;
 
 /**
  * PlaceholderAPI expansion for MidnightPatch.
@@ -41,6 +42,7 @@ import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
  *   %midnightpatch_projectiledamage%      - Projectile Damage toggle
  *   %midnightpatch_desirepath%            - Desire Path toggle
  *   %midnightpatch_deathcamera%           - Death Camera toggle
+ *   %midnightpatch_fakeplayer%            - Fake Player toggle
  */
 public class MidnightPatchExpansion extends PlaceholderExpansion {
     @Override
@@ -55,7 +57,7 @@ public class MidnightPatchExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "1.0";
+        return "1.1";
     }
 
     @Override
@@ -83,6 +85,7 @@ public class MidnightPatchExpansion extends PlaceholderExpansion {
             case "projectiledamage" -> boolToString(ToggleProjectileDamageCommand.isProjectileDamageEnabled(player));
             case "desirepath" -> boolToString(ToggleDesirePathCommand.isDesirePathEnabled(player));
             case "deathcamera" -> boolToString(ToggleDeathCameraCommand.isDeathCameraEnabled(player));
+            case "fakeplayer" -> boolToString(ToggleFakePlayerOnJoinLeaveCommand.isEnabled(player));
             default -> null;
         };
     }

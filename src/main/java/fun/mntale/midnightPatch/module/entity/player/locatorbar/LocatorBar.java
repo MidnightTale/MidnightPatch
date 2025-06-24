@@ -86,18 +86,12 @@ public class LocatorBar implements Listener {
         if (!enabled) return;
         
         Player player = event.getPlayer();
-        Location from = event.getFrom();
-        Location to = event.getTo();
         
-        if (to != null && (Math.abs(to.getX() - from.getX()) > 0.5 || 
-                          Math.abs(to.getY() - from.getY()) > 0.5 || 
-                          Math.abs(to.getZ() - from.getZ()) > 0.5)) {
-            
             FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
-                playerLocations.put(player.getUniqueId(), to);
-                updatePlayerWaypoint(player, to);
+                playerLocations.put(player.getUniqueId(), event.getTo());
+                updatePlayerWaypoint(player, event.getTo());
             }, null);
-        }
+    
     }
     
     private static void updatePlayerWaypoint(Player movingPlayer, Location newLocation) {

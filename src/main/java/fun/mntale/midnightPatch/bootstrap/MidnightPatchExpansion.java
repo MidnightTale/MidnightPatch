@@ -20,6 +20,7 @@ import fun.mntale.midnightPatch.command.TogglePhantomIsolationCommand;
 import fun.mntale.midnightPatch.command.ToggleProjectileDamageCommand;
 import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
 import fun.mntale.midnightPatch.command.ToggleFakePlayerOnJoinLeaveCommand;
+import fun.mntale.midnightPatch.command.ToggleLocatorBarCommand;
 
 /**
  * PlaceholderAPI expansion for MidnightPatch.
@@ -43,6 +44,7 @@ import fun.mntale.midnightPatch.command.ToggleFakePlayerOnJoinLeaveCommand;
  *   %midnightpatch_desirepath%            - Desire Path toggle
  *   %midnightpatch_deathcamera%           - Death Camera toggle
  *   %midnightpatch_fakeplayer%            - Fake Player toggle
+ *   %midnightpatch_locatorbar%            - Locator Bar toggle
  */
 public class MidnightPatchExpansion extends PlaceholderExpansion {
     @Override
@@ -86,6 +88,7 @@ public class MidnightPatchExpansion extends PlaceholderExpansion {
             case "desirepath" -> boolToString(ToggleDesirePathCommand.isDesirePathEnabled(player));
             case "deathcamera" -> boolToString(ToggleDeathCameraCommand.isDeathCameraEnabled(player));
             case "fakeplayer" -> boolToString(ToggleFakePlayerOnJoinLeaveCommand.isEnabled(player));
+            case "locatorbar" -> boolToString(ToggleLocatorBarCommand.isLocatorBarEnabled(player));
             default -> null;
         };
     }

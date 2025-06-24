@@ -1,0 +1,20 @@
+name: MidnightPatch
+version: '1.0-SNAPSHOT'
+main: fun.mntale.midnightPatch.MidnightPatch
+api-version: '1.21'
+bootstrapper: fun.mntale.midnightPatch.bootstrap.MidnightPatchBootstrap
+authors: [ MidnightTale_ ]
+website: https://mntale.fun
+folia-supported: true
+dependencies:
+  server:
+    packetevents:
+      load: BEFORE
+      required: true
+      join-classpath: true
+    ProtocolLib:
+      load: BEFORE
+      required: true
+    PlaceholderAPI:
+      load: BEFORE # 
+      required: false

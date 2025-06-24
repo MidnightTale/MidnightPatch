@@ -16,7 +16,7 @@ public class MidnightPatchBootstrap implements PluginBootstrap {
     @Override
     public void bootstrap(BootstrapContext context) {
         context.getLifecycleManager().registerEventHandler(
-            RegistryEvents.ENCHANTMENT.freeze().newHandler(event -> {
+            RegistryEvents.ENCHANTMENT.compose().newHandler(event -> {
                 // Register Harvesting
                 event.registry().register(
                     EnchantmentKeys.create(NamespacedKey.fromString("midnightpatch:harvesting")),

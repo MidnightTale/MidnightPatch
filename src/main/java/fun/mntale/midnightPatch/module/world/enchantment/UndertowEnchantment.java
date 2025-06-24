@@ -17,13 +17,15 @@ import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import fun.mntale.midnightPatch.MidnightPatch;
 import io.papermc.paper.registry.RegistryAccess;
 
+import java.util.Objects;
+
 public class UndertowEnchantment implements Listener {
     private static final NamespacedKey UNDERTOW_KEY = NamespacedKey.fromString("midnightpatch:undertow");
 
     private Enchantment getUndertowEnchantment() {
         return RegistryAccess.registryAccess()
             .getRegistry(io.papermc.paper.registry.RegistryKey.ENCHANTMENT)
-            .get(UNDERTOW_KEY);
+            .get(Objects.requireNonNull(UNDERTOW_KEY));
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -32,7 +34,7 @@ public class UndertowEnchantment implements Listener {
         if (event.getDamager() instanceof Player player) {
             if (!(event.getEntity() instanceof LivingEntity target)) return;
             ItemStack weapon = player.getInventory().getItemInMainHand();
-            if (weapon == null || weapon.getType() != Material.TRIDENT) return;
+            if (weapon.getType() != Material.TRIDENT) return;
             Enchantment undertow = getUndertowEnchantment();
             if (undertow == null || !weapon.containsEnchantment(undertow)) return;
             if (!player.isInWater()) return;
@@ -46,7 +48,7 @@ public class UndertowEnchantment implements Listener {
             if (!(event.getEntity() instanceof LivingEntity target)) return;
             ItemStack tridentItem = trident.getItemStack();
             Enchantment undertow = getUndertowEnchantment();
-            if (undertow == null || tridentItem == null || !tridentItem.containsEnchantment(undertow)) return;
+            if (undertow == null || !tridentItem.containsEnchantment(undertow)) return;
             if (!(trident.getShooter() instanceof Player player)) return;
             if (!player.isInWater()) return;
             int level = tridentItem.getEnchantmentLevel(undertow);

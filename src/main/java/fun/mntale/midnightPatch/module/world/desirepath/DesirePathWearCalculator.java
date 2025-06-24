@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.World;
 
 public class DesirePathWearCalculator {
+    @SuppressWarnings("deprecation")
     public static int calculateWear(Player player) {
         boolean isSprinting = player.isSprinting();
         boolean isSneaking = player.isSneaking();

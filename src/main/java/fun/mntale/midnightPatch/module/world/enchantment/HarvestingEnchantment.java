@@ -16,6 +16,7 @@ import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import fun.mntale.midnightPatch.MidnightPatch;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class HarvestingEnchantment implements Listener {
     private static final Map<Material, Material> CROP_TO_SEED = new HashMap<>();
@@ -28,7 +29,7 @@ public class HarvestingEnchantment implements Listener {
     }
 
     private static final NamespacedKey HARVESTING_KEY = NamespacedKey.fromString("midnightpatch:harvesting");
-    private static final Enchantment HARVESTING_ENCHANT = io.papermc.paper.registry.RegistryAccess.registryAccess().getRegistry(io.papermc.paper.registry.RegistryKey.ENCHANTMENT).get(HARVESTING_KEY);
+    private static final Enchantment HARVESTING_ENCHANT = io.papermc.paper.registry.RegistryAccess.registryAccess().getRegistry(io.papermc.paper.registry.RegistryKey.ENCHANTMENT).get(Objects.requireNonNull(HARVESTING_KEY));
 
     @EventHandler
     public void onPlayerUseHoe(PlayerInteractEvent event) {
@@ -61,9 +62,8 @@ public class HarvestingEnchantment implements Listener {
                     block.breakNaturally(hoe);
 
                     block.setType(cropType);
-                    Ageable newAgeable = (Ageable) block.getBlockData();
-                    newAgeable.setAge(0);
-                    block.setBlockData(newAgeable);
+                    ageable.setAge(0);
+                    block.setBlockData(ageable);
                     center.getWorld().playSound(center.getLocation().add(0.5, 0.5, 0.5), org.bukkit.Sound.BLOCK_COMPOSTER_READY, 1.2f, 1.0f);
                     double radius = (range) / 2.0;
                     int points = 36; // every 10 degrees

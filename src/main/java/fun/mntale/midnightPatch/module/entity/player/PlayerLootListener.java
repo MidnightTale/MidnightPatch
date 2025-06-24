@@ -1,5 +1,6 @@
 package fun.mntale.midnightPatch.module.entity.player;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import org.bukkit.GameRule;
@@ -44,7 +45,7 @@ public class PlayerLootListener implements Listener {
                 item.setUnlimitedLifetime(ToggleDeathLootNoDespawnCommand.isEnabled(player));
                 item.setCanMobPickup(ToggleDeathLootLetMobPickupCommand.isEnabled(player));
                 if (!ToggleDeathLootLetPlayerPickupCommand.isEnabled(player)) {
-                    item.setMetadata("owner", new FixedMetadataValue(event.getEntity().getServer().getPluginManager().getPlugin("MidnightPatch"), player.getUniqueId().toString()));
+                    item.setMetadata("owner", new FixedMetadataValue(Objects.requireNonNull(event.getEntity().getServer().getPluginManager().getPlugin("MidnightPatch")), player.getUniqueId().toString()));
                 }
                 Vector velocity = new Vector(
                         Math.random() * 0.2 - 0.2  / 2,
@@ -73,7 +74,7 @@ public class PlayerLootListener implements Listener {
         if (!(event.getEntity() instanceof Player player)) return;
         Item item = event.getItem();
         if (item.hasMetadata("owner")) {
-            UUID ownerUUID = UUID.fromString(item.getMetadata("owner").get(0).asString());
+            UUID ownerUUID = UUID.fromString(item.getMetadata("owner").getFirst().asString());
             if (!player.getUniqueId().equals(ownerUUID)) {
                 event.setCancelled(true);
             }

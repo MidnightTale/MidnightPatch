@@ -116,16 +116,15 @@ public class HealthDamageIndicatorListener implements Listener {
         return (entityHeight - MIN_HEIGHT_OFFSET) +
             ThreadLocalRandom.current().nextDouble() * MAX_HEIGHT_EXTRA;
     }
-
+    @SuppressWarnings("deprecation")
     private String getIconForDamageCause(DamageCause cause) {
         return switch (cause) {
             case ENTITY_ATTACK, ENTITY_SWEEP_ATTACK -> "\uD83D\uDDE1"; // 🗡
             case PROJECTILE -> "\uD83C\uDFF9"; // 🏹
             case CONTACT -> "\uD83E\uDE93"; // 🪓
-            case ENTITY_EXPLOSION, BLOCK_EXPLOSION -> "\u2604"; // ☄
-            case FALL -> "\u23F3"; // ⏳
+            case ENTITY_EXPLOSION, BLOCK_EXPLOSION, LAVA, HOT_FLOOR -> "\u2604"; // ☄
+            case FALL, DRAGON_BREATH -> "\u23F3"; // ⏳
             case FIRE, FIRE_TICK -> "\uD83D\uDD25"; // 🔥
-            case LAVA, HOT_FLOOR -> "\u2604"; // ☄
             case MAGIC -> "\uD83E\uDDEA"; // 🧪
             case POISON -> "\u2697"; // ⚗
             case THORNS -> "\u2B6A"; // ⯪
@@ -136,7 +135,6 @@ public class HealthDamageIndicatorListener implements Listener {
             case STARVATION -> "\uD83C\uDF56"; // 🍖
             case FALLING_BLOCK -> "\uD83E\uDEA3"; // 🪣
             case CRAMMING -> "\uD83D\uDD14"; // 🔔
-            case DRAGON_BREATH -> "\u23F3"; // ⏳
             case WITHER -> "\u26CF"; // ⛏
             case FREEZE -> "\u26C4"; // ⛄
             case SONIC_BOOM -> "\uD83D\uDD0A"; // 🔊

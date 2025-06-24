@@ -11,6 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import fun.mntale.midnightPatch.MidnightPatch;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 
+import java.util.Objects;
+
 public class FrostbiteEnchantment implements Listener {
     private static final NamespacedKey FROSTBITE_KEY = NamespacedKey.fromString("midnightpatch:frostbite");
     private static final int FREEZE_TICKS_PER_LEVEL = 160; // 8 seconds per level
@@ -22,7 +24,7 @@ public class FrostbiteEnchantment implements Listener {
         if (weapon == null) return;
         Enchantment frostbite = io.papermc.paper.registry.RegistryAccess.registryAccess()
             .getRegistry(io.papermc.paper.registry.RegistryKey.ENCHANTMENT)
-            .get(FROSTBITE_KEY);
+            .get(Objects.requireNonNull(FROSTBITE_KEY));
         if (frostbite == null || !weapon.containsEnchantment(frostbite)) return;
         if (!(event.getEntity() instanceof LivingEntity target)) return;
         int level = weapon.getEnchantmentLevel(frostbite);

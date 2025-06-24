@@ -13,6 +13,7 @@ import org.bukkit.NamespacedKey;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import org.jspecify.annotations.NullMarked;
 import java.util.Map;
+import java.util.Objects;
 
 @NullMarked
 public class PoseArmorStandListener implements Listener {
@@ -43,7 +44,7 @@ public class PoseArmorStandListener implements Listener {
             return;
         }
         ItemStack item = player.getInventory().getItemInMainHand();
-        if (item != null && item.getType() != Material.AIR) {
+        if (item.getType() != Material.AIR) {
             return;
         }
         cyclePose(armorStand);
@@ -64,7 +65,7 @@ public class PoseArmorStandListener implements Listener {
     private void cyclePose(ArmorStand armorStand) {
         String[] poseNames = presetPoses.keySet().toArray(new String[0]);
         String currentPose = getCurrentPoseName(armorStand);
-        if (currentPose == null || !presetPoses.containsKey(currentPose)) {
+        if (!presetPoses.containsKey(currentPose)) {
             currentPose = "default";
         }
         int currentIndex = -1;
@@ -86,18 +87,18 @@ public class PoseArmorStandListener implements Listener {
             task -> {
                 if (armorStand.isDead()) return;
                 armorStand.setArms(true);
-                armorStand.setHeadPose(pose.head);
-                armorStand.setBodyPose(pose.body);
-                armorStand.setLeftArmPose(pose.leftArm);
-                armorStand.setRightArmPose(pose.rightArm);
-                armorStand.setLeftLegPose(pose.leftLeg);
-                armorStand.setRightLegPose(pose.rightLeg);
+                armorStand.setHeadPose(pose.head());
+                armorStand.setBodyPose(pose.body());
+                armorStand.setLeftArmPose(pose.leftArm());
+                armorStand.setRightArmPose(pose.rightArm());
+                armorStand.setLeftLegPose(pose.leftLeg());
+                armorStand.setRightLegPose(pose.rightLeg());
                 armorStand.getPersistentDataContainer().set(POSE_KEY, PersistentDataType.STRING, poseName);
             }, null
         );
     }
 
     private String getCurrentPoseName(ArmorStand armorStand) {
-        return armorStand.getPersistentDataContainer().get(POSE_KEY, PersistentDataType.STRING);
+        return Objects.requireNonNull(armorStand.getPersistentDataContainer().get(POSE_KEY, PersistentDataType.STRING));
     }
 } 

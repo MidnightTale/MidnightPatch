@@ -14,6 +14,8 @@ import fun.mntale.midnightPatch.MidnightPatch;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
 import org.bukkit.Sound;
 import org.bukkit.Particle;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
@@ -36,7 +38,7 @@ public class ResilienceEnchantment implements Listener {
     private Enchantment getResilienceEnchantment() {
         return io.papermc.paper.registry.RegistryAccess.registryAccess()
             .getRegistry(io.papermc.paper.registry.RegistryKey.ENCHANTMENT)
-            .get(RESILIENCE_KEY);
+            .get(Objects.requireNonNull(RESILIENCE_KEY));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

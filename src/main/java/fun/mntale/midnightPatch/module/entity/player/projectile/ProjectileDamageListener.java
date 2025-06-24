@@ -5,8 +5,6 @@ import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.ThrownPotion;
-import org.bukkit.entity.SplashPotion;
-import org.bukkit.entity.LingeringPotion;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
@@ -18,7 +16,7 @@ public class ProjectileDamageListener implements Listener {
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent event) {
         Projectile projectile = event.getEntity();
-        if (projectile instanceof ThrownPotion || projectile instanceof SplashPotion || projectile instanceof LingeringPotion) return;
+        if (projectile instanceof ThrownPotion) return;
         if (projectile instanceof Arrow) return;
         if (projectile instanceof Trident) return;
         if (event.getHitEntity() instanceof LivingEntity target) {

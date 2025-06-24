@@ -13,7 +13,6 @@ import java.util.Map;
 public class RelimitAnvil implements Listener {
     private final Map<AnvilInventory, Integer> realMaxRepairCosts = new HashMap<>();
     private final boolean forceMax = true;
-
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPrepareAnvil(PrepareAnvilEvent e) {
         InventoryView view = e.getView();

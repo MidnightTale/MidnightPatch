@@ -54,9 +54,7 @@ public class DesirePathDataManager {
                 regionDataCopy.put(entry.getKey(), new HashMap<>(entry.getValue()));
             }
             File file = getRegionFile(world, chunkX, chunkZ);
-            FoliaScheduler.getAsyncScheduler().runNow(MidnightPatch.instance, (io) -> {
-                DesirePathRegionIO.saveRegion(file, regionDataCopy);
-            });
+            FoliaScheduler.getAsyncScheduler().runNow(MidnightPatch.instance, (io) -> DesirePathRegionIO.saveRegion(file, regionDataCopy));
             dirtyRegions.remove(regionKey);
         }
     }

@@ -21,13 +21,14 @@ import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class UpdraftEnchantment implements Listener {
     private static final NamespacedKey UPDRAFT_KEY = NamespacedKey.fromString("midnightpatch:updraft");
     public static final Enchantment UPDRAFT_ENCHANT = io.papermc.paper.registry.RegistryAccess.registryAccess()
         .getRegistry(io.papermc.paper.registry.RegistryKey.ENCHANTMENT)
-        .get(UPDRAFT_KEY);
+        .get(Objects.requireNonNull(UPDRAFT_KEY));
 
     // Track number of updraft jumps used per player per airtime
     private final Map<UUID, Integer> updraftJumps = new HashMap<>();
@@ -38,6 +39,7 @@ public class UpdraftEnchantment implements Listener {
      * Handles player join events. Ensures the player's flight state is set correctly
      * based on whether they have the Updraft enchantment on their boots. Resets jump count.
      */
+    @SuppressWarnings("deprecation")
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
@@ -62,6 +64,7 @@ public class UpdraftEnchantment implements Listener {
      * - Enables flight on ground and resets jump count.
      * - In air, allows flight if player has remaining updraft jumps.
      */
+    @SuppressWarnings("deprecation")
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
@@ -112,9 +115,7 @@ public class UpdraftEnchantment implements Listener {
             fallStartY.remove(uuid);
             wasFalling.remove(uuid);
             updraftJumps.remove(uuid); // Always reset on ground
-            FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
-                player.setAllowFlight(true);
-            }, null);
+            FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> player.setAllowFlight(true), null);
         } else {
             // Just started falling
             if (!fallStartY.containsKey(uuid)) {
@@ -231,6 +232,7 @@ public class UpdraftEnchantment implements Listener {
     /**
      * Handles armor changes. Updates flight permission if Updraft boots are equipped or removed.
      */
+    @SuppressWarnings("deprecation")
     @EventHandler
     public void onArmorChange(PlayerArmorChangeEvent event) {
         Player player = event.getPlayer();
@@ -262,7 +264,7 @@ public class UpdraftEnchantment implements Listener {
     private boolean shouldHaveUpdraft(Player player) {
         if (isCreativeOrSpectator(player)) return false;
         ItemStack boots = player.getInventory().getBoots();
-        return boots != null && boots.getType() != Material.AIR && boots.containsEnchantment(UPDRAFT_ENCHANT);
+        return boots != null && boots.getType() != Material.AIR && boots.containsEnchantment(Objects.requireNonNull(UPDRAFT_ENCHANT));
     }
 
     /**
@@ -270,7 +272,7 @@ public class UpdraftEnchantment implements Listener {
      */
     private int getUpdraftLevel(Player player) {
         ItemStack boots = player.getInventory().getBoots();
-        return (boots != null && boots.getType() != Material.AIR) ? boots.getEnchantmentLevel(UPDRAFT_ENCHANT) : 0;
+        return (boots != null && boots.getType() != Material.AIR) ? boots.getEnchantmentLevel(Objects.requireNonNull(UPDRAFT_ENCHANT)) : 0;
     }
 
     /**

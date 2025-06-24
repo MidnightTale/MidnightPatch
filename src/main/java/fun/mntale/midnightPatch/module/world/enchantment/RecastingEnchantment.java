@@ -22,6 +22,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -43,7 +44,7 @@ public class RecastingEnchantment implements Listener {
         }
         Enchantment recastEnchant = io.papermc.paper.registry.RegistryAccess.registryAccess()
             .getRegistry(io.papermc.paper.registry.RegistryKey.ENCHANTMENT)
-            .get(RECAST_KEY);
+            .get(Objects.requireNonNull(RECAST_KEY));
         return recastEnchant != null && rod.containsEnchantment(recastEnchant);
     }
 
@@ -202,20 +203,5 @@ public class RecastingEnchantment implements Listener {
         }
     }
 
-    
-    public void cleanupPlayer(Player player) {
-        stopRecastTask(player);
-    }
-    
-    /**
-     * Clean up all tasks when the plugin is disabled
-     */
-    public void cleanupAll() {
-        for (TaskWrapper task : autoFishTasks.values()) {
-            if (task != null) {
-                task.cancel();
-            }
-        }
-        autoFishTasks.clear();
-    }
-} 
+
+}

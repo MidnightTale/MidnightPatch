@@ -97,9 +97,7 @@ public class BedrockDeathCameraListener implements Listener {
 
         final Component deathLocMsg = Component.text("X: " + deathLoc.getBlockX() + "   Y: " + deathLoc.getBlockY() + "   Z: " + deathLoc.getBlockZ());
         final TaskWrapper[] actionBarWrapper = new TaskWrapper[1];
-        actionBarWrapper[0] = FoliaScheduler.getEntityScheduler().runAtFixedRate(player, MidnightPatch.instance, (ignored) -> {
-            player.sendActionBar(deathLocMsg);
-        }, null, 0L, 20L);
+        actionBarWrapper[0] = FoliaScheduler.getEntityScheduler().runAtFixedRate(player, MidnightPatch.instance, (ignored) -> player.sendActionBar(deathLocMsg), null, 0L, 20L);
 
         final TaskWrapper[] wrapper = new TaskWrapper[1];
         wrapper[0] = FoliaScheduler.getEntityScheduler().runAtFixedRate(player, MidnightPatch.instance, (ignored) -> {
@@ -107,9 +105,7 @@ public class BedrockDeathCameraListener implements Listener {
                 sendSetCameraPacket(player, player.getEntityId());
                 ArmorStand cam = deathCameras.remove(player.getUniqueId());
                 if (cam != null && !cam.isDead()) {
-                    FoliaScheduler.getEntityScheduler().runDelayed(player, MidnightPatch.instance, (t) -> {
-                        cam.remove();
-                    }, null, 20L);
+                    FoliaScheduler.getEntityScheduler().runDelayed(player, MidnightPatch.instance, (t) -> cam.remove(), null, 20L);
                 }
                 ItemStack realItem = player.getInventory().getItemInMainHand();
                 sendSetSlotPacket(player, realItem);

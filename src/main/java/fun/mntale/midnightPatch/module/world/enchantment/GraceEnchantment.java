@@ -22,6 +22,8 @@ import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 
+import java.util.Objects;
+
 public class GraceEnchantment implements Listener {
     private static final NamespacedKey GRACE_KEY = NamespacedKey.fromString("midnightpatch:grace");
     private static final PotionEffect SPEED_EFFECT = new PotionEffect(PotionEffectType.SPEED, 40, 0, true, false, true);
@@ -38,7 +40,7 @@ public class GraceEnchantment implements Listener {
     private Enchantment getGraceEnchantment() {
         return RegistryAccess.registryAccess()
             .getRegistry(RegistryKey.ENCHANTMENT)
-            .get(GRACE_KEY);
+            .get(Objects.requireNonNull(GRACE_KEY));
     }
 
     private void updateGraceEffect(Player player) {
@@ -52,7 +54,7 @@ public class GraceEnchantment implements Listener {
     }
 
     private boolean isFullHealth(Player player) {
-        double max = player.getAttribute(Attribute.MAX_HEALTH).getValue();
+        double max = Objects.requireNonNull(player.getAttribute(Attribute.MAX_HEALTH)).getValue();
         return player.getHealth() >= max;
     }
 

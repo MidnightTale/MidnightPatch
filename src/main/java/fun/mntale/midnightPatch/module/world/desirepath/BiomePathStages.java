@@ -31,35 +31,24 @@ public class BiomePathStages {
         // End
         Material[] endStages = { Material.END_STONE, Material.PURPUR_BLOCK, Material.END_STONE_BRICKS, Material.PURPUR_PILLAR, Material.COBBLESTONE, Material.CHISELED_STONE_BRICKS, Material.OBSIDIAN, Material.CRYING_OBSIDIAN, Material.BLACKSTONE };
         // Default fallback
-        Material[] defaultStages = plainsStages;
         for (Biome b : RegistryAccess.registryAccess().getRegistry(RegistryKey.BIOME)) {
             String name = b.getKey().getKey();
-            if (name.equals("plains") || name.equals("forest") || name.equals("birch_forest") || name.equals("dark_forest") || name.equals("flower_forest") || name.equals("meadow")) {
-                BIOME_PATH_STAGES.put(b, plainsStages);
-            } else if (name.equals("taiga") || name.equals("snowy_taiga") || name.equals("snowy_plains") || name.equals("snowy_slopes") || name.equals("snowy_beach") || name.equals("grove") || name.equals("frozen_river") || name.equals("frozen_ocean")) {
-                BIOME_PATH_STAGES.put(b, taigaStages);
-            } else if (name.equals("swamp") || name.equals("mangrove_swamp")) {
-                BIOME_PATH_STAGES.put(b, swampStages);
-            } else if (name.equals("desert") || name.equals("badlands") || name.equals("eroded_badlands") || name.equals("wooded_badlands") || name.equals("savanna") || name.equals("savanna_plateau")) {
-                BIOME_PATH_STAGES.put(b, desertStages);
-            } else if (name.equals("jungle") || name.equals("bamboo_jungle") || name.equals("sparse_jungle")) {
-                BIOME_PATH_STAGES.put(b, jungleStages);
-            } else if (name.equals("mushroom_fields") || name.equals("mushroom_field_shore")) {
-                BIOME_PATH_STAGES.put(b, mushroomStages);
-            } else if (name.equals("nether_wastes")) {
-                BIOME_PATH_STAGES.put(b, netherWastesStages);
-            } else if (name.equals("soul_sand_valley")) {
-                BIOME_PATH_STAGES.put(b, soulSandValleyStages);
-            } else if (name.equals("crimson_forest")) {
-                BIOME_PATH_STAGES.put(b, crimsonForestStages);
-            } else if (name.equals("warped_forest")) {
-                BIOME_PATH_STAGES.put(b, warpedForestStages);
-            } else if (name.equals("basalt_deltas")) {
-                BIOME_PATH_STAGES.put(b, basaltDeltasStages);
-            } else if (name.equals("the_end") || name.equals("end_highlands") || name.equals("end_midlands") || name.equals("end_barrens") || name.equals("small_end_islands")) {
-                BIOME_PATH_STAGES.put(b, endStages);
-            } else {
-                BIOME_PATH_STAGES.put(b, defaultStages);
+            switch (name) {
+                case "taiga", "snowy_taiga", "snowy_plains", "snowy_slopes", "snowy_beach", "grove", "frozen_river",
+                     "frozen_ocean" -> BIOME_PATH_STAGES.put(b, taigaStages);
+                case "swamp", "mangrove_swamp" -> BIOME_PATH_STAGES.put(b, swampStages);
+                case "desert", "badlands", "eroded_badlands", "wooded_badlands", "savanna", "savanna_plateau" ->
+                        BIOME_PATH_STAGES.put(b, desertStages);
+                case "jungle", "bamboo_jungle", "sparse_jungle" -> BIOME_PATH_STAGES.put(b, jungleStages);
+                case "mushroom_fields", "mushroom_field_shore" -> BIOME_PATH_STAGES.put(b, mushroomStages);
+                case "nether_wastes" -> BIOME_PATH_STAGES.put(b, netherWastesStages);
+                case "soul_sand_valley" -> BIOME_PATH_STAGES.put(b, soulSandValleyStages);
+                case "crimson_forest" -> BIOME_PATH_STAGES.put(b, crimsonForestStages);
+                case "warped_forest" -> BIOME_PATH_STAGES.put(b, warpedForestStages);
+                case "basalt_deltas" -> BIOME_PATH_STAGES.put(b, basaltDeltasStages);
+                case "the_end", "end_highlands", "end_midlands", "end_barrens", "small_end_islands" ->
+                        BIOME_PATH_STAGES.put(b, endStages);
+                default -> BIOME_PATH_STAGES.put(b, plainsStages);
             }
         }
     }

@@ -28,7 +28,7 @@ public class MendingRepair implements Listener {
             return;
         }
         ItemStack item = player.getInventory().getItemInMainHand();
-        if (item == null || !item.hasItemMeta()) {
+        if (!item.hasItemMeta()) {
             return;
         }
         ItemMeta meta = item.getItemMeta();

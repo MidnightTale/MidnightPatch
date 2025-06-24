@@ -43,7 +43,7 @@ import fun.mntale.midnightPatch.module.world.enchantment.ResilienceEnchantment;
 import fun.mntale.midnightPatch.module.world.enchantment.UndertowEnchantment;
 import fun.mntale.midnightPatch.module.entity.player.MendingRepair;
 import fun.mntale.midnightPatch.command.ToggleMendingRepairCommand;
-import fun.mntale.midnightPatch.bootstrap.MidnightPatchExpansion;;
+import fun.mntale.midnightPatch.bootstrap.MidnightPatchExpansion;
 
 public final class MidnightPatch extends JavaPlugin implements Listener {
     public static MidnightPatch instance;
@@ -137,10 +137,6 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         registerCommand("togglemendingrepair", toggleMendingRepairCommand);
 
         StartupJoinDelayPatch.START_TIME = System.currentTimeMillis();
-    }
-
-    @Override
-    public void onDisable() {
     }
 
 

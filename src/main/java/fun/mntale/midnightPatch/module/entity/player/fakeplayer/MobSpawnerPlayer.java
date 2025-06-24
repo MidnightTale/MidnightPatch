@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Collection;
+import java.nio.charset.StandardCharsets;
 
 public class MobSpawnerPlayer implements Listener {
 
@@ -41,7 +42,8 @@ public class MobSpawnerPlayer implements Listener {
 
             MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
             ServerLevel world = ((CraftWorld) location.getWorld()).getHandle();
-            GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
+            UUID fakeUuid = UUID.nameUUIDFromBytes(("FAKE_PLAYER_" + name).getBytes(StandardCharsets.UTF_8));
+            GameProfile gameProfile = new GameProfile(fakeUuid, name);
             ClientInformation clientInformation = ClientInformation.createDefault();
             ServerPlayer fakePlayer = new ServerPlayer(server, world, gameProfile, clientInformation);
 

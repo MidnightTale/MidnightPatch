@@ -66,18 +66,13 @@ public class LocatorBar implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        
-        FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
-            playerLocations.put(player.getUniqueId(), player.getLocation());
-            
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if (!onlinePlayer.equals(player) && !isCreativeOrSpectator(onlinePlayer) && onlinePlayer.getWorld().equals(player.getWorld())) {
-                    sendWaypoint(player, onlinePlayer, onlinePlayer.getLocation());
-                }
+        playerLocations.put(player.getUniqueId(), player.getLocation());
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if (!onlinePlayer.equals(player) && !isCreativeOrSpectator(onlinePlayer) && onlinePlayer.getWorld().equals(player.getWorld())) {
+                sendWaypoint(player, onlinePlayer, onlinePlayer.getLocation());
             }
-            // Show bed waypoint to the owner if they have a bed spawn
-            sendBedWaypoint(player);
-        }, null);
+        }
+        sendBedWaypoint(player);
     }
     
     @EventHandler
@@ -111,7 +106,7 @@ public class LocatorBar implements Listener {
             Location bedLoc = event.getBlock().getLocation();
             FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, bedLoc, (task) -> {
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    Location playerBed = player.getBedLocation();
+                    Location playerBed = player.getBedSpawnLocation();
                     if (playerBed != null && playerBed.getBlock().equals(event.getBlock())) {
                         removeBedWaypoint(player);
                     }
@@ -127,7 +122,7 @@ public class LocatorBar implements Listener {
                 Location bedLoc = block.getLocation();
                 FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, bedLoc, (task) -> {
                     for (Player player : Bukkit.getOnlinePlayers()) {
-                        Location playerBed = player.getBedLocation();
+                        Location playerBed = player.getBedSpawnLocation();
                         if (playerBed != null && playerBed.getBlock().equals(block)) {
                             removeBedWaypoint(player);
                         }
@@ -144,7 +139,7 @@ public class LocatorBar implements Listener {
                 Location bedLoc = block.getLocation();
                 FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, bedLoc, (task) -> {
                     for (Player player : Bukkit.getOnlinePlayers()) {
-                        Location playerBed = player.getBedLocation();
+                        Location playerBed = player.getBedSpawnLocation();
                         if (playerBed != null && playerBed.getBlock().equals(block)) {
                             removeBedWaypoint(player);
                         }
@@ -284,7 +279,7 @@ public class LocatorBar implements Listener {
 
     private static void sendBedWaypoint(Player player) {
         if (!ToggleLocatorBarCommand.isLocatorBarEnabled(player)) return;
-        Location bedLoc = player.getBedLocation();
+        Location bedLoc = player.getBedSpawnLocation();
         if (bedLoc == null) {
             removeBedWaypoint(player);
             return;

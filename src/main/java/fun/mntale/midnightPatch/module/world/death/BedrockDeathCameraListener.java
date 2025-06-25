@@ -107,7 +107,7 @@ public class BedrockDeathCameraListener implements Listener {
                 sendSetCameraPacket(player, player.getEntityId());
                 ArmorStand cam = deathCameras.remove(player.getUniqueId());
                 if (cam != null && !cam.isDead()) {
-                    FoliaScheduler.getEntityScheduler().runDelayed(player, MidnightPatch.instance, (t) -> cam.remove(), null, 20L);
+                    FoliaScheduler.getEntityScheduler().runDelayed(cam, MidnightPatch.instance, (t) -> cam.remove(), null, 20L);
                 }
                 ItemStack realItem = player.getInventory().getItemInMainHand();
                 sendSetSlotPacket(player, realItem);

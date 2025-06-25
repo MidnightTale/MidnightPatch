@@ -78,10 +78,8 @@ public class LocatorBar implements Listener {
         Player player = event.getPlayer();
         UUID playerId = player.getUniqueId();
         
-        FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
-            removeWaypointFromAllPlayers(playerId);
-            playerLocations.remove(playerId);
-        }, null);
+        removeWaypointFromAllPlayers(playerId);
+        playerLocations.remove(playerId);
     }
     
     @EventHandler

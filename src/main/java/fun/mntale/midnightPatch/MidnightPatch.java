@@ -126,10 +126,6 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         BasicCommand toggleArmorStandPoseCommand = new ToggleArmorStandPoseCommand();
         registerCommand("togglearmorstandpose", toggleArmorStandPoseCommand);
 
-        getServer().getPluginManager().registerEvents(new ArmorVisibilityListener(), this);
-        BasicCommand toggleArmorVisibilityCommand = new ToggleArmorVisibilityCommand();
-        registerCommand("togglearmorvisibility", toggleArmorVisibilityCommand);
-
         BasicCommand toggleLootChestProtectionCommand = new ToggleLootChestProtectionCommand();
         registerCommand("toggletargetloot", toggleLootChestProtectionCommand);
 

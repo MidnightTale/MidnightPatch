@@ -18,11 +18,11 @@ public class FakePlayerBroadcaster {
         ServerEntity tracker = new ServerEntity(
             (net.minecraft.server.level.ServerLevel) fakePlayer.level(),
             fakePlayer,
-            0, // update interval
+            1200, // update interval (or 1)
             true, // trackDelta
             (packet) -> {}, // broadcast (no-op)
             (packet, uuids) -> {}, // broadcastWithIgnore (no-op)
-            new java.util.HashSet<>() // trackedPlayers
+            java.util.concurrent.ConcurrentHashMap.newKeySet() // trackedPlayers (thread-safe)
         );
         // 3. Spawn entity in world
         ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(fakePlayer, tracker);
@@ -35,4 +35,5 @@ public class FakePlayerBroadcaster {
             }
         }
     }
+
 } 

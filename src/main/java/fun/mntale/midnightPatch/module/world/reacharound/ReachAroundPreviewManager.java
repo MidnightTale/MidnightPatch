@@ -20,6 +20,10 @@ public class ReachAroundPreviewManager {
     private final Map<UUID, Location> lastPreviewLocation = new ConcurrentHashMap<>();
 
     public void updatePreview(Player player, Material blockType) {
+        if (!blockType.isBlock() || !blockType.isSolid()) {
+            removePreview(player);
+            return;
+        }
         Location previewLocation = ReachAroundUtil.getPlayerReachAroundTarget(player);
         if (previewLocation == null) {
             removePreview(player);

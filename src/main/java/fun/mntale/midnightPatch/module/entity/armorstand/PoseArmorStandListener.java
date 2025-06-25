@@ -99,6 +99,7 @@ public class PoseArmorStandListener implements Listener {
     }
 
     private String getCurrentPoseName(ArmorStand armorStand) {
-        return Objects.requireNonNull(armorStand.getPersistentDataContainer().get(POSE_KEY, PersistentDataType.STRING));
+        String pose = armorStand.getPersistentDataContainer().get(POSE_KEY, PersistentDataType.STRING);
+        return pose != null ? pose : "default";
     }
 } 

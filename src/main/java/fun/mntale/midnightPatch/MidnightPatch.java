@@ -15,11 +15,13 @@ import fun.mntale.midnightPatch.command.ToggleProjectileDamageCommand;
 import fun.mntale.midnightPatch.command.ToggleDesirePathCommand;
 import fun.mntale.midnightPatch.command.ToggleFakePlayerOnJoinLeaveCommand;
 import fun.mntale.midnightPatch.command.ToggleDeathCameraCommand;
+import fun.mntale.midnightPatch.command.ToggleArmorVisibilityCommand;
 import fun.mntale.midnightPatch.module.world.reacharound.ReachAroundBlockListener;
 import fun.mntale.midnightPatch.module.entity.minecart.MinecartChunkLoadListener;
 import fun.mntale.midnightPatch.module.entity.player.LootMobTargetListener;
 import fun.mntale.midnightPatch.module.entity.player.PhantomIsolation;
 import fun.mntale.midnightPatch.module.entity.player.PlayerLootListener;
+import fun.mntale.midnightPatch.module.entity.player.ArmorVisibilityListener;
 import fun.mntale.midnightPatch.module.entity.player.fakeplayer.MobSpawnerPlayer;
 import fun.mntale.midnightPatch.module.entity.player.indicator.HealthDamageIndicatorListener;
 import fun.mntale.midnightPatch.module.entity.player.projectile.ProjectileDamageListener;
@@ -123,6 +125,10 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
 
         BasicCommand toggleArmorStandPoseCommand = new ToggleArmorStandPoseCommand();
         registerCommand("togglearmorstandpose", toggleArmorStandPoseCommand);
+
+        getServer().getPluginManager().registerEvents(new ArmorVisibilityListener(), this);
+        BasicCommand toggleArmorVisibilityCommand = new ToggleArmorVisibilityCommand();
+        registerCommand("togglearmorvisibility", toggleArmorVisibilityCommand);
 
         BasicCommand toggleLootChestProtectionCommand = new ToggleLootChestProtectionCommand();
         registerCommand("toggletargetloot", toggleLootChestProtectionCommand);

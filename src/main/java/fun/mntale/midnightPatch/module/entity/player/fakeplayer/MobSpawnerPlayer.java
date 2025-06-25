@@ -3,6 +3,7 @@ package fun.mntale.midnightPatch.module.entity.player.fakeplayer;
 import fun.mntale.midnightPatch.MidnightPatch;
 import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import net.minecraft.server.level.ServerPlayer;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,6 +18,8 @@ public class MobSpawnerPlayer implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        if (isCreativeOrSpectator(player)) return;
+        
         if (ToggleFakePlayerOnJoinLeaveCommand.isEnabled(player)) {
             FoliaScheduler.getRegionScheduler().runDelayed(
                 MidnightPatch.instance,
@@ -39,5 +42,13 @@ public class MobSpawnerPlayer implements Listener {
                 (task) -> FakePlayerFactory.remove(fakeName)
             );
         }
+    }
+
+    /**
+     * Checks if the player is in Creative or Spectator mode.
+     */
+    private boolean isCreativeOrSpectator(Player player) {
+        GameMode mode = player.getGameMode();
+        return mode == GameMode.CREATIVE || mode == GameMode.SPECTATOR;
     }
 } 

@@ -1,6 +1,7 @@
 package fun.mntale.midnightPatch.module.entity.player.locatorbar;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -65,7 +66,7 @@ public class LocatorBar implements Listener {
             playerLocations.put(player.getUniqueId(), player.getLocation());
             
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if (!onlinePlayer.equals(player)) {
+                if (!onlinePlayer.equals(player) && !isCreativeOrSpectator(onlinePlayer)) {
                     sendWaypoint(player, onlinePlayer, onlinePlayer.getLocation());
                 }
             }
@@ -93,10 +94,12 @@ public class LocatorBar implements Listener {
                 playerLocations.put(player.getUniqueId(), event.getTo());
                 updatePlayerWaypoint(player, event.getTo());
             }, null);
-    
     }
     
     private static void updatePlayerWaypoint(Player movingPlayer, Location newLocation) {
+        // Only update waypoints if the moving player is not creative/spectator
+        if (isCreativeOrSpectator(movingPlayer)) return;
+        
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (!onlinePlayer.equals(movingPlayer)) {
                 FoliaScheduler.getEntityScheduler().run(onlinePlayer, MidnightPatch.instance, (task) -> {
@@ -108,7 +111,13 @@ public class LocatorBar implements Listener {
     
     private static void sendWaypoint(Player recipient, Player target, Location location) {
         try {
-            if (!ToggleLocatorBarCommand.isLocatorBarEnabled(target)) {
+            // Don't send waypoint if target is creative/spectator (they're not tracked)
+            if (isCreativeOrSpectator(target)) {
+                return;
+            }
+            
+            // Check if recipient has locator bar enabled
+            if (!ToggleLocatorBarCommand.isLocatorBarEnabled(recipient)) {
                 return;
             }
             
@@ -204,5 +213,13 @@ public class LocatorBar implements Listener {
         }
         
         return (red << 16) | (green << 8) | blue;
+    }
+
+    /**
+     * Checks if the player is in Creative or Spectator mode.
+     */
+    private static boolean isCreativeOrSpectator(Player player) {
+        GameMode mode = player.getGameMode();
+        return mode == GameMode.CREATIVE || mode == GameMode.SPECTATOR;
     }
 }

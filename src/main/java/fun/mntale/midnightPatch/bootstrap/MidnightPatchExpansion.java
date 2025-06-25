@@ -21,7 +21,6 @@ import fun.mntale.midnightPatch.command.ToggleProjectileDamageCommand;
 import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
 import fun.mntale.midnightPatch.command.ToggleFakePlayerOnJoinLeaveCommand;
 import fun.mntale.midnightPatch.command.ToggleLocatorBarCommand;
-import fun.mntale.midnightPatch.command.ToggleArmorVisibilityCommand;
 
 /**
  * PlaceholderAPI expansion for MidnightPatch.
@@ -86,7 +85,6 @@ public class MidnightPatchExpansion extends PlaceholderExpansion {
             case "mendingrepair" -> boolToString(ToggleMendingRepairCommand.isEnabled(player));
             case "lootchestprotection" -> boolToString(ToggleLootChestProtectionCommand.isLootChestProtectionEnabled(player));
             case "armorstandpose" -> boolToString(ToggleArmorStandPoseCommand.isArmorStandPoseEnabled(player));
-            case "armorvisibility" -> boolToString(ToggleArmorVisibilityCommand.isArmorVisibilityEnabled(player));
             case "projectiledamage" -> boolToString(ToggleProjectileDamageCommand.isProjectileDamageEnabled(player));
             case "desirepath" -> boolToString(ToggleDesirePathCommand.isDesirePathEnabled(player));
             case "deathcamera" -> boolToString(ToggleDeathCameraCommand.isDeathCameraEnabled(player));

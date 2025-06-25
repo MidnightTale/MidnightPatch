@@ -24,8 +24,11 @@ public class MobSpawnerPlayer implements Listener {
             FoliaScheduler.getRegionScheduler().runDelayed(
                 MidnightPatch.instance,
                 player.getLocation(),
-                (task) -> FakePlayerFactory.createFakeForPlayer(player),
-                2L
+                (task) -> {
+                    FakePlayerFactory.createFakeForPlayer(player);
+                    rebroadcastAllFakePlayersToAllOnline();
+                },
+                20L
             );
         }
     }
@@ -44,11 +47,25 @@ public class MobSpawnerPlayer implements Listener {
         }
     }
 
+    @EventHandler
+    public void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent event) {
+        rebroadcastAllFakePlayersToAllOnline();
+    }
+
     /**
      * Checks if the player is in Creative or Spectator mode.
      */
     private boolean isCreativeOrSpectator(Player player) {
         GameMode mode = player.getGameMode();
         return mode == GameMode.CREATIVE || mode == GameMode.SPECTATOR;
+    }
+
+    // Utility method to re-broadcast all fake players to all online players
+    public static void rebroadcastAllFakePlayersToAllOnline() {
+        for (Player online : org.bukkit.Bukkit.getOnlinePlayers()) {
+            for (net.minecraft.server.level.ServerPlayer fake : fun.mntale.midnightPatch.module.entity.player.fakeplayer.FakePlayerFactory.fakePlayers.values()) {
+                fun.mntale.midnightPatch.module.entity.player.fakeplayer.FakePlayerBroadcaster.broadcastToPlayer(fake, online);
+            }
+        }
     }
 } 

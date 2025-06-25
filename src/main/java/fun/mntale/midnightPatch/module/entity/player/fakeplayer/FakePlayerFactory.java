@@ -33,14 +33,14 @@ public class FakePlayerFactory {
         GameProfile profile = (spec.skinProfile() != null) ? spec.skinProfile() : new GameProfile(spec.uuid(), spec.name());
         ClientInformation clientInformation = new ClientInformation(
             "en_us",
-            10,
+            8,
             ChatVisiblity.HIDDEN,
-            true,
+            false,
             127,
             HumanoidArm.RIGHT,
             false,
             false,
-            ParticleStatus.ALL
+            ParticleStatus.MINIMAL
         );
         ServerPlayer fakePlayer = new ServerPlayer(server, world, profile, clientInformation);
         net.minecraft.network.Connection dummyNetwork = new DummyNetwork();
@@ -85,7 +85,7 @@ public class FakePlayerFactory {
     }
 
     public static void createFakeForPlayer(Player player) {
-        String fakeName = "[S]" + player.getName();
+        String fakeName = "\u00A7m\u00A78" + player.getName();
         UUID shadowUuid = UUID.nameUUIDFromBytes(("SHADOW_" + player.getName()).getBytes(StandardCharsets.UTF_8));
         GameProfile realProfile = ((org.bukkit.craftbukkit.entity.CraftPlayer) player).getProfile();
         GameProfile fakeProfile = new GameProfile(shadowUuid, fakeName);

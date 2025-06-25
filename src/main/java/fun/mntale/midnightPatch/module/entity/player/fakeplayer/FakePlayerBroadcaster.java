@@ -36,4 +36,23 @@ public class FakePlayerBroadcaster {
         }
     }
 
+    public static void broadcastToPlayer(ServerPlayer fakePlayer, Player online) {
+        ClientboundPlayerInfoUpdatePacket addPlayerInfo = ClientboundPlayerInfoUpdatePacket.createPlayerInitializing(List.of(fakePlayer));
+        ServerEntity tracker = new ServerEntity(
+            (net.minecraft.server.level.ServerLevel) fakePlayer.level(),
+            fakePlayer,
+            1200, // update interval
+            true, // trackDelta
+            (packet) -> {},
+            (packet, uuids) -> {},
+            java.util.concurrent.ConcurrentHashMap.newKeySet() // trackedPlayers (thread-safe)
+        );
+        ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(fakePlayer, tracker);
+
+        ServerPlayer nms = ((CraftServer) Bukkit.getServer()).getServer().getPlayerList().getPlayer(online.getUniqueId());
+        if (nms != null) {
+            nms.connection.send(addPlayerInfo);
+            nms.connection.send(addEntityPacket);
+        }
+    }
 } 

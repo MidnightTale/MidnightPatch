@@ -14,12 +14,14 @@ public class PhantomIsolation {
         if (task != null && !task.isCancelled()) {
             task.cancel();
         }
-        task = FoliaScheduler.getAsyncScheduler().runAtFixedRate(
+        task = FoliaScheduler.getGlobalRegionScheduler().runAtFixedRate(
             plugin,
             (taskphantom) -> {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     if (!shouldIsolate(player)) {
-                        player.setStatistic(Statistic.TIME_SINCE_REST, 0);
+                        FoliaScheduler.getEntityScheduler().run(player, plugin, (entityTask) -> {
+                            player.setStatistic(Statistic.TIME_SINCE_REST, 0);
+                        }, null);
                     }
                 }
             },

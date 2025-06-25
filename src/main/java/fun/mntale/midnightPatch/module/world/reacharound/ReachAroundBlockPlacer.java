@@ -12,6 +12,7 @@ import fun.mntale.midnightPatch.MidnightPatch;
 public class ReachAroundBlockPlacer {
     public void placeBlock(Player player, ItemStack item, Location location) {
         if (item == null || !item.getType().isBlock() || location == null) return;
+        if (!item.getType().isSolid()) return;
         Block targetBlock = location.getBlock();
         if (!targetBlock.getType().isAir()) return;
         final Block finalTargetBlock = targetBlock;

@@ -30,6 +30,7 @@ public class BlockBreakingUtil {
         return block.getType().getHardness();
     }
 
+    @SuppressWarnings("deprecation")
     private static float getToolSpeed(ItemStack tool, Block block, Player player) {
         float toolSpeed = 1.0f;
         String toolName = tool != null ? tool.getType().name() : "";
@@ -73,7 +74,6 @@ public class BlockBreakingUtil {
             boolean hasAquaAffinity = tool != null && tool.containsEnchantment(Enchantment.AQUA_AFFINITY);
             if (!hasAquaAffinity) toolSpeed *= 0.2;
         }
-
         if (!player.isOnGround()) {
             toolSpeed *= 0.2;
         }

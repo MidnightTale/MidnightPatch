@@ -5,7 +5,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.Bukkit;
 
 import io.papermc.paper.command.brigadier.BasicCommand;
-import fun.mntale.midnightPatch.command.KillCommand;
+import fun.mntale.midnightPatch.command.DieCommand;
 import fun.mntale.midnightPatch.command.ToggleArmorStandPoseCommand;
 import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
 import fun.mntale.midnightPatch.command.ToggleHealthIndicatorCommand;
@@ -102,8 +102,8 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         PhantomIsolation.start(this);
         
         
-        BasicCommand killCommand = new KillCommand();
-        registerCommand("kill", killCommand);
+        BasicCommand dieCommand = new DieCommand();
+        registerCommand("die", dieCommand);
 
         getServer().getPluginManager().registerEvents(new HealthDamageIndicatorListener(), this);
         BasicCommand toggleIndicatorCommand = new ToggleHealthIndicatorCommand();

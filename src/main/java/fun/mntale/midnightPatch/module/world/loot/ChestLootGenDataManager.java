@@ -42,7 +42,7 @@ public class ChestLootGenDataManager {
         String regionKey = getRegionKey(world, chunkX, chunkZ);
         if (!generatedChests.containsKey(regionKey)) {
             File file = getRegionFile(world, chunkX, chunkZ);
-            Set<String> regionData = new HashSet<>();
+            Set<String> regionData = ConcurrentHashMap.newKeySet();
             if (file.exists()) {
                 try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                     String line;
@@ -63,7 +63,8 @@ public class ChestLootGenDataManager {
         Set<String> regionData = generatedChests.get(regionKey);
         if (regionData != null) {
             File file = getRegionFile(world, chunkX, chunkZ);
-            Set<String> regionDataCopy = new HashSet<>(regionData);
+            Set<String> regionDataCopy = ConcurrentHashMap.newKeySet();
+            regionDataCopy.addAll(regionData);
             FoliaScheduler.getAsyncScheduler().runNow(MidnightPatch.instance, (io) -> {
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
                     for (String key : regionDataCopy) {

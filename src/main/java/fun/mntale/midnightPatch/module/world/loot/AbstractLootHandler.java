@@ -14,8 +14,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.io.File;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -23,7 +23,7 @@ import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 public abstract class AbstractLootHandler implements Listener {
-    private final Set<Location> flaggedChests = new HashSet<>();
+    private final Set<Location> flaggedChests = ConcurrentHashMap.newKeySet();
     private final File dataDir;
     private final ChestLootGenDataManager lootGenDataManager = new ChestLootGenDataManager();
 

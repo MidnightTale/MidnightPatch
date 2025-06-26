@@ -5,7 +5,6 @@ import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import org.bukkit.World;
 import java.io.File;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -63,7 +62,9 @@ public class DesirePathDataManager {
     }
 
     public Set<String> getDirtyRegions() {
-        return new HashSet<>(dirtyRegions);
+        Set<String> copy = ConcurrentHashMap.newKeySet();
+        copy.addAll(dirtyRegions);
+        return copy;
     }
 
     public Map<String, Map<String, Map<String, Integer>>> getRegionMap() {

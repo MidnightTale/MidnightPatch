@@ -85,14 +85,47 @@ public class FakePlayerFactory {
     }
 
     public static void createFakeForPlayer(Player player) {
-        String fakeName = "\u00A7m\u00A78" + player.getName();
+        String baseName = player.getName();
+        String fakeName = ("[S]" + baseName).substring(0, Math.min(16, 3 + baseName.length())); // vanilla-safe, max 16 chars
         UUID shadowUuid = UUID.nameUUIDFromBytes(("SHADOW_" + player.getName()).getBytes(StandardCharsets.UTF_8));
         GameProfile realProfile = ((org.bukkit.craftbukkit.entity.CraftPlayer) player).getProfile();
         GameProfile fakeProfile = new GameProfile(shadowUuid, fakeName);
         fakeProfile.getProperties().putAll(realProfile.getProperties());
         FakePlayerSpec spec = new FakePlayerSpec(fakeName, shadowUuid, player.getLocation(), fakeProfile, false, null);
-        FakePlayerFactory.createFakePlayer(spec);
+        ServerPlayer fakePlayer = createFakePlayerReturn(spec);
+        if (fakePlayer != null) {
+            // Set a formatted custom name for visual effect
+            fakePlayer.getBukkitEntity().setCustomName("§m§8" + player.getName());
+            fakePlayer.getBukkitEntity().setCustomNameVisible(true);
+        }
         Bukkit.getLogger().info("[MobSpawner] Spawned fake player for logout: " + fakeName);
+    }
+
+    // Helper to return the ServerPlayer for custom name setting
+    private static ServerPlayer createFakePlayerReturn(FakePlayerSpec spec) {
+        MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
+        ServerLevel world = ((CraftWorld) spec.location().getWorld()).getHandle();
+        GameProfile profile = (spec.skinProfile() != null) ? spec.skinProfile() : new GameProfile(spec.uuid(), spec.name());
+        ClientInformation clientInformation = new ClientInformation(
+            "en_us",
+            8,
+            ChatVisiblity.HIDDEN,
+            false,
+            127,
+            HumanoidArm.RIGHT,
+            false,
+            false,
+            ParticleStatus.MINIMAL
+        );
+        ServerPlayer fakePlayer = new ServerPlayer(server, world, profile, clientInformation);
+        net.minecraft.network.Connection dummyNetwork = new DummyNetwork();
+        CommonListenerCookie cookie = CommonListenerCookie.createInitial(profile, false);
+        fakePlayer.connection = new DummyConnection(server, dummyNetwork, fakePlayer, cookie);
+        fakePlayer.setPos(spec.location().getX(), spec.location().getY(), spec.location().getZ());
+        world.addFreshEntity(fakePlayer);
+        FakePlayerBroadcaster.broadcast(fakePlayer);
+        addFakePlayer(spec.name(), fakePlayer);
+        return fakePlayer;
     }
 
     public static void addFakePlayer(String name, ServerPlayer player) {

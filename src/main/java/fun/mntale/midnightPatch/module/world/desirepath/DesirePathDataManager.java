@@ -47,12 +47,15 @@ public class DesirePathDataManager {
         String regionKey = getRegionKey(world, chunkX, chunkZ);
         Map<String, Map<String, Integer>> regionData = regionMap.get(regionKey);
         if (regionData != null) {
-            Map<String, Map<String, Integer>> regionDataCopy = new ConcurrentHashMap<>();
-            for (Map.Entry<String, Map<String, Integer>> entry : regionData.entrySet()) {
-                regionDataCopy.put(entry.getKey(), new ConcurrentHashMap<>(entry.getValue()));
-            }
+            Map<String, Map<String, Integer>> regionDataRef = regionData;
             File file = getRegionFile(world, chunkX, chunkZ);
-            FoliaScheduler.getAsyncScheduler().runNow(MidnightPatch.instance, (io) -> DesirePathRegionIO.saveRegion(file, regionDataCopy));
+            FoliaScheduler.getAsyncScheduler().runNow(MidnightPatch.instance, (io) -> {
+                Map<String, Map<String, Integer>> regionDataCopy = new ConcurrentHashMap<>();
+                for (Map.Entry<String, Map<String, Integer>> entry : regionDataRef.entrySet()) {
+                    regionDataCopy.put(entry.getKey(), new ConcurrentHashMap<>(entry.getValue()));
+                }
+                DesirePathRegionIO.saveRegion(file, regionDataCopy);
+            });
             dirtyRegions.remove(regionKey);
         }
     }

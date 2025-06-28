@@ -48,8 +48,6 @@ public class GraceEnchantment implements Listener {
             if (!player.hasPotionEffect(PotionEffectType.SPEED)) {
                 player.addPotionEffect(SPEED_EFFECT);
             }
-        } else {
-            player.removePotionEffect(PotionEffectType.SPEED);
         }
     }
 
@@ -81,11 +79,6 @@ public class GraceEnchantment implements Listener {
             (task) -> updateGraceEffect(event.getPlayer()),
             null
         );
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onQuit(PlayerQuitEvent event) {
-        event.getPlayer().removePotionEffect(PotionEffectType.SPEED);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

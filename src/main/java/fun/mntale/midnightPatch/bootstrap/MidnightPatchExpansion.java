@@ -13,7 +13,6 @@ import fun.mntale.midnightPatch.command.ToggleDeathLootLetMobPickupCommand;
 import fun.mntale.midnightPatch.command.ToggleDeathLootLetPlayerPickupCommand;
 import fun.mntale.midnightPatch.command.ToggleDeathLootNoDespawnCommand;
 import fun.mntale.midnightPatch.command.ToggleDesirePathCommand;
-import fun.mntale.midnightPatch.command.ToggleHealthIndicatorCommand;
 import fun.mntale.midnightPatch.command.ToggleLootChestProtectionCommand;
 import fun.mntale.midnightPatch.command.ToggleMendingRepairCommand;
 import fun.mntale.midnightPatch.command.TogglePhantomIsolationCommand;
@@ -75,7 +74,6 @@ public class MidnightPatchExpansion extends PlaceholderExpansion {
         if (player == null) return "";
         return switch (identifier.toLowerCase()) {
             case "reacharound" -> boolToString(ToggleReachAroundCommand.isReachAroundEnabled(player));
-            case "healthindicator" -> boolToString(ToggleHealthIndicatorCommand.isHealthIndicatorEnabled(player));
             case "deathlootglow" -> boolToString(ToggleDeathLootGlowCommand.isEnabled(player));
             case "deathlootinvulnerable" -> boolToString(ToggleDeathLootInvulnerableCommand.isEnabled(player));
             case "deathlootnodespawn" -> boolToString(ToggleDeathLootNoDespawnCommand.isEnabled(player));

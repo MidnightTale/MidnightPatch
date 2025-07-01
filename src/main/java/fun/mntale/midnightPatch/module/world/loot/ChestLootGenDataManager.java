@@ -5,7 +5,6 @@ import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import org.bukkit.Location;
 import org.bukkit.World;
 import java.io.*;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

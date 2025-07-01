@@ -8,7 +8,6 @@ import io.papermc.paper.command.brigadier.BasicCommand;
 import fun.mntale.midnightPatch.command.DieCommand;
 import fun.mntale.midnightPatch.command.ToggleArmorStandPoseCommand;
 import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
-import fun.mntale.midnightPatch.command.ToggleHealthIndicatorCommand;
 import fun.mntale.midnightPatch.command.ToggleLootChestProtectionCommand;
 import fun.mntale.midnightPatch.command.TogglePhantomIsolationCommand;
 import fun.mntale.midnightPatch.command.ToggleProjectileDamageCommand;
@@ -21,7 +20,6 @@ import fun.mntale.midnightPatch.module.entity.player.LootMobTargetListener;
 import fun.mntale.midnightPatch.module.entity.player.PhantomIsolation;
 import fun.mntale.midnightPatch.module.entity.player.PlayerLootListener;
 import fun.mntale.midnightPatch.module.entity.player.fakeplayer.MobSpawnerPlayer;
-import fun.mntale.midnightPatch.module.entity.player.indicator.HealthDamageIndicatorListener;
 import fun.mntale.midnightPatch.module.entity.player.projectile.ProjectileDamageListener;
 import fun.mntale.midnightPatch.module.entity.player.task.PlayerTaskManager;
 import fun.mntale.midnightPatch.module.world.fertilizer.FertilizerListener;
@@ -105,10 +103,6 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         BasicCommand dieCommand = new DieCommand();
         registerCommand("die", dieCommand);
 
-        getServer().getPluginManager().registerEvents(new HealthDamageIndicatorListener(), this);
-        BasicCommand toggleIndicatorCommand = new ToggleHealthIndicatorCommand();
-        registerCommand("toggleindicator", toggleIndicatorCommand);
-        
         getServer().getPluginManager().registerEvents(new ProjectileDamageListener(), this);
         BasicCommand toggleProjectileDamageCommand = new ToggleProjectileDamageCommand();
         registerCommand("toggleprojectiledamage", toggleProjectileDamageCommand);

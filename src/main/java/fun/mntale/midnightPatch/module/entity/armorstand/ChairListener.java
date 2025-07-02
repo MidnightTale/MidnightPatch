@@ -32,8 +32,7 @@ public class ChairListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.getHand() != EquipmentSlot.HAND) return;
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (!event.getAction().isRightClick() || event.getHand() != EquipmentSlot.HAND) return;
         Player player = event.getPlayer();
         if (!player.getInventory().getItemInMainHand().getType().isAir()) return;
         if (player.isInsideVehicle()) return; // Prevent sitting while riding

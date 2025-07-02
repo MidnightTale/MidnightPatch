@@ -51,6 +51,8 @@ import fun.mntale.midnightPatch.command.PlayerCommand;
 import fun.mntale.midnightPatch.command.TaskCommand;
 import fun.mntale.midnightPatch.module.entity.player.locatorbar.LocatorBar;
 import fun.mntale.midnightPatch.command.ToggleLocatorBarCommand;
+import fun.mntale.midnightPatch.module.entity.armorstand.ChairListener;
+import fun.mntale.midnightPatch.command.ToggleChairCommand;
 
 public final class MidnightPatch extends JavaPlugin implements Listener {
     public static MidnightPatch instance;
@@ -155,6 +157,11 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new LocatorBar(), this);
         BasicCommand toggleLocatorBarCommand = new ToggleLocatorBarCommand();
         registerCommand("togglelocatorbarposition", toggleLocatorBarCommand);
+
+        getServer().getPluginManager().registerEvents(new ChairListener(), this);
+
+        BasicCommand toggleChairCommand = new ToggleChairCommand();
+        registerCommand("togglechair", toggleChairCommand);
 
         MidnightPatchStartupJoinDelay.START_TIME = System.currentTimeMillis();
     }

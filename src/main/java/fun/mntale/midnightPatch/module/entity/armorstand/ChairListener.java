@@ -26,9 +26,14 @@ import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import fun.mntale.midnightPatch.MidnightPatch;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import fun.mntale.midnightPatch.command.ToggleChairCommand;
+import org.bukkit.block.data.type.Stairs;
+import org.bukkit.Location;
+import org.bukkit.event.player.PlayerMoveEvent;
+import io.github.retrooper.packetevents.util.folia.TaskWrapper;
 
 public class ChairListener implements Listener {
     private final Map<Player, ArmorStand> sittingMap = new ConcurrentHashMap<>();
+    private final Map<Player, Location> lastLocationMap = new ConcurrentHashMap<>();
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -40,6 +45,8 @@ public class ChairListener implements Listener {
         Block block = event.getClickedBlock();
         if (block == null) return;
         if (!isChairBlock(block)) return;
+        // Require player to be within 2.5 blocks of the chair block
+        if (player.getLocation().distance(block.getLocation().add(0.5, 0.5, 0.5)) > 2.5) return;
         Block above = block.getRelative(BlockFace.UP);
         if (above.getType().isSolid()) return;
         if (sittingMap.containsKey(player)) return;
@@ -48,7 +55,11 @@ public class ChairListener implements Listener {
         boolean occupied = sittingMap.values().stream().anyMatch(stand -> stand != null && stand.isValid() && stand.getLocation().getBlock().equals(block));
         if (occupied) return;
         // Spawn invisible marker ArmorStand
-        ArmorStand stand = block.getWorld().spawn(block.getLocation().add(0.5, getSitYOffset(block), 0.5), ArmorStand.class, as -> {
+        org.bukkit.util.Vector offset = getSitOffset(block);
+        lastLocationMap.put(player, player.getLocation());
+        Location sitLoc = block.getLocation().add(0.5 + offset.getX(), getSitYOffset(block), 0.5 + offset.getZ());
+        sitLoc.setYaw(45.0f);
+        ArmorStand stand = block.getWorld().spawn(sitLoc, ArmorStand.class, as -> {
             as.setInvisible(true);
             as.setMarker(true);
             as.setInvulnerable(true);
@@ -70,6 +81,7 @@ public class ChairListener implements Listener {
         ArmorStand stand = sittingMap.remove(player);
         if (stand != null && stand.isValid()) {
             FoliaScheduler.getEntityScheduler().run(stand, MidnightPatch.instance, (task) -> stand.remove(), null);
+            dismountAndTeleport(player);
         }
     }
 
@@ -79,6 +91,7 @@ public class ChairListener implements Listener {
         ArmorStand stand = sittingMap.remove(player);
         if (stand != null && stand.isValid()) {
             FoliaScheduler.getEntityScheduler().run(stand, MidnightPatch.instance, (task) -> stand.remove(), null);
+            dismountAndTeleport(player);
         }
     }
 
@@ -88,6 +101,7 @@ public class ChairListener implements Listener {
         ArmorStand stand = sittingMap.remove(player);
         if (stand != null && stand.isValid()) {
             FoliaScheduler.getEntityScheduler().run(stand, MidnightPatch.instance, (task) -> stand.remove(), null);
+            dismountAndTeleport(player);
         }
     }
 
@@ -131,9 +145,17 @@ public class ChairListener implements Listener {
         ArmorStand stand = sittingMap.remove(player);
         if (stand != null && stand.isValid()) {
             FoliaScheduler.getEntityScheduler().run(stand, MidnightPatch.instance, (task) -> stand.remove(), null);
-            if (player.isInsideVehicle()) {
-                FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> player.leaveVehicle(), null);
-            }
+            dismountAndTeleport(player);
+        }
+    }
+
+    private void dismountAndTeleport(Player player) {
+        Location lastLoc = lastLocationMap.remove(player);
+        if (lastLoc != null) {
+            // Delay teleport by 1 tick to ensure dismount is processed
+            FoliaScheduler.getEntityScheduler().runDelayed(player, MidnightPatch.instance, (task) -> {
+                player.teleportAsync(lastLoc);
+            }, null, 1L);
         }
     }
 
@@ -152,6 +174,7 @@ public class ChairListener implements Listener {
                         if (entry.getKey().isInsideVehicle()) {
                             FoliaScheduler.getEntityScheduler().run(entry.getKey(), MidnightPatch.instance, (entityTask) -> {
                                 entry.getKey().leaveVehicle();
+                                dismountAndTeleport(entry.getKey());
                             }, null);
                         }
                         return true;
@@ -165,7 +188,7 @@ public class ChairListener implements Listener {
     private boolean isChairBlock(Block block) {
         Material type = block.getType();
         String name = type.name();
-        if (name.endsWith("_STAIRS")) return true;
+        if (name.endsWith("_STAIRS") && block.getBlockData() instanceof Stairs stairs && stairs.getHalf() == Stairs.Half.BOTTOM) return true;
         if (name.endsWith("_CARPET")) return true;
         if (name.endsWith("_SLAB") && block.getBlockData() instanceof Slab slab && slab.getType() == Slab.Type.BOTTOM) return true;
         return false;
@@ -173,9 +196,17 @@ public class ChairListener implements Listener {
 
     private double getSitYOffset(Block block) {
         String name = block.getType().name();
-        if (name.endsWith("_STAIRS")) return 0.4;
-        if (name.endsWith("_CARPET")) return 0.0;
-        if (name.endsWith("_SLAB")) return 0.15;
+        if (name.endsWith("_STAIRS")) return 0.54;
+        if (name.endsWith("_CARPET")) return 0.1;
+        if (name.endsWith("_SLAB")) return 0.54;
         return 0.0;
+    }
+
+    private org.bukkit.util.Vector getSitOffset(Block block) {
+        if (block.getBlockData() instanceof Stairs stairs) {
+            org.bukkit.util.Vector offset = stairs.getFacing().getDirection().multiply(-0.2);
+            return offset;
+        }
+        return new org.bukkit.util.Vector(0, 0, 0);
     }
 } 

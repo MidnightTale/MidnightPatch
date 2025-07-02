@@ -9,7 +9,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -28,8 +27,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import fun.mntale.midnightPatch.command.ToggleChairCommand;
 import org.bukkit.block.data.type.Stairs;
 import org.bukkit.Location;
-import org.bukkit.event.player.PlayerMoveEvent;
-import io.github.retrooper.packetevents.util.folia.TaskWrapper;
 
 public class ChairListener implements Listener {
     private final Map<Player, ArmorStand> sittingMap = new ConcurrentHashMap<>();
@@ -58,7 +55,7 @@ public class ChairListener implements Listener {
         org.bukkit.util.Vector offset = getSitOffset(block);
         lastLocationMap.put(player, player.getLocation());
         Location sitLoc = block.getLocation().add(0.5 + offset.getX(), getSitYOffset(block), 0.5 + offset.getZ());
-        sitLoc.setYaw(45.0f);
+        sitLoc.setYaw(75.0f);
         ArmorStand stand = block.getWorld().spawn(sitLoc, ArmorStand.class, as -> {
             as.setInvisible(true);
             as.setMarker(true);

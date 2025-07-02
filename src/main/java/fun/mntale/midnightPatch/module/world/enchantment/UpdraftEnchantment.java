@@ -148,6 +148,16 @@ public class UpdraftEnchantment implements Listener {
         UUID uuid = player.getUniqueId();
         int jumpsUsed = updraftJumps.getOrDefault(uuid, 0);
         if (jumpsUsed >= level) return;
+        // Require 1 wind charge to use updraft
+        ItemStack windCharge = new ItemStack(Material.WIND_CHARGE);
+        if (!player.getInventory().containsAtLeast(windCharge, 1)) {
+            // Play sound if no wind charge, do not updraft
+            player.getWorld().playSound(player.getLocation(), org.bukkit.Sound.BLOCK_FIRE_EXTINGUISH, 0.6f, 0.7f);
+            event.setCancelled(true);
+            return;
+        }
+        // Remove 1 wind charge
+        player.getInventory().removeItem(windCharge);
         event.setCancelled(true);
         FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
             updraftJumps.put(uuid, jumpsUsed + 1);
@@ -156,11 +166,22 @@ public class UpdraftEnchantment implements Listener {
             Vector dir = player.getLocation().getDirection().normalize();
             double y = Math.max(0.35, Math.min(0.85, dir.getY()));
             dir.setY(y);
-            dir.multiply(1.1 + 0.2 * (level - 1));
+            dir.multiply(0.7 * (1.1 + 0.2 * (level - 1))); // Nerf: 70% of original
             player.setVelocity(dir);
             player.setFallDistance(0);
             player.getWorld().spawnParticle(org.bukkit.Particle.CLOUD, player.getLocation().add(0, 0.1, 0), 20, 0.2, 0.05, 0.2, 0.01);
             player.getWorld().playSound(player.getLocation(), org.bukkit.Sound.ENTITY_PHANTOM_FLAP, 1.0f, 1.2f);
+            // Reduce boots durability by 1, factoring in Unbreaking
+            ItemStack boots = player.getInventory().getBoots();
+            if (boots != null && boots.getType() != Material.AIR && boots.getItemMeta() instanceof org.bukkit.inventory.meta.Damageable damageable) {
+                int unbreaking = boots.getEnchantmentLevel(Enchantment.UNBREAKING);
+                boolean shouldDamage = unbreaking == 0 || java.util.concurrent.ThreadLocalRandom.current().nextInt(unbreaking + 1) == 0;
+                if (shouldDamage) {
+                    int newDamage = damageable.getDamage() + 1;
+                    damageable.setDamage(newDamage);
+                    boots.setItemMeta(damageable);
+                }
+            }
         }, null);
     }
 

@@ -66,6 +66,7 @@ public class BedrockDeathCameraListener implements Listener {
         stand.setInvulnerable(true);
         stand.setGravity(false);
         stand.setSilent(true);
+        stand.setPersistent(false);
         stand.setCustomNameVisible(false);
         stand.teleportAsync(camLoc);
 

@@ -55,7 +55,7 @@ public class ChairListener implements Listener {
         org.bukkit.util.Vector offset = getSitOffset(block);
         lastLocationMap.put(player, player.getLocation());
         Location sitLoc = block.getLocation().add(0.5 + offset.getX(), getSitYOffset(block), 0.5 + offset.getZ());
-        sitLoc.setYaw(75.0f);
+        sitLoc.setYaw(0.0f);
         ArmorStand stand = block.getWorld().spawn(sitLoc, ArmorStand.class, as -> {
             as.setInvisible(true);
             as.setMarker(true);

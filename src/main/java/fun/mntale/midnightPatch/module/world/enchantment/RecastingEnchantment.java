@@ -1,5 +1,6 @@
 package fun.mntale.midnightPatch.module.world.enchantment;
 
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import fun.mntale.midnightPatch.MidnightPatch;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,9 +15,6 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
-import io.github.retrooper.packetevents.util.folia.TaskWrapper;
-
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
@@ -30,7 +28,7 @@ public class RecastingEnchantment implements Listener {
     
     private static final int RECAST_DELAY_TICKS = 20; // 1 second delay before recasting
     
-    private final Map<UUID, TaskWrapper> autoFishTasks = new ConcurrentHashMap<>();
+    private final Map<UUID, WrappedTask> autoFishTasks = new ConcurrentHashMap<>();
     
     private static final NamespacedKey RECAST_KEY = NamespacedKey.fromString("midnightpatch:recasting");
 
@@ -74,12 +72,12 @@ public class RecastingEnchantment implements Listener {
                 
             case BITE:
                 // Fish is biting, right-click to catch it after a short delay
-                FoliaScheduler.getEntityScheduler().runDelayed(player, MidnightPatch.instance, (taskObj) -> {
+                MidnightPatch.instance.foliaLib.getScheduler().runAtEntityLater(player, (taskObj) -> {
                     if (hasRecastEnchantment(player) && player.isOnline()) {
                         // Right-click to catch the fish (not recast)
                         catchFish(player);
                     }
-                }, null, 5); // 5 tick delay to simulate reaction time
+                }, 5); // 5 tick delay to simulate reaction time
                 break;
                 
             case LURED:
@@ -111,18 +109,18 @@ public class RecastingEnchantment implements Listener {
         stopRecastTask(player);
         
         // Schedule new recast task
-        TaskWrapper task = FoliaScheduler.getEntityScheduler().runDelayed(player, MidnightPatch.instance, (taskObj) -> {
+        WrappedTask task =  MidnightPatch.instance.foliaLib.getScheduler().runAtEntityLater(player, () -> {
             if (hasRecastEnchantment(player) && player.isOnline()) {
                 recastFishingRod(player);
             }
             autoFishTasks.remove(player.getUniqueId());
-        }, null, RECAST_DELAY_TICKS);
+        }, RECAST_DELAY_TICKS);
         
         autoFishTasks.put(player.getUniqueId(), task);
     }
     
     private void stopRecastTask(Player player) {
-        TaskWrapper task = autoFishTasks.remove(player.getUniqueId());
+        WrappedTask task = autoFishTasks.remove(player.getUniqueId());
         if (task != null) {
             task.cancel();
         }
@@ -146,7 +144,7 @@ public class RecastingEnchantment implements Listener {
         }
         
         // Simulate right-click with fishing rod to cast
-        FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (taskObj) -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(player, (taskObj) -> {
             // Use the fishing rod to cast
             castFishingRod(player);
             
@@ -154,7 +152,7 @@ public class RecastingEnchantment implements Listener {
             Location loc = player.getLocation();
             player.playSound(loc, Sound.ENTITY_FISHING_BOBBER_THROW, 0.5f, 1.0f);
             player.spawnParticle(Particle.DRIPPING_WATER, loc.add(0, 1, 0), 5, 0.3, 0.3, 0.3);
-        }, null);
+        });
     }
     
     private void castFishingRod(Player player) {

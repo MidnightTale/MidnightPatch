@@ -12,7 +12,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import fun.mntale.midnightPatch.MidnightPatch;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
@@ -50,8 +49,7 @@ public class HarvestingEnchantment implements Listener {
         // Range: level 1 = 1x1, level 2 = 3x3, ..., level 5 = 9x9
         int range = level * 2 - 1;
         int half = range / 2;
-
-        FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(player, (task) -> {
             for (int dx = -half; dx <= half; dx++) {
                 for (int dz = -half; dz <= half; dz++) {
                     Block block = center.getRelative(dx, 0, dz);
@@ -77,7 +75,7 @@ public class HarvestingEnchantment implements Listener {
                     }
                 }
             }
-        }, null);
+        });
 
     }
 } 

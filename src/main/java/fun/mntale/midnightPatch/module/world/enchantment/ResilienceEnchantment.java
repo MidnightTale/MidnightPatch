@@ -18,7 +18,6 @@ import java.util.Objects;
 
 import org.bukkit.Sound;
 import org.bukkit.Particle;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 
 public class ResilienceEnchantment implements Listener {
     private static final NamespacedKey RESILIENCE_KEY = NamespacedKey.fromString("midnightpatch:resilience");
@@ -51,7 +50,7 @@ public class ResilienceEnchantment implements Listener {
         if (cooldowns.getOrDefault(player, 0L) > now) return;
         // Activate Last Breath
         event.setCancelled(true);
-        FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtEntity( player, (task) -> {
             player.setHealth(1.0);
             player.addPotionEffect(RESISTANCE_EFFECT);
             player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, (int) (COOLDOWN_MILLIS / 50), 0, true, false, true));
@@ -59,6 +58,6 @@ public class ResilienceEnchantment implements Listener {
             // Play sound and particle effect
             player.getWorld().playSound(player.getLocation(), Sound.ITEM_TOTEM_USE, 1.0f, 1.0f);
             player.getWorld().spawnParticle(Particle.TOTEM_OF_UNDYING, player.getLocation().add(0, 1, 0), 30, 0.5, 1, 0.5, 0.1);
-        },null);
+        });
     }
 } 

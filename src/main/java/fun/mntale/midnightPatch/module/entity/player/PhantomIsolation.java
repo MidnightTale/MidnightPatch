@@ -1,27 +1,26 @@
 package fun.mntale.midnightPatch.module.entity.player;
 
+import com.tcoded.folialib.wrapper.task.WrappedTask;
+import fun.mntale.midnightPatch.MidnightPatch;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
-import io.github.retrooper.packetevents.util.folia.TaskWrapper;
 
 public class PhantomIsolation {
-    private static TaskWrapper task;
+    private static WrappedTask task;
 
     public static void start(Plugin plugin) {
         if (task != null && !task.isCancelled()) {
             task.cancel();
         }
-        task = FoliaScheduler.getGlobalRegionScheduler().runAtFixedRate(
-            plugin,
-            (taskphantom) -> {
+        task = MidnightPatch.instance.foliaLib.getScheduler().runTimer(
+            () -> {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     if (!shouldIsolate(player)) {
-                        FoliaScheduler.getEntityScheduler().run(player, plugin, (entityTask) -> {
+                        MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(player, (entityTask) -> {
                             player.setStatistic(Statistic.TIME_SINCE_REST, 0);
-                        }, null);
+                        });
                     }
                 }
             },

@@ -1,5 +1,6 @@
 package fun.mntale.midnightPatch;
 
+import com.tcoded.folialib.FoliaLib;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.event.Listener;
 import org.bukkit.Bukkit;
@@ -57,13 +58,14 @@ import fun.mntale.midnightPatch.module.entity.boat.DispenserBoatListener;
 
 public final class MidnightPatch extends JavaPlugin implements Listener {
     public static MidnightPatch instance;
-
+    public FoliaLib foliaLib;
     @Override
     public void onEnable() {
         instance = this;
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new MidnightPatchExpansion().register();
         }
+        FoliaLib foliaLib = new FoliaLib(instance);
         getServer().getPluginManager().registerEvents(new ReachAroundBlockListener(), this);
         BasicCommand ToggleReachAroundCommand = new ToggleReachAroundCommand();
         registerCommand("togglereacharound", ToggleReachAroundCommand);

@@ -1,5 +1,6 @@
 package fun.mntale.midnightPatch.module.world.enchantment;
 
+import fun.mntale.midnightPatch.MidnightPatch;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -17,7 +18,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.NamespacedKey;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 
@@ -72,22 +72,18 @@ public class GraceEnchantment implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent event) {
-        FoliaScheduler.getEntityScheduler().run(
+        MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(
             event.getPlayer(),
-            fun.mntale.midnightPatch.MidnightPatch.instance,
-            (task) -> updateGraceEffect(event.getPlayer()),
-            null
+            (task) -> updateGraceEffect(event.getPlayer())
         );
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player player) {
-            FoliaScheduler.getEntityScheduler().run(
+            MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(
                 player,
-                fun.mntale.midnightPatch.MidnightPatch.instance,
-                (task) -> updateGraceEffect(player),
-                null
+                (task) -> updateGraceEffect(player)
             );
         }
     }
@@ -95,11 +91,9 @@ public class GraceEnchantment implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onHeal(EntityRegainHealthEvent event) {
         if (event.getEntity() instanceof Player player) {
-            FoliaScheduler.getEntityScheduler().run(
+            MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(
                 player,
-                fun.mntale.midnightPatch.MidnightPatch.instance,
-                (task) -> updateGraceEffect(player),
-                null
+                (task) -> updateGraceEffect(player)
             );
         }
     }

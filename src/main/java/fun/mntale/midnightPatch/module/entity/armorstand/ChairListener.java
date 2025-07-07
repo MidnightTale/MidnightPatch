@@ -21,7 +21,6 @@ import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import fun.mntale.midnightPatch.MidnightPatch;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import fun.mntale.midnightPatch.command.ToggleChairCommand;
@@ -77,7 +76,7 @@ public class ChairListener implements Listener {
         if (!(entity instanceof Player player)) return;
         ArmorStand stand = sittingMap.remove(player);
         if (stand != null && stand.isValid()) {
-            FoliaScheduler.getEntityScheduler().run(stand, MidnightPatch.instance, (task) -> stand.remove(), null);
+            MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(stand,(task) -> stand.remove());
             dismountAndTeleport(player);
         }
     }
@@ -87,7 +86,7 @@ public class ChairListener implements Listener {
         Player player = event.getPlayer();
         ArmorStand stand = sittingMap.remove(player);
         if (stand != null && stand.isValid()) {
-            FoliaScheduler.getEntityScheduler().run(stand, MidnightPatch.instance, (task) -> stand.remove(), null);
+            MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(stand,(task) -> stand.remove());
             dismountAndTeleport(player);
         }
     }
@@ -97,7 +96,7 @@ public class ChairListener implements Listener {
         Player player = event.getEntity();
         ArmorStand stand = sittingMap.remove(player);
         if (stand != null && stand.isValid()) {
-            FoliaScheduler.getEntityScheduler().run(stand, MidnightPatch.instance, (task) -> stand.remove(), null);
+            MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(stand,(task) -> stand.remove());
             dismountAndTeleport(player);
         }
     }
@@ -141,7 +140,7 @@ public class ChairListener implements Listener {
         Player player = event.getPlayer();
         ArmorStand stand = sittingMap.remove(player);
         if (stand != null && stand.isValid()) {
-            FoliaScheduler.getEntityScheduler().run(stand, MidnightPatch.instance, (task) -> stand.remove(), null);
+            MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(stand,(task) -> stand.remove());
             dismountAndTeleport(player);
         }
     }
@@ -150,29 +149,29 @@ public class ChairListener implements Listener {
         Location lastLoc = lastLocationMap.remove(player);
         if (lastLoc != null) {
             // Delay teleport by 1 tick to ensure dismount is processed
-            FoliaScheduler.getEntityScheduler().runDelayed(player, MidnightPatch.instance, (task) -> {
+            MidnightPatch.instance.foliaLib.getScheduler().runAtEntityLater(player,(task) -> {
                 player.teleportAsync(lastLoc);
-            }, null, 1L);
+            }, 1L);
         }
     }
 
     private void removeChairIfPresent(Block block) {
         // Use RegionScheduler to ensure Folia safety for block location
-        FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, block.getLocation(), (task) -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtLocation(block.getLocation(), (task) -> {
             sittingMap.entrySet().removeIf(entry -> {
                 ArmorStand stand = entry.getValue();
                 if (stand != null && stand.isValid()) {
                     Block standBlock = stand.getLocation().getBlock();
                     if (standBlock.equals(block)) {
                         // Use EntityScheduler for entity actions
-                        FoliaScheduler.getEntityScheduler().run(stand, MidnightPatch.instance, (entityTask) -> {
+                        MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(stand,(entityTask) -> {
                             stand.remove();
-                        }, null);
+                        });
                         if (entry.getKey().isInsideVehicle()) {
-                            FoliaScheduler.getEntityScheduler().run(entry.getKey(), MidnightPatch.instance, (entityTask) -> {
+                            MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(entry.getKey(),(entityTask) -> {
                                 entry.getKey().leaveVehicle();
                                 dismountAndTeleport(entry.getKey());
-                            }, null);
+                            });
                         }
                         return true;
                     }

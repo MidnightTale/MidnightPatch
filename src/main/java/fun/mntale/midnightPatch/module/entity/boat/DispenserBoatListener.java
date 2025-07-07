@@ -1,7 +1,6 @@
 package fun.mntale.midnightPatch.module.entity.boat;
 
 import fun.mntale.midnightPatch.MidnightPatch;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -75,7 +74,7 @@ public class DispenserBoatListener implements Listener {
         event.setCancelled(true);
         // Folia region scheduler for world/entity access
         Location finalSpawnLoc = spawnLoc;
-        FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, finalSpawnLoc, (task) -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtLocation(finalSpawnLoc, (task) -> {
             finalSpawnLoc.setYaw(yaw);
             Entity entity = dispenserBlock.getWorld().spawnEntity(finalSpawnLoc, entityType);
             entity.setRotation(yaw, 0f);

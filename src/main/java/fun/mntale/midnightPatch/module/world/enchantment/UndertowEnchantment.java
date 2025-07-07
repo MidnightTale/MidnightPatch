@@ -13,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.Particle;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import fun.mntale.midnightPatch.MidnightPatch;
 import io.papermc.paper.registry.RegistryAccess;
 
@@ -60,7 +59,8 @@ public class UndertowEnchantment implements Listener {
 
     // Melee: lower pull, never pull past player
     private void pullTargetToPlayerMelee(LivingEntity target, Player player, int level) {
-        FoliaScheduler.getEntityScheduler().run(target, MidnightPatch.instance, (task) -> {
+
+        MidnightPatch.instance.foliaLib.getScheduler().runAtEntity( target, (task) -> {
             double baseStrength = 0.3 + 0.15 * (level - 1); // e.g., 0.3, 0.45, 0.6
             org.bukkit.util.Vector toPlayer = player.getLocation().toVector().subtract(target.getLocation().toVector());
             double distance = toPlayer.length();
@@ -75,12 +75,12 @@ public class UndertowEnchantment implements Listener {
             // Play sound and particle effect
             target.getWorld().playSound(target.getLocation(), Sound.ENTITY_PLAYER_SPLASH, 1.0f, 1.0f);
             target.getWorld().spawnParticle(Particle.BUBBLE, target.getLocation().add(0, 1, 0), 20, 0.3, 0.5, 0.3, 0.05);
-        }, null);
+        });
     }
 
     // Thrown: higher pull, even more if target is in water
     private void pullTargetToPlayerThrown(LivingEntity target, Player player, int level) {
-        FoliaScheduler.getEntityScheduler().run(target, MidnightPatch.instance, (task) -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtEntity( target, (task) -> {
             double baseStrength = 0.7 + 0.3 * (level - 1); // e.g., 0.7, 1.0, 1.3
             if (target.isInWater()) {
                 baseStrength *= 1.5; // 50% more if target is in water
@@ -91,6 +91,6 @@ public class UndertowEnchantment implements Listener {
             // Play sound and particle effect
             target.getWorld().playSound(target.getLocation(), Sound.ENTITY_PLAYER_SPLASH, 1.0f, 1.0f);
             target.getWorld().spawnParticle(Particle.BUBBLE, target.getLocation().add(0, 1, 0), 20, 0.3, 0.5, 0.3, 0.05);
-        }, null);
+        });
     }
 } 

@@ -1,7 +1,6 @@
 package fun.mntale.midnightPatch.module.entity.player.fakeplayer;
 
 import fun.mntale.midnightPatch.MidnightPatch;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -21,8 +20,7 @@ public class MobSpawnerPlayer implements Listener {
         if (isCreativeOrSpectator(player)) return;
         
         if (ToggleFakePlayerOnJoinLeaveCommand.isEnabled(player)) {
-            FoliaScheduler.getRegionScheduler().runDelayed(
-                MidnightPatch.instance,
+            MidnightPatch.instance.foliaLib.getScheduler().runAtLocationLater(
                 player.getLocation(),
                 (task) -> {
                     FakePlayerFactory.createFakeForPlayer(player);
@@ -39,8 +37,7 @@ public class MobSpawnerPlayer implements Listener {
         ServerPlayer fakePlayer = FakePlayerFactory.fakePlayers.get(fakeName);
         if (fakePlayer != null) {
             Location loc = fakePlayer.getBukkitEntity().getLocation();
-            FoliaScheduler.getRegionScheduler().run(
-                MidnightPatch.instance,
+            MidnightPatch.instance.foliaLib.getScheduler().runAtLocation(
                 loc,
                 (task) -> FakePlayerFactory.remove(fakeName)
             );

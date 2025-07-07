@@ -3,6 +3,7 @@ package fun.mntale.midnightPatch.module.world.death;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.Material;
@@ -24,8 +25,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
-import io.github.retrooper.packetevents.util.folia.TaskWrapper;
 import net.kyori.adventure.text.Component;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -85,8 +84,9 @@ public class BedrockDeathCameraListener implements Listener {
         sendSetSlotPacket(player, invisibleItem);
 
         final int[] tick = {0};
-        TaskWrapper[] orbitWrapper = new TaskWrapper[1];
-        orbitWrapper[0] = FoliaScheduler.getEntityScheduler().runAtFixedRate(stand, MidnightPatch.instance, (ignored) -> {
+        WrappedTask[] orbitWrapper = new WrappedTask[1];
+
+        orbitWrapper[0] = MidnightPatch.instance.foliaLib.getScheduler().runAtEntityTimer(stand, () -> {
             tick[0]++;
             double angle = 2 * Math.PI * (((double)(tick[0] % totalTicks)) / totalTicks);
             double newX = center.getX() + radius * Math.cos(angle);
@@ -96,19 +96,19 @@ public class BedrockDeathCameraListener implements Listener {
             Vector direction = deathLoc.toVector().subtract(newLoc.toVector()).normalize();
             newLoc.setDirection(direction);
             stand.teleportAsync(newLoc);
-        }, null, 1L, 1L);
+        }, 1L, 1L);
 
         final Component deathLocMsg = Component.text("X: " + deathLoc.getBlockX() + "   Y: " + deathLoc.getBlockY() + "   Z: " + deathLoc.getBlockZ());
-        final TaskWrapper[] actionBarWrapper = new TaskWrapper[1];
-        actionBarWrapper[0] = FoliaScheduler.getEntityScheduler().runAtFixedRate(player, MidnightPatch.instance, (ignored) -> player.sendActionBar(deathLocMsg), null, 0L, 20L);
+        final WrappedTask[] actionBarWrapper = new WrappedTask[1];
+        actionBarWrapper[0] = MidnightPatch.instance.foliaLib.getScheduler().runAtEntityTimer(player, () -> player.sendActionBar(deathLocMsg), null, 0L, 20L);
 
-        final TaskWrapper[] wrapper = new TaskWrapper[1];
-        wrapper[0] = FoliaScheduler.getEntityScheduler().runAtFixedRate(player, MidnightPatch.instance, (ignored) -> {
+        final WrappedTask[] wrapper = new WrappedTask[1];
+        wrapper[0] = MidnightPatch.instance.foliaLib.getScheduler().runAtEntityTimer(player, () -> {
             if (!player.isDead()) {
                 sendSetCameraPacket(player, player.getEntityId());
                 ArmorStand cam = deathCameras.remove(player.getUniqueId());
                 if (cam != null && !cam.isDead()) {
-                    FoliaScheduler.getEntityScheduler().runDelayed(cam, MidnightPatch.instance, (t) -> cam.remove(), null, 20L);
+                    MidnightPatch.instance.foliaLib.getScheduler().runAtEntityLater(cam, (t) -> cam.remove(), null, 20L);
                 }
                 ItemStack realItem = player.getInventory().getItemInMainHand();
                 sendSetSlotPacket(player, realItem);

@@ -1,10 +1,10 @@
 package fun.mntale.midnightPatch.module.world.fertilizer;
 
+import fun.mntale.midnightPatch.MidnightPatch;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.plugin.Plugin;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import java.util.concurrent.ThreadLocalRandom;
 
 public enum FertilizerGrowthType {
@@ -74,7 +74,7 @@ public enum FertilizerGrowthType {
                     return false;
                 }
                 final Block finalNext = next;
-                FoliaScheduler.getRegionScheduler().execute(plugin, finalNext.getLocation(), () -> {
+                MidnightPatch.instance.foliaLib.getScheduler().runAtLocation(finalNext.getLocation(), (w) -> {
                     finalNext.setType(Material.SUGAR_CANE);
                 });
             }
@@ -114,7 +114,7 @@ public enum FertilizerGrowthType {
                     break;
                 }
                 final Block finalNext = next;
-                FoliaScheduler.getRegionScheduler().execute(plugin, finalNext.getLocation(), () -> {
+                MidnightPatch.instance.foliaLib.getScheduler().runAtLocation(finalNext.getLocation(), (ww) -> {
                     finalNext.setType(Material.CACTUS);
                 });
                 grown++;
@@ -146,7 +146,7 @@ public enum FertilizerGrowthType {
             Block above = top.getRelative(BlockFace.UP);
             if (above.getType() == Material.WATER) {
                 final Block finalAbove = above;
-                FoliaScheduler.getRegionScheduler().execute(plugin, finalAbove.getLocation(), () -> {
+                MidnightPatch.instance.foliaLib.getScheduler().runAtLocation(finalAbove.getLocation(), (www) -> {
                     finalAbove.setType(Material.KELP);
                 });
                 return true;
@@ -175,7 +175,7 @@ public enum FertilizerGrowthType {
             if (target.getType() == Material.AIR) {
                 final Block finalTarget = target;
                 final Material vineType = isTwisting ? Material.TWISTING_VINES : Material.WEEPING_VINES;
-                FoliaScheduler.getRegionScheduler().execute(plugin, finalTarget.getLocation(), () -> {
+                MidnightPatch.instance.foliaLib.getScheduler().runAtLocation(finalTarget.getLocation(), (wwwww) -> {
                     finalTarget.setType(vineType);
                 });
                 return true;
@@ -198,7 +198,7 @@ public enum FertilizerGrowthType {
                     if (flowerType != null) {
                         final Block finalTarget = targetBlock;
                         final Material finalFlowerType = flowerType;
-                        FoliaScheduler.getRegionScheduler().execute(plugin, finalTarget.getLocation(), () -> {
+                        MidnightPatch.instance.foliaLib.getScheduler().runAtLocation(finalTarget.getLocation(), (wwwwww) -> {
                             finalTarget.setType(finalFlowerType);
                         });
                         flowersPlaced++;

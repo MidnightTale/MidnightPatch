@@ -16,7 +16,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.waypoints.Waypoint;
 import net.minecraft.world.waypoints.WaypointStyleAssets;
 import fun.mntale.midnightPatch.command.ToggleLocatorBarCommand;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -38,9 +37,9 @@ public class LocatorBar implements Listener {
         enabled = false;
         
         for (Player player : Bukkit.getOnlinePlayers()) {
-            FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
+            MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(player, (task) -> {
                 removeAllWaypoints(player);
-            }, null);
+            });
         }
         playerLocations.clear();
     }
@@ -81,19 +80,19 @@ public class LocatorBar implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         if (!enabled) return;
         Player player = event.getPlayer();
-        FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(player, (task) -> {
             playerLocations.put(player.getUniqueId(), event.getTo());
             updatePlayerWaypoint(player, event.getTo());
-        }, null);
+        });
     }
     
     private static void updatePlayerWaypoint(Player movingPlayer, Location newLocation) {
         
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (!onlinePlayer.equals(movingPlayer) && onlinePlayer.getWorld().equals(movingPlayer.getWorld())) {
-                FoliaScheduler.getEntityScheduler().run(onlinePlayer, MidnightPatch.instance, (task) -> {
+                MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(onlinePlayer, (task) -> {
                     sendWaypoint(onlinePlayer, movingPlayer, newLocation);
-                }, null);
+                });
             }
         }
     }
@@ -143,9 +142,9 @@ public class LocatorBar implements Listener {
     
     private static void removeWaypointFromAllPlayers(UUID playerId) {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            FoliaScheduler.getEntityScheduler().run(onlinePlayer, MidnightPatch.instance, (task) -> {
+            MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(onlinePlayer, (task) -> {
                 removeWaypoint(onlinePlayer, playerId);
-            }, null);
+            });
         }
     }
     

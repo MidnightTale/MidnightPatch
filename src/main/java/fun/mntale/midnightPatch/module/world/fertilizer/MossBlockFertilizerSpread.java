@@ -3,12 +3,11 @@ package fun.mntale.midnightPatch.module.world.fertilizer;
 import fun.mntale.midnightPatch.MidnightPatch;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MossBlockFertilizerSpread {
     public static void applyMossSpread(Block centerBlock) {
-        FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, centerBlock.getLocation(), taskBase -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtLocation(centerBlock.getLocation(), taskBase -> {
             int maxX = ThreadLocalRandom.current().nextBoolean() ? 2 : 3;
             int maxZ = ThreadLocalRandom.current().nextBoolean() ? 2 : 3;
             for (int x = -maxX; x <= maxX; x++) {

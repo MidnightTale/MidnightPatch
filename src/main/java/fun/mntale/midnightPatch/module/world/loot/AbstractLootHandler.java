@@ -1,7 +1,6 @@
 package fun.mntale.midnightPatch.module.world.loot;
 
 import fun.mntale.midnightPatch.MidnightPatch;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -62,7 +61,7 @@ public abstract class AbstractLootHandler implements Listener {
         if (!flaggedChests.remove(loc)) return;
         if (lootGenDataManager.isChestGenerated(loc)) return; // Already generated
         if (!shouldAddLoot(event.getInventory())) return;
-        FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, loc, (task) -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtLocation(loc, (task) -> {
             if (ThreadLocalRandom.current().nextDouble() < getChance()) {
                 event.getInventory().addItem(createLootItem());
                 lootGenDataManager.markChestGenerated(loc);

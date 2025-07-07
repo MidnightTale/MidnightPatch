@@ -1,9 +1,8 @@
 package fun.mntale.midnightPatch.module.world.reacharound;
 
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
-import io.github.retrooper.packetevents.util.folia.TaskWrapper;
 import fun.mntale.midnightPatch.MidnightPatch;
 import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
 import java.util.Map;
@@ -11,7 +10,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ReachAroundPlayerTaskManager {
-    private final Map<UUID, TaskWrapper> playerTasks = new ConcurrentHashMap<>();
+    private final Map<UUID, WrappedTask> playerTasks = new ConcurrentHashMap<>();
     private final ReachAroundPreviewManager previewManager;
 
     public ReachAroundPlayerTaskManager(ReachAroundPreviewManager previewManager) {
@@ -23,10 +22,10 @@ public class ReachAroundPlayerTaskManager {
         if (playerTasks.containsKey(playerId)) {
             return;
         }
-        TaskWrapper task = FoliaScheduler.getEntityScheduler().runAtFixedRate(
+
+        WrappedTask task = MidnightPatch.instance.foliaLib.getScheduler().runAtEntityTimer(
             player,
-            MidnightPatch.instance,
-            taskBase -> {
+                () -> {
                 if (!player.isOnline()) {
                     stopPlayerTask(player);
                     return;
@@ -42,7 +41,6 @@ public class ReachAroundPlayerTaskManager {
                 }
                 previewManager.updatePreview(player, item.getType());
             },
-            null,
             60L,
             2L
         );
@@ -51,7 +49,7 @@ public class ReachAroundPlayerTaskManager {
 
     public void stopPlayerTask(Player player) {
         UUID playerId = player.getUniqueId();
-        TaskWrapper task = playerTasks.remove(playerId);
+        WrappedTask task = playerTasks.remove(playerId);
         if (task != null) {
             task.cancel();
         }

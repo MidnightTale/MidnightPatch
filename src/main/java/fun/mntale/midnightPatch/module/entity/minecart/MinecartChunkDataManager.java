@@ -3,7 +3,6 @@ package fun.mntale.midnightPatch.module.entity.minecart;
 import fun.mntale.midnightPatch.MidnightPatch;
 import org.bukkit.World;
 import org.bukkit.Location;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import java.io.*;
 import java.util.Map;
 import java.util.UUID;
@@ -65,7 +64,7 @@ public class MinecartChunkDataManager {
     }
 
     public void loadChunksAroundLocation(World world, double x, double y, double z) {
-        FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, new Location(world, x, y, z), task -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtLocation(new Location(world, x, y, z), task -> {
             int centerX = (int) Math.floor(x / 16.0);
             int centerZ = (int) Math.floor(z / 16.0);
             for (int offset = -MinecartChunkConfig.CHUNK_RADIUS; offset <= MinecartChunkConfig.CHUNK_RADIUS; offset++) {

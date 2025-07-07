@@ -1,7 +1,6 @@
 package fun.mntale.midnightPatch.module.world.enchantment;
 
 import fun.mntale.midnightPatch.MidnightPatch;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import org.bukkit.GameMode;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -44,7 +43,7 @@ public class UpdraftEnchantment implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(player, (task) -> {
             if (isCreativeOrSpectator(player)) {
                 player.setAllowFlight(true); // Always allow flight in these modes
                 return;
@@ -55,7 +54,7 @@ public class UpdraftEnchantment implements Listener {
             if (hasUpdraft && player.isOnGround()) {
                 updraftJumps.remove(uuid);
             }
-        }, null);
+        });
     }
 
     /**
@@ -73,13 +72,13 @@ public class UpdraftEnchantment implements Listener {
         boolean hasUpdraft = shouldHaveUpdraft(player);
 
         if (!hasUpdraft) {
-            FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
+            MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(player, (task) -> {
                 if (!isCreativeOrSpectator(player)) {
                     player.setAllowFlight(false);
                 }
                 fallStartY.remove(uuid);
                 wasFalling.remove(uuid);
-            }, null);
+            });
             return;
         }
 
@@ -115,18 +114,18 @@ public class UpdraftEnchantment implements Listener {
             fallStartY.remove(uuid);
             wasFalling.remove(uuid);
             updraftJumps.remove(uuid); // Always reset on ground
-            FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> player.setAllowFlight(true), null);
+            MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(player, (task) -> player.setAllowFlight(true));
         } else {
             // Just started falling
             if (!fallStartY.containsKey(uuid)) {
                 fallStartY.put(uuid, player.getLocation().getY());
                 wasFalling.put(uuid, true);
             }
-            FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
+            MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(player, (task) -> {
                 int level = getUpdraftLevel(player);
                 int jumpsUsed = updraftJumps.getOrDefault(uuid, 0);
                 player.setAllowFlight(jumpsUsed < level);
-            }, null);
+            });
         }
     }
 
@@ -159,7 +158,7 @@ public class UpdraftEnchantment implements Listener {
         // Remove 1 wind charge
         player.getInventory().removeItem(windCharge);
         event.setCancelled(true);
-        FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(player, (task) -> {
             updraftJumps.put(uuid, jumpsUsed + 1);
             player.setAllowFlight(jumpsUsed + 1 < level);
             player.setFlying(false);
@@ -182,7 +181,7 @@ public class UpdraftEnchantment implements Listener {
                     boots.setItemMeta(damageable);
                 }
             }
-        }, null);
+        });
     }
 
     /**
@@ -234,12 +233,12 @@ public class UpdraftEnchantment implements Listener {
         }
 
         // Reset jump count, restore flight, clear fall start
-        FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(player, (task) -> {
             updraftJumps.remove(uuid);
             fallStartY.remove(uuid);
             wasFalling.remove(uuid);
             if (shouldHaveUpdraft(player)) player.setAllowFlight(true);
-        }, null);
+        });
     }
 
     /**
@@ -258,7 +257,7 @@ public class UpdraftEnchantment implements Listener {
     public void onArmorChange(PlayerArmorChangeEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        FoliaScheduler.getEntityScheduler().run(player, MidnightPatch.instance, (task) -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(player, (task) -> {
             if (isCreativeOrSpectator(player)) {
                 player.setAllowFlight(true);
                 return;
@@ -276,7 +275,7 @@ public class UpdraftEnchantment implements Listener {
                 int jumpsUsed = updraftJumps.getOrDefault(uuid, 0);
                 player.setAllowFlight(jumpsUsed < level);
             }
-        }, null);
+        });
     }
 
     /**

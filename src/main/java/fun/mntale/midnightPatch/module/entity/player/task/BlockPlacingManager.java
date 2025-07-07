@@ -1,10 +1,9 @@
 package fun.mntale.midnightPatch.module.entity.player.task;
 
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import fun.mntale.midnightPatch.MidnightPatch;
 import fun.mntale.midnightPatch.module.entity.player.task.effect.BlockSoundUtil;
 import fun.mntale.midnightPatch.module.entity.player.task.packet.ItemInteractUtil;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
-import io.github.retrooper.packetevents.util.folia.TaskWrapper;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -14,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
 public class BlockPlacingManager {
-    private static final Map<Player, TaskWrapper> placeTasks = new ConcurrentHashMap<>();
+    private static final Map<Player, WrappedTask> placeTasks = new ConcurrentHashMap<>();
     private static final Map<Player, Block> lastBlockMap = new ConcurrentHashMap<>();
     private static final Map<Player, BlockFace> lastFaceMap = new ConcurrentHashMap<>();
 
@@ -25,7 +24,7 @@ public class BlockPlacingManager {
     public static void startPlaceTask(Player player, int interval) {
         if (placeTasks.containsKey(player)) return;
         
-        TaskWrapper task = FoliaScheduler.getEntityScheduler().runAtFixedRate(player, MidnightPatch.instance, (ignored) -> {
+        WrappedTask task = MidnightPatch.instance.foliaLib.getScheduler().runAtEntityTimer(player, () -> {
             player.swingMainHand();
             double range = player.getAttribute(Attribute.BLOCK_INTERACTION_RANGE).getValue();
             var result = player.rayTraceBlocks(range);
@@ -65,7 +64,7 @@ public class BlockPlacingManager {
     }
 
     public static void stopPlaceTask(Player player) {
-        TaskWrapper task = placeTasks.remove(player);
+        WrappedTask task = placeTasks.remove(player);
         if (task != null) {
             task.cancel();
         }

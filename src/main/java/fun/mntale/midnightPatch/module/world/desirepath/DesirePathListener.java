@@ -14,7 +14,6 @@ import org.bukkit.World;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.block.Biome;
 import org.bukkit.Location;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.block.Container;
@@ -49,7 +48,7 @@ public class DesirePathListener implements Listener {
         if (event.getFrom().getBlock().equals(event.getTo().getBlock())) return;
         int wearAmount = DesirePathWearCalculator.calculateWear(player);
         Location loc = player.getLocation().subtract(0, 1, 0);
-        FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, loc, task -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtLocation(loc, task -> {
             Block block = loc.getBlock();
             Material type = block.getType();
             Biome biome = block.getBiome();

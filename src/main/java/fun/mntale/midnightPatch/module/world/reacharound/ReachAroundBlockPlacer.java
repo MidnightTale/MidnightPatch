@@ -6,7 +6,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import fun.mntale.midnightPatch.MidnightPatch;
 
 public class ReachAroundBlockPlacer {
@@ -18,7 +17,7 @@ public class ReachAroundBlockPlacer {
         final Block finalTargetBlock = targetBlock;
         final Material finalItemType = item.getType();
         final Player finalPlayer = player;
-        FoliaScheduler.getRegionScheduler().execute(MidnightPatch.instance, targetBlock.getLocation(), () -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtLocation(targetBlock.getLocation(), (placeBlock) -> {
             finalTargetBlock.setType(finalItemType);
             if (finalItemType.name().contains("STAIRS") || 
                 finalItemType.name().contains("SLAB") ||
@@ -37,7 +36,7 @@ public class ReachAroundBlockPlacer {
     private void setBlockDirection(Block block, Player player) {
         final Block finalBlock = block;
         final Player finalPlayer = player;
-        FoliaScheduler.getRegionScheduler().execute(MidnightPatch.instance, block.getLocation(), () -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtLocation(block.getLocation(), (setBlockDirection) -> {
             try {
                 if (finalBlock.getBlockData() instanceof org.bukkit.block.data.Directional directional) {
                     BlockFace facing = ReachAroundUtil.getPlayerFacingDirection(finalPlayer);

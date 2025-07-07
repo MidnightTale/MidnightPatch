@@ -9,7 +9,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import fun.mntale.midnightPatch.MidnightPatch;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 
 import java.util.Objects;
 
@@ -30,15 +29,15 @@ public class FrostbiteEnchantment implements Listener {
         int level = weapon.getEnchantmentLevel(frostbite);
         if (level <= 0) return;
         int freezeTicks = level * FREEZE_TICKS_PER_LEVEL;
-        FoliaScheduler.getEntityScheduler().run(target, MidnightPatch.instance, (task) -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(target, (task) -> {
             target.setFreezeTicks(Math.max(target.getFreezeTicks(), freezeTicks));
             // Start a repeating particle task that matches the freeze timer
             spawnFreezeParticles(target);
-        }, null);
+        });
     }
 
     private void spawnFreezeParticles(LivingEntity target) {
-        FoliaScheduler.getEntityScheduler().runDelayed(target, MidnightPatch.instance, (t) -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtEntityLater(target,(t) -> {
             if (target.getFreezeTicks() > 0) {
                 target.getWorld().spawnParticle(org.bukkit.Particle.SNOWFLAKE, target.getLocation().add(0, target.getHeight() / 2, 0), 20, 0.3, 0.5, 0.3, 0.01);
                 // Schedule next repeat

@@ -1,5 +1,6 @@
 package fun.mntale.midnightPatch.module.entity.armorstand;
 
+import fun.mntale.midnightPatch.MidnightPatch;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.NamespacedKey;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import java.util.Map;
 
 
@@ -21,12 +21,11 @@ public class PoseArmorStandListener implements Listener {
     @EventHandler
     public void onEntitySpawn(EntitySpawnEvent event) {
         if (event.getEntity() instanceof ArmorStand armorStand) {
-            FoliaScheduler.getEntityScheduler().run(armorStand,
-                fun.mntale.midnightPatch.MidnightPatch.instance,
+            MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(armorStand,
                 task -> {
                     if (armorStand.isDead()) return;
                     armorStand.setArms(true);
-                }, null
+                }
             );
         }
     }
@@ -80,8 +79,7 @@ public class PoseArmorStandListener implements Listener {
     private void applyPose(ArmorStand armorStand, String poseName) {
         ArmorStandPose pose = presetPoses.get(poseName);
         if (pose == null) return;
-        FoliaScheduler.getEntityScheduler().run(armorStand,
-            fun.mntale.midnightPatch.MidnightPatch.instance,
+        MidnightPatch.instance.foliaLib.getScheduler().runAtEntity(armorStand,
             task -> {
                 if (armorStand.isDead()) return;
                 armorStand.setArms(true);
@@ -92,7 +90,7 @@ public class PoseArmorStandListener implements Listener {
                 armorStand.setLeftLegPose(pose.leftLeg());
                 armorStand.setRightLegPose(pose.rightLeg());
                 armorStand.getPersistentDataContainer().set(POSE_KEY, PersistentDataType.STRING, poseName);
-            }, null
+            }
         );
     }
 

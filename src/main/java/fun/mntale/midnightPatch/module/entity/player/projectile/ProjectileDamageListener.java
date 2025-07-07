@@ -1,7 +1,6 @@
 package fun.mntale.midnightPatch.module.entity.player.projectile;
 
 import fun.mntale.midnightPatch.MidnightPatch;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.ThrownPotion;
@@ -25,7 +24,7 @@ public class ProjectileDamageListener implements Listener {
             LivingEntity shooterEntity = ProjectileDamageUtil.getShooter(projectile);
             if (!(shooterEntity instanceof org.bukkit.entity.Player)) return;
             double damage = ProjectileDamageUtil.getDamageForProjectile(projectile);
-            FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, target.getLocation(), task -> {
+            MidnightPatch.instance.foliaLib.getScheduler().runAtLocation(target.getLocation(), task -> {
                 target.damage(damage, shooterEntity);
                 org.bukkit.util.Vector direction = shooterEntity.getLocation().getDirection().normalize();
                 org.bukkit.util.Vector knockback = direction.multiply(ProjectileDamageConfig.KNOCKBACK_STRENGTH).setY(0.35);

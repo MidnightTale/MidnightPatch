@@ -1,7 +1,6 @@
 package fun.mntale.midnightPatch.module.world.loot;
 
 import fun.mntale.midnightPatch.MidnightPatch;
-import io.github.retrooper.packetevents.util.folia.FoliaScheduler;
 import org.bukkit.Location;
 import org.bukkit.World;
 import java.io.*;
@@ -64,7 +63,7 @@ public class ChestLootGenDataManager {
             File file = getRegionFile(world, chunkX, chunkZ);
             Set<String> regionDataCopy = ConcurrentHashMap.newKeySet();
             regionDataCopy.addAll(regionData);
-            FoliaScheduler.getAsyncScheduler().runNow(MidnightPatch.instance, (io) -> {
+            MidnightPatch.instance.foliaLib.getScheduler().runAsync((io) -> {
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
                     for (String key : regionDataCopy) {
                         writer.write(key);
@@ -82,7 +81,7 @@ public class ChestLootGenDataManager {
         int chunkX = loc.getBlockX() >> 4;
         int chunkZ = loc.getBlockZ() >> 4;
         final boolean[] result = {false};
-        FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, loc, (task) -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtLocation(loc, (task) -> {
             Set<String> region = loadRegion(world, chunkX, chunkZ);
             String chestKey = blockKey(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
             result[0] = region.contains(chestKey);
@@ -94,7 +93,7 @@ public class ChestLootGenDataManager {
         World world = loc.getWorld();
         int chunkX = loc.getBlockX() >> 4;
         int chunkZ = loc.getBlockZ() >> 4;
-        FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, loc, (task) -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtLocation(loc, (task) -> {
             Set<String> region = loadRegion(world, chunkX, chunkZ);
             String chestKey = blockKey(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
             if (region.add(chestKey)) {
@@ -107,7 +106,7 @@ public class ChestLootGenDataManager {
         World world = loc.getWorld();
         int chunkX = loc.getBlockX() >> 4;
         int chunkZ = loc.getBlockZ() >> 4;
-        FoliaScheduler.getRegionScheduler().run(MidnightPatch.instance, loc, (task) -> {
+        MidnightPatch.instance.foliaLib.getScheduler().runAtLocation(loc, (task) -> {
             Set<String> region = loadRegion(world, chunkX, chunkZ);
             String chestKey = blockKey(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
             if (region.remove(chestKey)) {

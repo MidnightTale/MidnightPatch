@@ -16,9 +16,7 @@ import fun.mntale.midnightPatch.command.ToggleDesirePathCommand;
 import fun.mntale.midnightPatch.command.ToggleFakePlayerOnJoinLeaveCommand;
 import fun.mntale.midnightPatch.command.ToggleDeathCameraCommand;
 import fun.mntale.midnightPatch.module.world.reacharound.ReachAroundBlockListener;
-import fun.mntale.midnightPatch.module.entity.minecart.MinecartChunkLoadListener;
 import fun.mntale.midnightPatch.module.entity.player.LootMobTargetListener;
-import fun.mntale.midnightPatch.module.entity.player.PhantomIsolation;
 import fun.mntale.midnightPatch.module.entity.player.PlayerLootListener;
 import fun.mntale.midnightPatch.module.entity.player.fakeplayer.MobSpawnerPlayer;
 import fun.mntale.midnightPatch.module.entity.player.projectile.ProjectileDamageListener;
@@ -59,18 +57,19 @@ import fun.mntale.midnightPatch.module.entity.boat.DispenserBoatListener;
 public final class MidnightPatch extends JavaPlugin implements Listener {
     public static MidnightPatch instance;
     public FoliaLib foliaLib;
+
     @Override
     public void onEnable() {
         instance = this;
+        foliaLib = new FoliaLib(this);
+        
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new MidnightPatchExpansion().register();
         }
-        FoliaLib foliaLib = new FoliaLib(instance);
         getServer().getPluginManager().registerEvents(new ReachAroundBlockListener(), this);
         BasicCommand ToggleReachAroundCommand = new ToggleReachAroundCommand();
         registerCommand("togglereacharound", ToggleReachAroundCommand);
 
-        getServer().getPluginManager().registerEvents(new MinecartChunkLoadListener(), this);
         getServer().getPluginManager().registerEvents(new FertilizerListener(), this);
         getServer().getPluginManager().registerEvents(new LootMobTargetListener(), this);
         getServer().getPluginManager().registerEvents(new BabyMobListener(), this);
@@ -102,8 +101,6 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new UndertowEnchantment(), this);
         getServer().getPluginManager().registerEvents(new UndertowLoot(), this);
 
-        PhantomIsolation.start(this);
-        
         
         BasicCommand dieCommand = new DieCommand();
         registerCommand("die", dieCommand);

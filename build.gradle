@@ -71,7 +71,4 @@ tasks.runServer {
 tasks.shadowJar {
     // !! MAKE SURE TO CHANGE THIS TO YOUR PLUGIN'S GROUP & PLUGIN NAME !!
     relocate("com.tcoded.folialib", "fun.mntale.midnightPatch.lib.folialib")
-    minimize {
-        exclude dependency("com.tcoded:FoliaLib:.*")
-    }
 }

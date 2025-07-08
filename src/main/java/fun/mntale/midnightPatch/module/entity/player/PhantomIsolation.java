@@ -5,15 +5,15 @@ import fun.mntale.midnightPatch.MidnightPatch;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 public class PhantomIsolation {
     private static WrappedTask task;
 
-    public static void start(Plugin plugin) {
+    public static void start() {
         if (task != null && !task.isCancelled()) {
             task.cancel();
         }
+
         task = MidnightPatch.instance.foliaLib.getScheduler().runTimer(
             () -> {
                 for (Player player : Bukkit.getOnlinePlayers()) {

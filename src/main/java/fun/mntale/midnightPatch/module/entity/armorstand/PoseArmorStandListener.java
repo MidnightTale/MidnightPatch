@@ -36,10 +36,6 @@ public class PoseArmorStandListener implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        if (!fun.mntale.midnightPatch.command.ToggleArmorStandPoseCommand.isArmorStandPoseEnabled(player)) {
-            player.sendActionBar(net.kyori.adventure.text.Component.text("Armor Stand Pose: DISABLED", net.kyori.adventure.text.format.NamedTextColor.RED));
-            return;
-        }
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item.getType() != Material.AIR) {
             return;

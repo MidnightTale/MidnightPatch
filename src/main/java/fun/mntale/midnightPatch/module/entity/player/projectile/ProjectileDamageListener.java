@@ -9,7 +9,6 @@ import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import fun.mntale.midnightPatch.command.ToggleProjectileDamageCommand;
 
 public class ProjectileDamageListener implements Listener {
     @EventHandler
@@ -20,7 +19,6 @@ public class ProjectileDamageListener implements Listener {
         if (projectile instanceof Trident) return;
         if (event.getHitEntity() instanceof LivingEntity target) {
             if (!(target instanceof org.bukkit.entity.Player player)) return;
-            if (!ToggleProjectileDamageCommand.isProjectileDamageEnabled(player)) return;
             LivingEntity shooterEntity = ProjectileDamageUtil.getShooter(projectile);
             if (!(shooterEntity instanceof org.bukkit.entity.Player)) return;
             double damage = ProjectileDamageUtil.getDamageForProjectile(projectile);

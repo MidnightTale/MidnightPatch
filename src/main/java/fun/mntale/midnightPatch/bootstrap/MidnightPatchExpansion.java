@@ -5,22 +5,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import fun.mntale.midnightPatch.command.ToggleArmorStandPoseCommand;
-import fun.mntale.midnightPatch.command.ToggleDeathCameraCommand;
-import fun.mntale.midnightPatch.command.ToggleDeathLootGlowCommand;
-import fun.mntale.midnightPatch.command.ToggleDeathLootInvulnerableCommand;
-import fun.mntale.midnightPatch.command.ToggleDeathLootLetMobPickupCommand;
-import fun.mntale.midnightPatch.command.ToggleDeathLootLetPlayerPickupCommand;
-import fun.mntale.midnightPatch.command.ToggleDeathLootNoDespawnCommand;
-import fun.mntale.midnightPatch.command.ToggleDesirePathCommand;
-import fun.mntale.midnightPatch.command.ToggleLootChestProtectionCommand;
-import fun.mntale.midnightPatch.command.ToggleMendingRepairCommand;
-import fun.mntale.midnightPatch.command.TogglePhantomIsolationCommand;
-import fun.mntale.midnightPatch.command.ToggleProjectileDamageCommand;
 import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
-import fun.mntale.midnightPatch.command.ToggleFakePlayerOnJoinLeaveCommand;
-import fun.mntale.midnightPatch.command.ToggleLocatorBarCommand;
-import fun.mntale.midnightPatch.command.ToggleChairCommand;
 
 /**
  * PlaceholderAPI expansion for MidnightPatch.
@@ -30,23 +15,6 @@ import fun.mntale.midnightPatch.command.ToggleChairCommand;
  *
  * Available placeholders:
  *   %midnightpatch_reacharound%           - ReachAround feature toggle
- *   %midnightpatch_healthindicator%       - Health Indicator toggle
- *   %midnightpatch_deathlootglow%         - Death Loot Glow toggle
- *   %midnightpatch_deathlootinvulnerable% - Death Loot Invulnerable toggle
- *   %midnightpatch_deathlootnodespawn%    - Death Loot No Despawn toggle
- *   %midnightpatch_deathlootletmobpickup% - Death Loot Let Mob Pickup toggle
- *   %midnightpatch_deathlootletplayerpickup% - Death Loot Let Player Pickup toggle
- *   %midnightpatch_phantomisolation%      - Phantom Isolation toggle
- *   %midnightpatch_mendingrepair%         - Mending Repair toggle
- *   %midnightpatch_lootchestprotection%   - Loot Chest Protection toggle
- *   %midnightpatch_armorstandpose%        - Armor Stand Pose toggle
- *   %midnightpatch_armorvisibility%       - Armor Visibility toggle
- *   %midnightpatch_projectiledamage%      - Projectile Damage toggle
- *   %midnightpatch_desirepath%            - Desire Path toggle
- *   %midnightpatch_deathcamera%           - Death Camera toggle
- *   %midnightpatch_fakeplayer%            - Fake Player toggle
- *   %midnightpatch_locatorbar%            - Locator Bar toggle
- *   %midnightpatch_chair%                 - Chair toggle
  */
 public class MidnightPatchExpansion extends PlaceholderExpansion {
     @Override
@@ -76,21 +44,6 @@ public class MidnightPatchExpansion extends PlaceholderExpansion {
         if (player == null) return "";
         return switch (identifier.toLowerCase()) {
             case "reacharound" -> boolToString(ToggleReachAroundCommand.isReachAroundEnabled(player));
-            case "deathlootglow" -> boolToString(ToggleDeathLootGlowCommand.isEnabled(player));
-            case "deathlootinvulnerable" -> boolToString(ToggleDeathLootInvulnerableCommand.isEnabled(player));
-            case "deathlootnodespawn" -> boolToString(ToggleDeathLootNoDespawnCommand.isEnabled(player));
-            case "deathlootletmobpickup" -> boolToString(ToggleDeathLootLetMobPickupCommand.isEnabled(player));
-            case "deathlootletplayerpickup" -> boolToString(ToggleDeathLootLetPlayerPickupCommand.isEnabled(player));
-            case "phantomisolation" -> boolToString(TogglePhantomIsolationCommand.isPhantomIsolationEnabled(player));
-            case "mendingrepair" -> boolToString(ToggleMendingRepairCommand.isEnabled(player));
-            case "lootchestprotection" -> boolToString(ToggleLootChestProtectionCommand.isLootChestProtectionEnabled(player));
-            case "armorstandpose" -> boolToString(ToggleArmorStandPoseCommand.isArmorStandPoseEnabled(player));
-            case "projectiledamage" -> boolToString(ToggleProjectileDamageCommand.isProjectileDamageEnabled(player));
-            case "desirepath" -> boolToString(ToggleDesirePathCommand.isDesirePathEnabled(player));
-            case "deathcamera" -> boolToString(ToggleDeathCameraCommand.isDeathCameraEnabled(player));
-            case "fakeplayer" -> boolToString(ToggleFakePlayerOnJoinLeaveCommand.isEnabled(player));
-            case "locatorbar" -> boolToString(ToggleLocatorBarCommand.isLocatorBarEnabled(player));
-            case "chair" -> boolToString(ToggleChairCommand.isChairEnabled(player));
             default -> null;
         };
     }

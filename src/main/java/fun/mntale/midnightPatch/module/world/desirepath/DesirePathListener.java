@@ -1,7 +1,6 @@
 package fun.mntale.midnightPatch.module.world.desirepath;
 
 import fun.mntale.midnightPatch.MidnightPatch;
-import fun.mntale.midnightPatch.command.ToggleDesirePathCommand;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -44,7 +43,6 @@ public class DesirePathListener implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if (!ToggleDesirePathCommand.isDesirePathEnabled(player)) return;
         if (event.getFrom().getBlock().equals(event.getTo().getBlock())) return;
         int wearAmount = DesirePathWearCalculator.calculateWear(player);
         Location loc = player.getLocation().subtract(0, 1, 0);

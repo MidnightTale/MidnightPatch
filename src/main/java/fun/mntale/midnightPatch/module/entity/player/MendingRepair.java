@@ -12,7 +12,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.UUID;
-import fun.mntale.midnightPatch.command.ToggleMendingRepairCommand;
 
 public class MendingRepair implements Listener {
     private final Map<UUID, Integer> repairStep = new ConcurrentHashMap<>();
@@ -21,9 +20,6 @@ public class MendingRepair implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if (!ToggleMendingRepairCommand.isEnabled(player)) {
-            return;
-        }
         if (!(event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) || !player.isSneaking()) {
             return;
         }

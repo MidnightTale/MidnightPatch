@@ -2,6 +2,7 @@ package fun.mntale.midnightPatch.module.entity.player;
 
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.GameRule;
 import org.bukkit.World;
@@ -15,13 +16,19 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
-import fun.mntale.midnightPatch.command.ToggleDeathLootGlowCommand;
-import fun.mntale.midnightPatch.command.ToggleDeathLootInvulnerableCommand;
-import fun.mntale.midnightPatch.command.ToggleDeathLootNoDespawnCommand;
-import fun.mntale.midnightPatch.command.ToggleDeathLootLetMobPickupCommand;
-import fun.mntale.midnightPatch.command.ToggleDeathLootLetPlayerPickupCommand;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.Location;
 
 public class PlayerLootListener implements Listener {
+
+    private static final java.util.Map<UUID, Vector> lastHitDirection = new ConcurrentHashMap<>();
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        Vector hitDirection = player.getLocation().toVector().subtract(event.getDamager().getLocation().toVector()).normalize();
+        lastHitDirection.put(player.getUniqueId(), hitDirection);
+    }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
@@ -37,22 +44,29 @@ public class PlayerLootListener implements Listener {
             event.getDrops().clear();
         }
 
+        Vector dropDirection = lastHitDirection.getOrDefault(player.getUniqueId(), new Vector(0, 0.2, 0));
+        // Use the opposite direction for item drop
+        Vector baseVelocity = dropDirection.clone().multiply(-0.4); // scale as needed
+        
         for (ItemStack itemStack : originalInventory) {
             if (itemStack != null) {
-                Item item = player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
-                item.setGlowing(ToggleDeathLootGlowCommand.isEnabled(player));
-                item.setInvulnerable(ToggleDeathLootInvulnerableCommand.isEnabled(player));
-                item.setUnlimitedLifetime(ToggleDeathLootNoDespawnCommand.isEnabled(player));
-                item.setCanMobPickup(ToggleDeathLootLetMobPickupCommand.isEnabled(player));
-                if (!ToggleDeathLootLetPlayerPickupCommand.isEnabled(player)) {
-                    item.setMetadata("owner", new FixedMetadataValue(Objects.requireNonNull(event.getEntity().getServer().getPluginManager().getPlugin("MidnightPatch")), player.getUniqueId().toString()));
-                }
-                Vector velocity = new Vector(
-                        Math.random() * 0.2 - 0.2  / 2,
-                        Math.random() * (0.2  / 3) - (0.2  / 3) / 2,
-                        Math.random() * 0.2  - 0.2  / 2
+                Location dropLocation = player.getLocation().clone();
+                dropLocation.setY(dropLocation.getY() + 0.5);
+                Item item = player.getWorld().dropItemNaturally(dropLocation, itemStack);
+                item.setGlowing(true);
+                item.setInvulnerable(true);
+                item.setUnlimitedLifetime(true);
+                item.setCanMobPickup(false);
+                item.setMetadata("owner", new FixedMetadataValue(Objects.requireNonNull(event.getEntity().getServer().getPluginManager().getPlugin("MidnightPatch")), player.getUniqueId().toString()));
+
+                // Add random spread to the base velocity
+                Vector randomSpread = new Vector(
+                    (Math.random() - 0.5) * 0.2, // X: -0.1 to 0.1
+                    (Math.random() - 0.5) * 0.2, // Y: -0.1 to 0.1
+                    (Math.random() - 0.5) * 0.2  // Z: -0.1 to 0.1
                 );
-                item.setVelocity(velocity);
+                Vector finalVelocity = baseVelocity.clone().add(randomSpread);
+                item.setVelocity(finalVelocity);
 
                 int playerTotalExp = ExperienceUtil.getPlayerExp(player);
                 int expToDrop = (playerTotalExp * 70) / 100; 
@@ -62,11 +76,14 @@ public class PlayerLootListener implements Listener {
 
                 while (expToDrop > 0) {
                     int orbValue = Math.min(expToDrop, 100);
-                    player.getWorld().spawn(player.getLocation(), ExperienceOrb.class).setExperience(orbValue);
+                    Location orbLocation = player.getLocation().clone();
+                    orbLocation.setY(orbLocation.getY() + 0.5);
+                    player.getWorld().spawn(orbLocation, ExperienceOrb.class).setExperience(orbValue);
                     expToDrop -= orbValue;
                 }
             }
         }
+        lastHitDirection.remove(player.getUniqueId());
     }
 
     @EventHandler

@@ -23,7 +23,6 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import fun.mntale.midnightPatch.MidnightPatch;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import fun.mntale.midnightPatch.command.ToggleChairCommand;
 import org.bukkit.block.data.type.Stairs;
 import org.bukkit.Location;
 

@@ -36,7 +36,6 @@ public class ChairListener implements Listener {
         Player player = event.getPlayer();
         if (!player.getInventory().getItemInMainHand().getType().isAir()) return;
         if (player.isInsideVehicle()) return; // Prevent sitting while riding
-        if (!ToggleChairCommand.isChairEnabled(player)) return;
         Block block = event.getClickedBlock();
         if (block == null) return;
         if (!isChairBlock(block)) return;

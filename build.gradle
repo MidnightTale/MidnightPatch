@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'fun.mntale'
-version = '1.2'
+version = '2.0'
 
 repositories {
     mavenCentral()
@@ -27,9 +27,8 @@ repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.21.7-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.8-R0.1-SNAPSHOT")
     implementation("com.tcoded:FoliaLib:0.5.1")
-    implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'org.lz4:lz4-java:1.8.0'
     compileOnly 'com.comphenix.protocol:ProtocolLib:5.1.0'
     compileOnly 'me.clip:placeholderapi:2.11.6'

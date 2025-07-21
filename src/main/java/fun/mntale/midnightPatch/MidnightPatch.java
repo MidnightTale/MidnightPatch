@@ -9,7 +9,6 @@ import io.papermc.paper.command.brigadier.BasicCommand;
 import fun.mntale.midnightPatch.command.DieCommand;
 import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
 import fun.mntale.midnightPatch.module.world.reacharound.ReachAroundBlockListener;
-import fun.mntale.midnightPatch.module.entity.player.PlayerLootListener;
 import fun.mntale.midnightPatch.module.entity.player.projectile.ProjectileDamageListener;
 import fun.mntale.midnightPatch.module.entity.player.task.PlayerTaskManager;
 import fun.mntale.midnightPatch.module.world.fertilizer.FertilizerListener;
@@ -88,8 +87,6 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new DesirePathListener(), this);
 
         getServer().getPluginManager().registerEvents(new BedrockDeathCameraListener(), this);
-
-        getServer().getPluginManager().registerEvents(new PlayerLootListener(), this);
 
         getServer().getPluginManager().registerEvents(new MendingRepair(), this);
 

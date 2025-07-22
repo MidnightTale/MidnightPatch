@@ -14,6 +14,7 @@ import fun.mntale.midnightPatch.module.entity.player.projectile.ProjectileDamage
 import fun.mntale.midnightPatch.module.entity.player.task.PlayerTaskManager;
 import fun.mntale.midnightPatch.module.world.fertilizer.FertilizerListener;
 import fun.mntale.midnightPatch.module.world.death.BedrockDeathCameraListener;
+import fun.mntale.midnightPatch.module.world.death.DeathItemOwnerDisplay;
 import fun.mntale.midnightPatch.module.world.desirepath.DesirePathListener;
 import fun.mntale.midnightPatch.module.world.fertilizer.MossBlockFertilizerListener;
 import fun.mntale.midnightPatch.module.world.loot.FrostbiteLoot;
@@ -38,9 +39,12 @@ import fun.mntale.midnightPatch.command.PlayerCommand;
 import fun.mntale.midnightPatch.command.TaskCommand;
 import fun.mntale.midnightPatch.module.entity.armorstand.ChairListener;
 
+import static fun.mntale.midnightPatch.module.world.death.DeathItemOwnerDisplay.initializeReflectionFields;
+
 public final class MidnightPatch extends JavaPlugin implements Listener {
     public static MidnightPatch instance;
     public FoliaLib foliaLib;
+    private DeathItemOwnerDisplay deathItemOwnerDisplay;
 
     @Override
     public void onEnable() {
@@ -88,6 +92,16 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new DesirePathListener(), this);
 
         getServer().getPluginManager().registerEvents(new BedrockDeathCameraListener(), this);
+        
+        // Check if server supports atDeprecated death item owner display
+        if (isAtDeprecatedServer()) {
+            getLogger().info("atDeprecated server detected - enabling death item owner display");
+            initializeReflectionFields();
+            deathItemOwnerDisplay = new DeathItemOwnerDisplay();
+            getServer().getPluginManager().registerEvents(deathItemOwnerDisplay, this);
+        } else {
+            getLogger().info("atDeprecated server not detected - death item owner display disabled");
+        }
 
         getServer().getPluginManager().registerEvents(new MendingRepair(), this);
 
@@ -104,6 +118,33 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
 
         MidnightPatchStartupJoinDelay.START_TIME = System.currentTimeMillis();
     }
-
-
+    
+    /**
+     * Check if the server is running atDeprecated fork with death loot support
+     */
+    private boolean isAtDeprecatedServer() {
+        try {
+            // Check server version string for atDeprecated
+            String version = Bukkit.getVersion();
+            if (version.contains("atDeprecated")) {
+                return true;
+            }
+            
+            // Try to access atDeprecated's ItemEntity fields to confirm support
+            Class<?> itemEntityClass = Class.forName("net.minecraft.world.entity.item.ItemEntity");
+            itemEntityClass.getDeclaredField("isDeathLoot");
+            itemEntityClass.getDeclaredField("target");
+            
+            return true;
+        } catch (ClassNotFoundException | NoSuchFieldException e) {
+            return false;
+        }
+    }
+    
+    @Override
+    public void onDisable() {
+        if (deathItemOwnerDisplay != null) {
+            deathItemOwnerDisplay.cleanup();
+        }
+    }
 }

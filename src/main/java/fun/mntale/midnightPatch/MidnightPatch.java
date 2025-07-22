@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import io.papermc.paper.command.brigadier.BasicCommand;
 import fun.mntale.midnightPatch.command.DieCommand;
 import fun.mntale.midnightPatch.command.ToggleReachAroundCommand;
+import fun.mntale.midnightPatch.module.entity.player.skin.BedrockSkinListener;
 import fun.mntale.midnightPatch.module.world.reacharound.ReachAroundBlockListener;
 import fun.mntale.midnightPatch.module.entity.player.projectile.ProjectileDamageListener;
 import fun.mntale.midnightPatch.module.entity.player.task.PlayerTaskManager;
@@ -98,6 +99,8 @@ public final class MidnightPatch extends JavaPlugin implements Listener {
         registerCommand("task", taskCommand);
 
         getServer().getPluginManager().registerEvents(new ChairListener(), this);
+
+        getServer().getPluginManager().registerEvents(new BedrockSkinListener(), this);
 
         MidnightPatchStartupJoinDelay.START_TIME = System.currentTimeMillis();
     }
